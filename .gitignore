@@ -18,3 +18,5 @@ nytprof.out
 *.o
 *.bs
 /_eumm/
+/.vs/Solution/v14/.suo
+/.vs/config/applicationhost.config
