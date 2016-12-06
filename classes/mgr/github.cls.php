@@ -1,0 +1,44 @@
+<?php
+class GithubMgr {
+  private $client_id;
+  private $client_secret;
+  private $access_token;
+
+  public function __construct($client_id, $client_secret) {
+    $this->client_id = $client_id;
+    $this->client_secret = $client_secret;
+    $this->access_token=$_SESSION[SessionName]["access_token"];
+
+
+  }
+
+
+  public function setAccessToken($code){
+
+    $url="https://github.com/login/oauth/access_token";
+    //$data="client_id=".$this->client_id."&client_secret=".$this->client_secret."&code=".$code;
+    $data["client_id"]=$this->client_id;
+    $data["client_secret"]=$this->client_secret;
+    $data["code"]=$code;
+
+	$ret= request_post($url,$data);
+    $ret=explode("&",$ret);
+    $ret=explode("=",$ret[0]);
+    $access_token=$ret[1];
+    if($access_token==""){
+        return;
+    }
+    echo $access_token;
+    $_SESSION[SessionName]["access_token"]=$access_token;
+    $this->access_token=$access_token;
+  }
+
+  public function getUser(){
+    $url="https://api.github.com/user?access_token=".$this->access_token;
+    $res= json_decode(request_get($url));
+    return $res;
+  }
+
+}
+$githubMgr=new GithubMgr($CONFIG['github']["client_id"], $CONFIG['github']["client_secret"]);
+?>
