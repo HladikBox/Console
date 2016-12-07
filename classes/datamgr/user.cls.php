@@ -23,8 +23,9 @@
 	}
 
 	public function syncGithubUser($user){
-		print_r($user);
+		//print_r($user);
 		$id=parameter_filter($user["id"]);
+		$avatar_url=parameter_filter($user["avatar_url"]);
 		$login=parameter_filter($user["login"]);
 		$html_url=parameter_filter($user["html_url"]);
 		$repos_url=parameter_filter($user["repos_url"]);
@@ -39,16 +40,16 @@
 		$query = $this->dbmgr->query($sql);
 		$result = $this->dbmgr->fetch_array_all($query);
     if(count($result)>0){
-      $sql="update tb_user_github set html_url='$html_url', repos_url='$repos_url', url='$url'
+      $sql="update tb_user_github set html_url='$html_url', repos_url='$repos_url', url='$url',avatar_url='$avatar_url'
       , type='$type', name='$name', company='$company', location='$location',updated_date=now()
       where id=$id";
     }else{
       $sql="insert into tb_user_github (id,login,
-      html_url,repos_url,url,
+      html_url,repos_url,url,avatar_url,
       type,name,company,location,
       authenticated_date,updated_date) values 
       ($id,'$login'
-      ,'$html_url','$repos_url','$url'
+      ,'$html_url','$repos_url','$url','$avatar_url'
       ,'$type','$name','$company','$location'
       ,now(),now())";
     }

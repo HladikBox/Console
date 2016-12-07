@@ -1,7 +1,6 @@
 <?php
 
   require '../include/common.inc.php';
-  include ROOT.'/include/init.inc.php';
   
   include ROOT.'/classes/mgr/github.cls.php';
   include ROOT.'/classes/datamgr/user.cls.php';
