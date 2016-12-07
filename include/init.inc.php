@@ -19,7 +19,7 @@ if(isset($_SESSION[SESSIONNAME]["url_request"]))
 $User=$_SESSION[SESSIONNAME]["user"];
 
 
-
+$smarty->assign("User",$User);
 
 
 
