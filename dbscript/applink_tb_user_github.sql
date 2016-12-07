@@ -2,7 +2,7 @@ CREATE DATABASE  IF NOT EXISTS `applink` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `applink`;
 -- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
 --
--- Host: localhost    Database: applink
+-- Host: 127.0.0.1    Database: applink
 -- ------------------------------------------------------
 -- Server version	5.7.10-enterprise-commercial-advanced-log
 
@@ -29,6 +29,7 @@ CREATE TABLE `tb_user_github` (
   `login` varchar(100) DEFAULT NULL,
   `html_url` varchar(255) DEFAULT NULL,
   `repos_url` varchar(255) DEFAULT NULL,
+  `avatar_url` varchar(255) DEFAULT NULL,
   `url` varchar(255) DEFAULT NULL,
   `type` varchar(255) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
@@ -45,6 +46,7 @@ CREATE TABLE `tb_user_github` (
 
 LOCK TABLES `tb_user_github` WRITE;
 /*!40000 ALTER TABLE `tb_user_github` DISABLE KEYS */;
+INSERT INTO `tb_user_github` VALUES (621332,'alucard263096','https://github.com/alucard263096','https://api.github.com/users/alucard263096/repos','https://avatars.githubusercontent.com/u/621332?v=3','https://api.github.com/users/alucard263096','User','蔡小司','Helpfooter company','Shenzhen','2016-12-07 22:15:41','2016-12-07 22:15:41');
 /*!40000 ALTER TABLE `tb_user_github` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -57,4 +59,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-12-07 16:24:38
+-- Dump completed on 2016-12-07 22:29:08
