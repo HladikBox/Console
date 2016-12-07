@@ -20,7 +20,12 @@ $CONFIG['smarty']['cache_lifetime']=3600; //second,-1 is always on
 $CONFIG['logsavedir'] 		= 'logs/';	
 $CONFIG['error_handler'] ="E_ALL";
 
-
+#[Database]
+$CONFIG['database']['provider']	= 'mysql';  //mssql,sqlsrv
+$CONFIG['database']['host']		= 'localhost';  
+$CONFIG['database']['database']	= 'applink';  
+$CONFIG['database']['user']		= 'root';  
+$CONFIG['database']['psw']		= 'root'; 
 
 
 
