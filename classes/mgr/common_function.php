@@ -197,123 +197,128 @@ function getPageNumberCodeArray($sum,$curpage,$eachincount){
 			$arr[]=$pagecount-1;
 			$arr[]=$pagecount;
 		}else if($curpage<=3){
-			$arr[]=1;
-			$arr[]=2;
-			$arr[]=3;
-			$arr[]=4;
-			$arr[]=5;
-		}else{
-			$arr[]=$curpage-2;
-			$arr[]=$curpage-1;
-			$arr[]=$curpage;
-			$arr[]=$curpage+1;
-			$arr[]=$curpage+2;
-		}
-	}
-	$ret["pages"]=$arr;
-	return $ret;
-}
+      $arr[]=1;
+      $arr[]=2;
+      $arr[]=3;
+      $arr[]=4;
+      $arr[]=5;
+      }else{
+      $arr[]=$curpage-2;
+      $arr[]=$curpage-1;
+      $arr[]=$curpage;
+      $arr[]=$curpage+1;
+      $arr[]=$curpage+2;
+      }
+      }
+      $ret["pages"]=$arr;
+      return $ret;
+      }
 
-function splitCodition($cols,$keyword){
-	$ret="(1=2 ";
-	$condition=explode(" ",$keyword);
-	foreach($cols as $col){
-		foreach($condition as $v){
-			$ret=$ret." or $col like '%".parameter_filter($v)."%' 
-			";
-		}
-	}
-	$ret.=" )";
-	return $ret;
-}
-function getmonsun($curtime){
-$curweekday = date('w',$curtime);
-//为0是 就是 星期七
-$curweekday = $curweekday?$curweekday:7;
-$curmon = $curtime - ($curweekday-1)*86400;
-$cursun = $curtime + (7 - $curweekday)*86400;
-$cur['mon'] = $curmon;
-$cur['mon_str'] =date('Y年m月d日',$curmon);
-$cur['mon_str_t'] =date('Y-m-d',$curmon);
-$cur['first_day'] =date('Y-m-d',$curmon);
-$cur['sun'] = $cursun;
-$cur['sun_str'] = date('Y年m月d日',$cursun);;
-$cur['sun_str_t'] = date('Y-m-d',$cursun);;
-return $cur;
-}
-function getmon($curtime){
-$curweekday = date('w',$curtime);
-$curweekday = $curweekday?$curweekday:7;
-$curmon = $curtime - ($curweekday-1)*86400;
-return date('Y-m-d',$curmon);;
-}
-function getDayShortName($str){
-	$time=strtotime($str);
-	$curweekday = date('w',$time);
-	$curweekday = $curweekday?$curweekday:7;
-	switch($curweekday){
-		case 1:return "mon";
-		case 2:return "tue";
-		case 3:return "wed";
-		case 4:return "thu";
-		case 5:return "fri";
-		case 6:return "sat";
-		case 7:return "sun";
-	}
+      function splitCodition($cols,$keyword){
+      $ret="(1=2 ";
+      $condition=explode(" ",$keyword);
+      foreach($cols as $col){
+      foreach($condition as $v){
+      $ret=$ret." or $col like '%".parameter_filter($v)."%'
+      ";
+      }
+      }
+      $ret.=" )";
+      return $ret;
+      }
+      function getmonsun($curtime){
+      $curweekday = date('w',$curtime);
+      //为0是 就是 星期七
+      $curweekday = $curweekday?$curweekday:7;
+      $curmon = $curtime - ($curweekday-1)*86400;
+      $cursun = $curtime + (7 - $curweekday)*86400;
+      $cur['mon'] = $curmon;
+      $cur['mon_str'] =date('Y年m月d日',$curmon);
+      $cur['mon_str_t'] =date('Y-m-d',$curmon);
+      $cur['first_day'] =date('Y-m-d',$curmon);
+      $cur['sun'] = $cursun;
+      $cur['sun_str'] = date('Y年m月d日',$cursun);;
+      $cur['sun_str_t'] = date('Y-m-d',$cursun);;
+      return $cur;
+      }
+      function getmon($curtime){
+      $curweekday = date('w',$curtime);
+      $curweekday = $curweekday?$curweekday:7;
+      $curmon = $curtime - ($curweekday-1)*86400;
+      return date('Y-m-d',$curmon);;
+      }
+      function getDayShortName($str){
+      $time=strtotime($str);
+      $curweekday = date('w',$time);
+      $curweekday = $curweekday?$curweekday:7;
+      switch($curweekday){
+      case 1:return "mon";
+      case 2:return "tue";
+      case 3:return "wed";
+      case 4:return "thu";
+      case 5:return "fri";
+      case 6:return "sat";
+      case 7:return "sun";
+      }
 
-}
-function checkDataInList($arr,$val){
-	foreach($arr as $v){
-		if($v[0]==$val){
-			return true;
-		}
-	}
-	return false;
-}
-function is_date($date)
-{
- if($date == date('Y-m-d H:i:s',strtotime($date))){
-  return true;
- }else{
-  return false;
- }
- 
-}
+      }
+      function checkDataInList($arr,$val){
+      foreach($arr as $v){
+      if($v[0]==$val){
+      return true;
+      }
+      }
+      return false;
+      }
+      function is_date($date)
+      {
+      if($date == date('Y-m-d H:i:s',strtotime($date))){
+      return true;
+      }else{
+      return false;
+      }
+
+      }
 
 
-  function request_post($url , $data ) {
-        $postdata = http_build_query(
-            $data
-        );
-        $opts = array('http' =>
-                      array(
-                          'method'  => 'POST',
-                          'header'  => "Content-type: application/x-www-form-urlencoded;",
-                          'content' => $postdata
-                      )
-        );
-        $context = stream_context_create($opts);
-        $result = file_get_contents($url, false, $context);
-        return $result;
-  }
+      function request_post($url , $data ) {
+      $postdata = http_build_query(
+      $data
+      );
+      $opts = array('http' =>
+      array(
+      'method'  => 'POST',
+      'header'  => "Content-type: application/x-www-form-urlencoded;",
+      'content' => $postdata
+      )
+      );
+      $context = stream_context_create($opts);
+      //echo $context;
+      //echo "a";
+      $result = file_get_contents($url, false, $context);
+      //echo $result;
+      return $result;
+      }
 
-  function request_get($url) {
+      function request_get($url) {
 
-$ch = curl_init(); 
+      $ch = curl_init();
 
-$headers = array();
-$headers[] = 'Cache-Control: no-cache';
-$headers[] = 'Content-Type: application/x-www-form-urlencoded; charset=utf-8';
-$headers[] = 'User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:28.0) Gecko/20100101 Firefox/28.0';
+      $headers = array();
+      $headers[] = 'Cache-Control: no-cache';
+      $headers[] = 'Content-Type: application/x-www-form-urlencoded; charset=utf-8';
+      $headers[] = 'User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:28.0) Gecko/20100101 Firefox/28.0';
 
-curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+      curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
-curl_setopt($ch, CURLOPT_URL,$url); 
-curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); 
-curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); 
-curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
-$res= curl_exec($ch); 
-    curl_close($ch);
-    return $res;
-  }
-?>
+      curl_setopt($ch, CURLOPT_URL,$url);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+      $res= curl_exec($ch);
+      curl_close($ch);
+      //echo $res;
+      return $res;
+      }
+      ?>
+    

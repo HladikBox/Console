@@ -4,8 +4,9 @@
   include ROOT.'/include/init.inc.php';
   
   include ROOT.'/classes/mgr/github.cls.php';
-  //$githubMgr->setAccessToken($_REQUEST["code"]);
-  echo $githubMgr->getUser();
+  $githubMgr->setAccessToken($_REQUEST["code"]);
+  $user = $githubMgr->getUser();
+  echo $user->login;
 
   
   //$smarty->assign("client_id",$CONFIG['github']['client_id']);
