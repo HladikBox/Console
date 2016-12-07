@@ -7,7 +7,10 @@
   $githubMgr->setAccessToken($_REQUEST["code"]);
   $user = $githubMgr->getUser();
   $userMgr->syncGithubUser($user);
-  $_SESSION[SessionName]["user"]=$user;
+  $_SESSION[SESSIONNAME]["user"]=$user;
+  
+  WindowRedirect("/");
+
 
   //$smarty->assign("client_id",$CONFIG['github']['client_id']);
   //$smarty->assign("client_secret",$CONFIG['github']['client_secret']);

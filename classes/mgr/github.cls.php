@@ -7,8 +7,8 @@ class GithubMgr {
   public function __construct($client_id, $client_secret) {
     $this->client_id = $client_id;
     $this->client_secret = $client_secret;
-    $this->access_token=$_SESSION[SessionName]["access_token"];
-    $this->code=$_SESSION[SessionName]["code"];
+    $this->access_token=$_SESSION[SESSIONNAME]["access_token"];
+    $this->code=$_SESSION[SESSIONNAME]["code"];
 
 
   }
@@ -31,8 +31,8 @@ class GithubMgr {
     if($access_token==""){
         return;
     }
-    $_SESSION[SessionName]["code"]=$code;
-    $_SESSION[SessionName]["access_token"]=$access_token;
+    $_SESSION[SESSIONNAME]["code"]=$code;
+    $_SESSION[SESSIONNAME]["access_token"]=$access_token;
     $this->access_token=$access_token;
     $this->code=$code;
   }
