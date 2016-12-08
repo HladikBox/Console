@@ -1,9 +1,10 @@
 RewriteEngine on
 
 RewriteRule ^$ index.php
+RewriteRule ^login/$ login.php
 
-RewriteRule ^([a-zA-Z0-9\-]*)$ $1.php
-RewriteRule ^([a-zA-Z0-9\-]*)/$ $1.php
+RewriteRule ^([a-zA-Z0-9\-]*)$ $1/index.php
+RewriteRule ^([a-zA-Z0-9\-]*)/$ $1/index.php
 
 RewriteRule ^([a-zA-Z0-9\-]*)/([a-zA-Z0-9\-]*)$ /$1/$2.php 
 RewriteRule ^([a-zA-Z0-9\-]*)/([a-zA-Z0-9\-]*)/$ /$1/$2.php 

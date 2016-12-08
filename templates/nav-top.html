@@ -192,7 +192,12 @@
     <!-- /.dropdown -->
     <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-            <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+            {{if $User.avatar_url!=""}}
+            <img src="{{$User.avatar_url}}" style="height:20px;" />
+            {{else}}
+            <i class="fa fa-user fa-fw"></i>
+            {{/if}}
+            <i class="fa fa-caret-down"></i>
         </a>
         <ul class="dropdown-menu dropdown-user">
             <li>
