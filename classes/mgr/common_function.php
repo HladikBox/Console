@@ -97,6 +97,10 @@ function ResetNameWithLang($arr,$lang){
 
 }
 
+function outputJson($result){
+    return json_encode($result);
+}
+
 function outputXml($result){
 header("Content-type: text/xml");
   $str="<?xml version=\"1.0\" encoding=\"utf-8\" ?><table>";

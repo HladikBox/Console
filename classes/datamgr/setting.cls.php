@@ -6,12 +6,12 @@
  * Window - Preferences - PHPeclipse - PHP - Code Templates
  */
 
- class Mgr
+ class SettingMgr
  {
  	private static $instance = null;
 	public static $dbmgr = null;
 	public static function getInstance() {
-		return self :: $instance != null ? self :: $instance : new Mgr();
+		return self :: $instance != null ? self :: $instance : new SettingMgr();
 	}
 
 	private function __construct() {
@@ -27,10 +27,17 @@
 	{
 		
 	}
+
+    public function getSetting(){
+        $sql="select * from tb_setting";
+        $query = $this->dbmgr->query($sql);
+        $result = $this->dbmgr->fetch_array($query);
+        return $result;
+    }
  }
  
- $Mgr=Mgr::getInstance();
- $Mgr->dbmgr=$dbmgr;
+ $settingMgr=SettingMgr::getInstance();
+ $settingMgr->dbmgr=$dbmgr;
 
 
 

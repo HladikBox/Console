@@ -21,6 +21,13 @@ $User=$_SESSION[SESSIONNAME]["user"];
 
 $smarty->assign("User",$User);
 
+  include ROOT.'/classes/datamgr/setting.cls.php';
+  $setting=$settingMgr->getSetting();
+  if(!isset($_SESSION[SESSIONNAME]["setting"]))
+  {
+    $_SESSION[SESSIONNAME]["setting"]=$setting;
+  }
 
+$smarty->assign("Setting",$setting);
 
 ?>

@@ -18,12 +18,28 @@ USE `applink`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Dumping events for database 'applink'
+-- Table structure for table `tb_setting`
 --
 
+DROP TABLE IF EXISTS `tb_setting`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tb_setting` (
+  `id` int(11) NOT NULL,
+  `max_created_apps` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
 --
--- Dumping routines for database 'applink'
+-- Dumping data for table `tb_setting`
 --
+
+LOCK TABLES `tb_setting` WRITE;
+/*!40000 ALTER TABLE `tb_setting` DISABLE KEYS */;
+INSERT INTO `tb_setting` VALUES (1,5);
+/*!40000 ALTER TABLE `tb_setting` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
