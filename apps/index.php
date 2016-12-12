@@ -7,6 +7,12 @@
  */
   require '../include/common.inc.php';
   include ROOT.'/include/init.inc.php';
+
+  
+  include ROOT.'/classes/datamgr/app.cls.php';
+  $app_type_list=$appMgr->getAppTypeList();
+
+  $smarty->assign("app_type_list",$app_type_list);
   
   $smarty->display(ROOT.'/templates/apps/index.html');
   

@@ -46,7 +46,7 @@ CREATE TABLE `tb_user_github` (
 
 LOCK TABLES `tb_user_github` WRITE;
 /*!40000 ALTER TABLE `tb_user_github` DISABLE KEYS */;
-INSERT INTO `tb_user_github` VALUES (621332,'alucard263096','https://github.com/alucard263096','https://api.github.com/users/alucard263096/repos','https://avatars.githubusercontent.com/u/621332?v=3','https://api.github.com/users/alucard263096','User','蔡小司','Helpfooter company','Shenzhen','2016-12-07 22:15:41','2016-12-07 22:15:41');
+INSERT INTO `tb_user_github` VALUES (621332,'alucard263096','https://github.com/alucard263096','https://api.github.com/users/alucard263096/repos','https://avatars.githubusercontent.com/u/621332?v=3','https://api.github.com/users/alucard263096','User','蔡小司','Helpfooter company','Shenzhen','2016-12-07 22:15:41','2016-12-10 23:07:58');
 /*!40000 ALTER TABLE `tb_user_github` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -59,4 +59,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-12-07 22:29:08
+-- Dump completed on 2016-12-12  0:29:56
