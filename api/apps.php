@@ -12,7 +12,7 @@
 
   $action=$_REQUEST["action"];
   if($action=="createapp"){
-    outputJson($appMgr->createApp());
+    outputJson($appMgr->createApp($_REQUEST["name"],$_REQUEST["type"]));
   }
 
 

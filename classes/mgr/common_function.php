@@ -12,6 +12,7 @@ function encode($str)
 function parameter_filter($param)
 {
 	$arr=array("'"=>"''");
+  $param = trim($param);
 	$param = strtr($param,$arr);
 	$param = mysql_escape_string($param);
 	return $param;
@@ -98,7 +99,7 @@ function ResetNameWithLang($arr,$lang){
 }
 
 function outputJson($result){
-    return json_encode($result);
+    die( json_encode($result));
 }
 
 function outputXml($result){
@@ -130,30 +131,25 @@ header("Content-type: text/xml");
 	$str.="</row>";
   }
   $str.="</table>";
-  echo $str;
-  exit;
+echo $str;
+exit;
 }
 function utf8_for_xml($string)
 {
-    $ret= preg_replace ('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', ' ', $string);
-	return $ret;
+$ret= preg_replace ('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', ' ', $string);
+return $ret;
 }
-function outResult($num,$message,$return=""){
-	$array=Array();
-	$arr=Array();
-	$arr[0]=$num;
-	$arr["id"]=$num;
-	$arr[1]=$message;
-	$arr["result"]=$message;
-	$arr[2]=$return;
-	$arr["return"]=$return;
-	$array[]=$arr;
-	return $array;
+function outResult($code,$message,$return=""){
+  $arr=Array();
+  $arr["code"]=$code;
+  $arr["result"]=$message;
+  $arr["return"]=$return;
+  return $arr;
 }
 function spliteArray($array,$count){
-	$ret=array();
-	$group=0;
-	for($i=0;$i<count($array);$i++){
+$ret=array();
+$group=0;
+for($i=0;$i<count($array);$i++){
 		if($i>0&&$i%$count==0){
 			$group++;
 		}
