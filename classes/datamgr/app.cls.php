@@ -29,12 +29,12 @@
         return $result;
     }
     public function createApp($name,$type){
-      Global $UID;
+      Global $UID,$Setting;
       
       $name=parameter_filter($name);
       $type=$type+0;
-      if(empty($name)){
-        return outResult("-1","应用名称不能为空","appname");
+      if(empty($name)||strlen($name)>15){
+        return outResult("-1","应用名称不能为空并控制在15个字符以内","appname");
       }
       if($type==0){
         return outResult("-1","请选择应用类型","apptype");
@@ -45,12 +45,29 @@
       if($result[0]!=""){
         return outResult("-1","这个应用名称已经用过了","appname");
       }
+
+      $sql="select 1 from tb_app where user_id=$UID and status<>'D'";
+      $query = $this->dbmgr->query($sql);
+      $result = $this->dbmgr->fetch_array_all($query);
+
+
+      if(count($result)>=$Setting["max_created_apps"]){
+        return outResult("-1","你已经超过创建应用的数量了","appname");
+      }
+   
       $id=$this->dbmgr->getNewId("tb_app");
       $sql="insert into tb_app (id,user_id,name,`type`,created_date) values
       ($id,$UID,'$name',$type,now())";
       $this->dbmgr->query($sql);
       
       return outResult(0,"保存成功",$id);
+    }
+    public function getUserApps($UID){
+      $sql="select * from tb_app where user_id=$UID  order by created_date desc";
+      $query = $this->dbmgr->query($sql);
+      $result = $this->dbmgr->fetch_array_all($query);
+
+      return $result;
     }
  }
  

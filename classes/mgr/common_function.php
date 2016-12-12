@@ -320,4 +320,8 @@ function getPageNumberCodeArray($sum,$curpage,$eachincount){
       //echo $res;
       return $res;
       }
+      function getDateStr($date){
+            $time=strtotime($date);
+            return date("Y-m-d",$time);
+      }
       ?>

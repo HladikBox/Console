@@ -33,3 +33,7 @@ bin/
 access_token.json
 jsapi_ticket.json
 /.vs/config/applicationhost.config
+
+.DS_Store
+
+Console.sublime-workspace

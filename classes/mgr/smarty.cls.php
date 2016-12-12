@@ -13,7 +13,11 @@ $smarty->cache_dir=ROOT."/cache";
 $smarty->left_delimiter="{{";
 $smarty->right_delimiter="}}";
 
+function smarty_getDateStr($arg){
+	return getDateStr($arg["date"]);
+}
 
+$smarty->register_function("getDateStr","smarty_getDateStr");  
 
  $smarty->assign('rootpath',$CONFIG['smarty']['rootpath']);
  $smarty->assign('smarty_root',ROOT."/templates");

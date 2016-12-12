@@ -8,7 +8,7 @@
     <section class="content-header">
         <div class="row">
             <div class="col-md-10">
-                <h1>
+                <h2>
                     <i class="fa fa-th"></i> 我的应用({{$appcount+0}}/{{$Setting.max_created_apps}})
                     <small>您可以在这里创建、设置并管理您的应用</small>
                 </h1>
@@ -29,6 +29,31 @@
             <p>您还没有任何应用,先去<a href="#" class="btnCreate">新建一个应用</a>吧!</p>
         </div>
         {{else}}
+
+          {{foreach from=$apps item=rs}}
+          <div class="box box-primary collapsed-box box-solid">
+            <div class="box-header with-border">
+              <h3 class="box-title">
+                {{$rs.name}}
+              </h3>
+              <h3 class="box-title">
+                {{$rs.name}}
+              </h3>
+
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+                </button>
+              </div>
+              <!-- /.box-tools -->
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              The body of the box
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        {{/foreach}}
 
         {{/if}}
 

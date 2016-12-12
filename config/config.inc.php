@@ -22,7 +22,7 @@ $CONFIG['error_handler'] ="E_ALL";
 
 #[Database]
 $CONFIG['database']['provider']	= 'mysql';  //mssql,sqlsrv
-$CONFIG['database']['host']		= 'localhost';  
+$CONFIG['database']['host']		= "127.0.0.1";
 $CONFIG['database']['database']	= 'applink';  
 $CONFIG['database']['user']		= 'root';  
 $CONFIG['database']['psw']		= 'root'; 

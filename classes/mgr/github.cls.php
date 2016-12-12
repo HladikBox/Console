@@ -38,7 +38,7 @@ class GithubMgr {
   }
 
   public function getUser(){
-    $url="https://api.github.com/user?access_token=d6f2f1f5cb4b4f77803a77ac6bb16d45978bc5c7";
+    $url="https://api.github.com/user?access_token=dcc45be8d6f66d1603ca4966032296b53aafcfab";
     $res= request_get($url);
     $res=json_decode($res,true);
     //print_r($res);
