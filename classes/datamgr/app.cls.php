@@ -50,20 +50,20 @@
       $query = $this->dbmgr->query($sql);
       $result = $this->dbmgr->fetch_array_all($query);
 
-
+    
       if(count($result)>=$Setting["max_created_apps"]){
-        return outResult("-1","你已经超过创建应用的数量了","appname");
+        return outResult("-1","你已经超过创建应用的数量了".$Setting["max_created_apps"]."a","appname");
       }
    
       $id=$this->dbmgr->getNewId("tb_app");
-      $sql="insert into tb_app (id,user_id,name,`type`,created_date) values
-      ($id,$UID,'$name',$type,now())";
+      $sql="insert into tb_app (id,user_id,name,`type`,created_date,`status,run_status) values
+      ($id,$UID,'$name',$type,now(),'A','C')";
       $this->dbmgr->query($sql);
       
       return outResult(0,"保存成功",$id);
     }
     public function getUserApps($UID){
-      $sql="select * from tb_app where user_id=$UID  order by created_date desc";
+      $sql="select * from tb_app where user_id=$UID and status<>'D' order by created_date desc";
       $query = $this->dbmgr->query($sql);
       $result = $this->dbmgr->fetch_array_all($query);
 

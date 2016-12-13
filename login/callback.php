@@ -5,8 +5,9 @@
   include ROOT.'/classes/mgr/github.cls.php';
   include ROOT.'/classes/datamgr/user.cls.php';
   //$githubMgr->setAccessToken($_REQUEST["code"]);
-  $user = $githubMgr->getUser();
-  $userMgr->syncGithubUser($user);
+  //$user = $githubMgr->getUser();
+  //$userMgr->syncGithubUser($user);
+  $user = $userMgr->getDebugUser();
   $_SESSION[SESSIONNAME]["user"]=$user;
   
   WindowRedirect("/");

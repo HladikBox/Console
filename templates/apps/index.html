@@ -31,26 +31,41 @@
         {{else}}
 
           {{foreach from=$apps item=rs}}
-          <div class="box box-primary collapsed-box box-solid">
+          <div class="box box-primary collapsed-box box-solid appinfobox" id="app_{{$rs.id}}" aid="{{$rs.id}}">
             <div class="box-header with-border">
-              <h3 class="box-title">
-                {{$rs.name}}
-              </h3>
-              <h3 class="box-title">
-                {{$rs.name}}
-              </h3>
-
-              <div class="box-tools pull-right">
-                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
-                </button>
-              </div>
+                <div class="row">
+                    <div class="col-md-4">aaa</div>
+                    <div class="col-md-3"><span>{{getDateStr date=$rs.created_date}} 创建</span></div>
+                    <div class="col-md-3">
+                        <span>运行状态</span>
+                        <i class="fa fa-play"></i> 
+                        <i class="fa fa-stop"></i>
+                    </div>
+                    <div class="col-md-1">
+                        <i class="fa fa-trash"></i>
+                    </div>
+                    <div class="col-md-1">
+                        <i class="fa fa-pencil-square-o"></i>
+                    </div>
+                </div>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                </div>
               <!-- /.box-tools -->
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              The body of the box
+              暂无数据
             </div>
-            <!-- /.box-body -->
+            <!-- /.box-body -->              
+              <!-- Loading (remove the following to stop the loading)-->
+              <div class="overlay">
+                  <i class="fa fa-spinner fa-spin"></i>
+              </div>
+              <!-- end loading -->
+
           </div>
           <!-- /.box -->
         {{/foreach}}
@@ -130,24 +145,24 @@
             $("#btnCreatApp").attr("disabled", true);
             $(".has-error .help-block").html("");
             $(".has-error").removeClass("has-error");
-
-            $.post("{{$rootpath}}api/apps", json, function (data) {
-                try{
-                    data = JSON.parse(data);
-                    if (data.code == 0) {
-                        alert("添加成功");
-                    } else if(data.code==-1) {
-                        $("#" + data.return + "_fg").addClass("has-error");
-                        $("#" + data.return + "_fg .help-block").html(data.result);
-                    } 
-                    
-                }catch(e){
-                    alert("系统错误，请联系管理员"+data);
+            getJSON("{{$rootpath}}api/apps", json, function (data) {
+                if (data.code == 0) {
+                    alert("添加成功");
+                } else if (data.code == -1) {
+                    $("#" + data.return + "_fg").addClass("has-error");
+                    $("#" + data.return + "_fg .help-block").html(data.result);
                 }
+            }, function () {
                 $("#btnCreatApp").attr("disabled", false);
             });
+            
         });
-
+        $(".appinfobox").each(function () {
+            var idname = $(this).attr("id");
+            var id = $(this).attr("aid");
+            var json = { "action": "getappinfo", "id": id };
+            
+        });
     });
     
 </script>

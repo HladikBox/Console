@@ -23,12 +23,12 @@ $UID=$User["id"];
 $smarty->assign("User",$User);
 
   include ROOT.'/classes/datamgr/setting.cls.php';
-  $setting=$settingMgr->getSetting();
+  $Setting=$settingMgr->getSetting();
   if(!isset($_SESSION[SESSIONNAME]["setting"]))
   {
-    $_SESSION[SESSIONNAME]["setting"]=$setting;
+    $_SESSION[SESSIONNAME]["setting"]=$Setting;
   }
 
-$smarty->assign("Setting",$setting);
+$smarty->assign("Setting",$Setting);
 
 ?>

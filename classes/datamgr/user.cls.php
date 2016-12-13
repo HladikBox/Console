@@ -21,6 +21,13 @@
 	{
 		
 	}
+  
+  public function getDebugUser(){
+     $sql="select * from tb_user_github where id=621332";
+		$query = $this->dbmgr->query($sql);
+		$result = $this->dbmgr->fetch_array($query);
+    return $result;
+  }
 
 	public function syncGithubUser($user){
 		//print_r($user);
