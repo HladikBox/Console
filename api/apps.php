@@ -13,6 +13,8 @@
   $action=$_REQUEST["action"];
   if($action=="createapp"){
     outputJson($appMgr->createApp($_REQUEST["name"],$_REQUEST["type"]));
+  }elseif ($action=="getappinfo") {
+  	outputJson($appMgr->getAppInfo($UID,$_REQUEST["id"]));
   }
 
 

@@ -24,25 +24,25 @@
 
     <!-- Main content -->
     <section class="content">
-        {{if $appcount==0}}
-        <div class="well ">
+        <div class="well hide " id="noapptips">
             <p>您还没有任何应用,先去<a href="#" class="btnCreate">新建一个应用</a>吧!</p>
         </div>
-        {{else}}
-
           {{foreach from=$apps item=rs}}
-          <div class="box box-primary collapsed-box box-solid appinfobox" id="app_{{$rs.id}}" aid="{{$rs.id}}">
+          <div class="box box-primary collapsed-box box-solid appinfobox" id="app_{{$rs.id}}" >
             <div class="box-header with-border">
                 <div class="row">
                     <div class="col-md-4">aaa</div>
                     <div class="col-md-3"><span>{{getDateStr date=$rs.created_date}} 创建</span></div>
                     <div class="col-md-3">
-                        <span>运行状态</span>
+                        {{if $rs.run_status=="C"}}
+                        <a class="badge bg-yellow-active"> 等待配置</a>
+                        {{else}}
                         <i class="fa fa-play"></i> 
                         <i class="fa fa-stop"></i>
+                        {{/if}}
                     </div>
                     <div class="col-md-1">
-                        <i class="fa fa-trash"></i>
+                        <a href="#" class="fa fa-trash btnDeleteApp" aid="{{$rs.id}}" ></a>
                     </div>
                     <div class="col-md-1">
                         <i class="fa fa-pencil-square-o"></i>
@@ -60,17 +60,10 @@
               暂无数据
             </div>
             <!-- /.box-body -->              
-              <!-- Loading (remove the following to stop the loading)-->
-              <div class="overlay">
-                  <i class="fa fa-spinner fa-spin"></i>
-              </div>
-              <!-- end loading -->
 
           </div>
           <!-- /.box -->
         {{/foreach}}
-
-        {{/if}}
 
     </section>
     <!-- /.content -->
@@ -86,7 +79,7 @@
                 </button>
                 <h4 class="modal-title">创建应用</h4>
             </div>
-            <div class="modal-body">、
+            <div class="modal-body">
                 <div class="row">
                     <div class="col-md-10">
                         <form class="form-horizontal">
@@ -129,6 +122,14 @@
 
 <script>
     $(document).ready(function () {
+        function checkIfShowNoaPP(){
+            if($(".appinfobox").length>0){
+                $("#noapptips").addClass("hide");
+            }else{
+                $("#noapptips").removeClass("hide");
+            }
+        }
+        checkIfShowNoaPP();
         $(".btnCreate").click(function () {
             $("#dlgCreate").modal("show");
         });
@@ -157,12 +158,20 @@
             });
             
         });
-        $(".appinfobox").each(function () {
-            var idname = $(this).attr("id");
-            var id = $(this).attr("aid");
-            var json = { "action": "getappinfo", "id": id };
-            
+
+        $(".btnDeleteApp").click(function(){
+            var id=$(this).attr("aid");
+            var json={
+                action:"deleteapp",
+                id:id
+            };
+            warning("删除应用后将不可恢复，请先保存好数据，继续请按确定",function(){
+                getJSON("")
+                $("#app_"+id).remove();
+                checkIfShowNoaPP();
+            });
         });
+        
     });
     
 </script>

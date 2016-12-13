@@ -56,7 +56,7 @@
       }
    
       $id=$this->dbmgr->getNewId("tb_app");
-      $sql="insert into tb_app (id,user_id,name,`type`,created_date,`status,run_status) values
+      $sql="insert into tb_app (id,user_id,name,`type`,created_date,`status`,run_status) values
       ($id,$UID,'$name',$type,now(),'A','C')";
       $this->dbmgr->query($sql);
       
@@ -66,6 +66,13 @@
       $sql="select * from tb_app where user_id=$UID and status<>'D' order by created_date desc";
       $query = $this->dbmgr->query($sql);
       $result = $this->dbmgr->fetch_array_all($query);
+
+      return $result;
+    }
+    public function getAppInfo($UID,$id){
+      $sql="select * from tb_app where user_id=$UID and id=$id ";
+      $query = $this->dbmgr->query($sql);
+      $result = $this->dbmgr->fetch_array($query);
 
       return $result;
     }
