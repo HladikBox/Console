@@ -8,7 +8,7 @@
             if(uiback!=null)
             uiback();
         } catch (e) {
-            alert(data);
+            alert(e.message+data);
             if(errorfunction!=null){
                 errorfunction();
             }else{

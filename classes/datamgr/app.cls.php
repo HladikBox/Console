@@ -39,7 +39,7 @@
       if($type==0){
         return outResult("-1","请选择应用类型","apptype");
       }
-      $sql="select 1 from tb_app where name='$name' and user_id=$UID ";
+      $sql="select 1 from tb_app where name='$name' and user_id=$UID and status<>'D' ";
       $query = $this->dbmgr->query($sql);
       $result = $this->dbmgr->fetch_array($query);
       if($result[0]!=""){
@@ -63,14 +63,18 @@
       return outResult(0,"保存成功",$id);
     }
     public function getUserApps($UID){
-      $sql="select * from tb_app where user_id=$UID and status<>'D' order by created_date desc";
+      $sql="select a.*,ap.name type_name from tb_app a
+      inner join tb_app_type ap on a.type=ap.id
+      where user_id=$UID and a.status<>'D' order by created_date desc";
       $query = $this->dbmgr->query($sql);
       $result = $this->dbmgr->fetch_array_all($query);
 
       return $result;
     }
     public function getAppInfo($UID,$id){
-      $sql="select * from tb_app where user_id=$UID and id=$id ";
+      $sql="select a.*,ap.name type_name from tb_app a
+      inner join tb_app_type ap on a.type=ap.id 
+      where user_id=$UID and a.id=$id ";
       $query = $this->dbmgr->query($sql);
       $result = $this->dbmgr->fetch_array($query);
 

@@ -1,0 +1,17 @@
+<?php
+/*
+ * Created on 2012-6-30
+ *
+ * To change the template for this generated file go to
+ * Window - Preferences - PHPeclipse - PHP - Code Templates
+ */
+
+  require '../include/common.inc.php';
+  include ROOT.'/include/init.inc.php';
+  
+  include ROOT.'/classes/datamgr/app.cls.php';
+  $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["id"]);
+  //print_r($appinfo);
+  $smarty->assign("appinfo",$appinfo);
+  $smarty->display(ROOT.'/templates/apps/config.html');
+?>

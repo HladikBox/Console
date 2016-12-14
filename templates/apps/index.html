@@ -31,11 +31,12 @@
           <div class="box box-primary collapsed-box box-solid appinfobox" id="app_{{$rs.id}}" >
             <div class="box-header with-border">
                 <div class="row">
-                    <div class="col-md-4">aaa</div>
-                    <div class="col-md-3"><span>{{getDateStr date=$rs.created_date}} 创建</span></div>
+                    <div class="col-md-3">{{$rs.name}}</div>
+                    <div class="col-md-2">{{$rs.type_name}}类应用</div>
+                    <div class="col-md-2"><span>{{getDateStr date=$rs.created_date}} 创建</span></div>
                     <div class="col-md-3">
                         {{if $rs.run_status=="C"}}
-                        <a class="badge bg-yellow-active"> 等待配置</a>
+                        <a href="/apps/config?id={{$rs.id}}" class="badge bg-yellow-active"> 等待配置</a>
                         {{else}}
                         <i class="fa fa-play"></i> 
                         <i class="fa fa-stop"></i>
@@ -45,7 +46,7 @@
                         <a href="#" class="fa fa-trash btnDeleteApp" aid="{{$rs.id}}" ></a>
                     </div>
                     <div class="col-md-1">
-                        <i class="fa fa-pencil-square-o"></i>
+                        <a href="/apps/config?id={{$rs.id}}"  class="fa fa-pencil-square-o"></a>
                     </div>
                 </div>
                 <div class="box-tools pull-right">
@@ -149,7 +150,7 @@
             $(".has-error").removeClass("has-error");
             getJSON("{{$rootpath}}api/apps", json, function (data) {
                 if (data.code == 0) {
-                    alert("添加成功");
+                    window.location.href="{{$rootpath}}apps/config?id="+data.return;
                 } else if (data.code == -1) {
                     $("#" + data.return + "_fg").addClass("has-error");
                     $("#" + data.return + "_fg .help-block").html(data.result);
