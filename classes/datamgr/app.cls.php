@@ -76,6 +76,10 @@
 
       return $result;
     }
+    public function deleteApp($UID,$id){
+       $sql="update tb_app set `status`='D' where user_id=$UID and id=$id ";
+       $query = $this->dbmgr->query($sql);
+    }
  }
  
  $appMgr=AppMgr::getInstance();

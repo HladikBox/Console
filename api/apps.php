@@ -15,6 +15,8 @@
     outputJson($appMgr->createApp($_REQUEST["name"],$_REQUEST["type"]));
   }elseif ($action=="getappinfo") {
   	outputJson($appMgr->getAppInfo($UID,$_REQUEST["id"]));
+  }elseif ($action=="deleteapp") {
+  	outputJson($appMgr->deleteApp($UID,$_REQUEST["id"]));
   }
 
 

@@ -1,10 +1,11 @@
 ﻿function getJSON(url, json, success, uiback,errorfunction) {
     $.post(url, json, function (data) {
+        //alert(data);
         try {
             data = JSON.parse(data);
             if(success!=null)
             success(data);
-            if(uiback!-null)
+            if(uiback!=null)
             uiback();
         } catch (e) {
             alert(data);
@@ -25,7 +26,6 @@ function info(context,okfunction){
 }
 
 function warning(context,okfunction){
-    
     privatealert("警告",context,"warning",okfunction);
 }
 
