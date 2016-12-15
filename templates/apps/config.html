@@ -34,49 +34,49 @@
               <form class="form-horizontal">
                 <div class="box-body">
                   <div class="form-group">
-                    <label for="app_name" class="col-sm-2 control-label"><span style="color:red;">*</span> 应用名称</label>
-                    <div class="col-sm-10">
+                    <label for="app_name" class="col-md-2 control-label"><span style="color:red;">*</span> 应用名称</label>
+                    <div class="col-md-10">
                       <input type="text" class="form-control" value="{{$appinfo.name}}" id="app_name" placeholder="请输入应用名称">
                     </div>
                   </div>
                     <div class="form-group" >
-                        <label for="app_type"  class="col-sm-2 control-label"><span style="color:red;">*</span> 应用类型</label>
-                        <div class="col-sm-10">
+                        <label for="app_type"  class="col-md-2 control-label"><span style="color:red;">*</span> 应用类型</label>
+                        <div class="col-md-10">
                             <select class="form-control" id="app_type" >
                                 {{foreach from=$app_type_list item=rs}}
                                 <option value="{{$rs.id}}" {{if $rs.id==$appinfo.type}}selected{{/if}}>{{$rs.name}}</option>
                                 {{/foreach}}
                             </select>
                         </div>
-                        <span class="help-block col-sm-offset-4"></span>
+                        <span class="help-block col-md-offset-4"></span>
                     </div>
                   <div class="form-group">
-                    <label for="app_alias" class="col-sm-2 control-label">应用代号</label>
-                    <div class="col-sm-10">
+                    <label for="app_alias" class="col-md-2 control-label">应用代号</label>
+                    <div class="col-md-10">
                       <input type="text" class="form-control" readonly="readonly" value="{{$appinfo.alias}}" id="app_alias" placeholder="代号作为应用的识别码，用于生成各种标示，请接收15位以下英文字符，自动转换为小写">
                     </div>
                   </div>
                   <div class="form-group">
-                    <label for="info_description" class="col-sm-2 control-label">应用介绍</label>
-                    <div class="col-sm-10">
+                    <label for="info_description" class="col-md-2 control-label">应用介绍</label>
+                    <div class="col-md-10">
                       <input type="text" class="form-control" id="info_description" placeholder="请简单的介绍一下你的应用">
                     </div>
                   </div>
                   <div class="form-group">
-                    <label for="info_contact_name" class="col-sm-2 control-label">联系人姓名</label>
-                    <div class="col-sm-10">
+                    <label for="info_contact_name" class="col-md-2 control-label">联系人姓名</label>
+                    <div class="col-md-10">
                       <input type="text" class="form-control" id="info_contact_name" placeholder="请输入你的姓名，在有问题的时候我们能够找到你">
                     </div>
                   </div>
                   <div class="form-group">
-                    <label for="info_contact_online" class="col-sm-2 control-label">联系人在线联系方式</label>
-                    <div class="col-sm-10">
+                    <label for="info_contact_online" class="col-md-2 control-label">联系人在线联系方式</label>
+                    <div class="col-md-10">
                       <input type="text" class="form-control" id="info_contact_online" placeholder="请输入随便一种网上的联络方式，我们会优先在网上找你">
                     </div>
                   </div>
                   <div class="form-group">
-                    <label for="info_contact_mobile" class="col-sm-2 control-label">联系人手机号码</label>
-                    <div class="col-sm-10">
+                    <label for="info_contact_mobile" class="col-md-2 control-label">联系人手机号码</label>
+                    <div class="col-md-10">
                       <input type="text" class="form-control" id="info_contact_mobile" placeholder="请输入你的联系人手机号码，必要时我们可以找到你本人">
                     </div>
                   </div>
@@ -98,26 +98,26 @@
                   <form class="form-horizontal">
                     <div class="box-body">
                       <div class="form-group">
-                        <label for="db_dev_server" class="col-sm-2 control-label">数据库连接</label>
-                        <div class="col-sm-10">
+                        <label for="db_dev_server" class="col-md-2 control-label">数据库连接</label>
+                        <div class="col-md-10">
                           <input type="text" class="form-control" value="mysql.app-link.org:3306" readonly="readonly" id="db_dev_server" placeholder="数据库的连接字符串，例如mysql.app-link.org:3306">
                         </div>
                       </div>
                       <div class="form-group">
-                        <label for="db_dev_db_name" class="col-sm-2 control-label">数据库名称</label>
-                        <div class="col-sm-10">
-                          <input type="text" class="form-control" id="db_dev_db_name"  readonly="readonly" value="{{$User.login}}_{{$appinfo.alias}}" placeholder="连接数据库的scheme名称">
+                        <label for="db_dev_dbname" class="col-md-2 control-label">数据库名称</label>
+                        <div class="col-md-10">
+                          <input type="text" class="form-control" id="db_dev_dbname"  readonly="readonly" value="{{$User.login}}_{{$appinfo.alias}}" placeholder="连接数据库的scheme名称">
                         </div>
                       </div>
                       <div class="form-group">
-                        <label for="db_dev_login" class="col-sm-2 control-label">用户名</label>
-                        <div class="col-sm-10">
+                        <label for="db_dev_login" class="col-md-2 control-label">用户名</label>
+                        <div class="col-md-10">
                           <input type="text" class="form-control" id="db_dev_login"  readonly="readonly" value="{{$User.login}}" placeholder="连接数据库使用的用户名">
                         </div>
                       </div>
                       <div class="form-group">
-                        <label for="db_dev_password" class="col-sm-2 control-label">密码</label>
-                        <div class="col-sm-10">
+                        <label for="db_dev_password" class="col-md-2 control-label">密码</label>
+                        <div class="col-md-10">
                           <input type="text" class="form-control" id="db_dev_password"  readonly="readonly" value="{{$appinfo.dev_password}}" placeholder="连接数据库使用的密码">
                         </div>
                       </div>
@@ -137,27 +137,30 @@
                   <form class="form-horizontal">
                     <div class="box-body">
                       <div class="form-group">
-                        <label for="db_live_server" class="col-sm-2 control-label">数据库连接</label>
-                        <div class="col-sm-10">
-                          <input type="text" class="form-control"  id="db_live_server" placeholder="数据库的连接字符串，例如mysql.app-link.org:3306">
+                        <label for="db_live_server" class="col-md-2 control-label">数据库连接</label>
+                        <div class="col-md-10">
+                          <input type="text" class="form-control"  id="db_live_server" value="{{$appinfo.live_server}}" placeholder="数据库的连接字符串，例如mysql.app-link.org:3306">
                         </div>
                       </div>
                       <div class="form-group">
-                        <label for="db_live_db_name" class="col-sm-2 control-label">数据库名称</label>
-                        <div class="col-sm-10">
-                          <input type="text" class="form-control" id="db_live_db_name" placeholder="连接数据库的scheme名称">
+                        <label for="db_live_dbname" class="col-md-2 control-label">数据库名称</label>
+                        <div class="col-md-10">
+                          <input type="text" class="form-control" id="db_live_dbname" value="{{$appinfo.live_dbname}}"  placeholder="连接数据库的scheme名称">
                         </div>
                       </div>
                       <div class="form-group">
-                        <label for="db_live_login" class="col-sm-2 control-label">用户名</label>
-                        <div class="col-sm-10">
-                          <input type="text" class="form-control" id="db_live_login"   placeholder="连接数据库使用的用户名">
+                        <label for="db_live_login" class="col-md-2 control-label">用户名</label>
+                        <div class="col-md-10">
+                          <input type="text" class="form-control" id="db_live_login"   value="{{$appinfo.live_login}}"  placeholder="连接数据库使用的用户名">
                         </div>
                       </div>
                       <div class="form-group">
-                        <label for="db_live_password" class="col-sm-2 control-label">密码</label>
-                        <div class="col-sm-10">
-                          <input type="password" class="form-control" id="db_live_password" placeholder="连接数据库使用的密码">
+                        <label for="db_live_password" class="col-md-2 control-label">密码</label>
+                        <div class="col-md-9">
+                          <input type="password" class="form-control" id="db_live_password"  value="{{$appinfo.live_password}}"  placeholder="连接数据库使用的密码">
+                        </div>
+                        <div class="col-md-1">
+                          <button type="button" class="btn btn-block btn-info" id="btnLiveDbConnecTest" >测试</button>
                         </div>
                       </div>
                     </div>
@@ -177,28 +180,28 @@
 
                 <div class="box box-info">
                   <div class="box-header with-border">
-                    <h3 class="box-title">开发环境工作目录</h3>
+                    <h3 class="box-title">开发环境FTP工作目录</h3>
                   </div>
                   <!-- /.box-header -->
                   <!-- form start -->
                   <form class="form-horizontal">
                     <div class="box-body">
                       <div class="form-group">
-                        <label for="workspace_dev_ftpserver" class="col-sm-2 control-label">FTP路径</label>
-                        <div class="col-sm-10">
-                          <input type="text" class="form-control" value="ftp://ftp.app-link.org:21/{{$User.login}}/{{$appinfo.alias}}" readonly="readonly" id="workspace_dev_ftpserver" placeholder="代码的FTP服务器地址">
+                        <label for="workspace_dev_ftpurl" class="col-md-2 control-label">FTP路径</label>
+                        <div class="col-md-10">
+                          <input type="text" class="form-control" value="ftp://ftp.app-link.org:21/{{$User.login}}/{{$appinfo.alias}}" readonly="readonly" id="workspace_dev_ftpurl" placeholder="代码的FTP服务器地址">
                         </div>
                       </div>
                       <div class="form-group">
-                        <label for="workspace_dev_ftplogin" class="col-sm-2 control-label">用户名</label>
-                        <div class="col-sm-10">
-                          <input type="text" class="form-control" id="workspace_dev_ftplogin"  readonly="readonly" value="{{$User.login}}" placeholder="连接使用的用户名">
+                        <label for="workspace_dev_ftplogin" class="col-md-2 control-label">用户名</label>
+                        <div class="col-md-10">
+                          <input type="text" class="form-control" id="workspace_dev_ftplogin"  readonly="readonly" value="{{$User.login}}" placeholder="连接FTP目录使用的用户名">
                         </div>
                       </div>
                       <div class="form-group">
-                        <label for="workspace_dev_ftppassword" class="col-sm-2 control-label">密码</label>
-                        <div class="col-sm-10">
-                          <input type="text" class="form-control" id="workspace_dev_ftppassword"  readonly="readonly" value="{{$appinfo.dev_ftppassword}}" placeholder="连接数据库使用的密码">
+                        <label for="workspace_dev_ftppassword" class="col-md-2 control-label">密码</label>
+                        <div class="col-md-10">
+                          <input type="text" class="form-control" id="workspace_dev_ftppassword"  readonly="readonly" value="{{$appinfo.dev_ftppassword}}" placeholder="连接FTP使用的密码">
                         </div>
                       </div>
                     </div>
@@ -208,36 +211,33 @@
 
 
                 
-                <div class="box box-success">
+                <div class="box box-info">
                   <div class="box-header with-border">
-                    <h3 class="box-title">正式环境数据库配置 <small class="badge bg-green">可待开发完成后发布时再配置</small></h3>
+                    <h3 class="box-title">正式环境FTP发布目录 <small class="badge bg-green">可待开发完成后发布时再配置</small></h3>
                   </div>
                   <!-- /.box-header -->
                   <!-- form start -->
                   <form class="form-horizontal">
                     <div class="box-body">
                       <div class="form-group">
-                        <label for="db_live_server" class="col-sm-2 control-label">数据库连接</label>
-                        <div class="col-sm-10">
-                          <input type="text" class="form-control"  id="db_live_server" placeholder="数据库的连接字符串，例如mysql.app-link.org:3306">
+                        <label for="workspace_live_ftpurl" class="col-md-2 control-label">FTP路径</label>
+                        <div class="col-md-10">
+                          <input type="text" class="form-control" value="{{$appinfo.live_ftpurl}}" id="workspace_live_ftpurl" placeholder="代码的FTP服务器地址">
                         </div>
                       </div>
                       <div class="form-group">
-                        <label for="db_live_db_name" class="col-sm-2 control-label">数据库名称</label>
-                        <div class="col-sm-10">
-                          <input type="text" class="form-control" id="db_live_db_name" placeholder="连接数据库的scheme名称">
+                        <label for="workspace_live_ftplogin" class="col-md-2 control-label">用户名</label>
+                        <div class="col-md-10">
+                          <input type="text" class="form-control" id="workspace_live_ftplogin" value="{{$appinfo.live_ftplogin}}" placeholder="连接FTP目录使用的用户名">
                         </div>
                       </div>
                       <div class="form-group">
-                        <label for="db_live_login" class="col-sm-2 control-label">用户名</label>
-                        <div class="col-sm-10">
-                          <input type="text" class="form-control" id="db_live_login"   placeholder="连接数据库使用的用户名">
+                        <label for="workspace_live_ftppassword" class="col-md-2 control-label">密码</label>
+                        <div class="col-md-9">
+                          <input type="text" class="form-control" id="workspace_live_ftppassword" value="{{$appinfo.live_ftppassword}}" placeholder="连接FTP使用的密码">
                         </div>
-                      </div>
-                      <div class="form-group">
-                        <label for="db_live_password" class="col-sm-2 control-label">密码</label>
-                        <div class="col-sm-10">
-                          <input type="password" class="form-control" id="db_live_password" placeholder="连接数据库使用的密码">
+                        <div class="col-md-1">
+                          <button type="button" class="btn btn-block btn-info" >测试</button>
                         </div>
                       </div>
                     </div>
@@ -245,8 +245,12 @@
                   </form>
                 </div>
 
-
-
+                  {{if $appinfo.run_status=='C'}}
+                  <button type="button" class="btn btn-success" >生成应用</button>
+                  {{else}}
+                  <button type="button" class="btn btn-primary" >保存</button>
+                  {{/if}}
+                  <button type="button" class="btn btn-default pull-right" onclick="goTab('tab_2')">>>配置数据库</button>
 
 
               </div>
@@ -257,8 +261,11 @@
           </div>
           <!-- nav-tabs-custom -->
           <button class="btn  ">返回</button>
-          <button class="btn btn-warning ">复原</button>
-          <button class="btn btn-primary ">保存</button>
+                  {{if $appinfo.run_status=='C'}}
+                  <button type="button" class="btn btn-success" >生成应用</button>
+                  {{else}}
+                  <button type="button" class="btn btn-primary" >保存</button>
+                  {{/if}}
 
     </section>
     <!-- /.content -->
@@ -270,6 +277,31 @@
     $(document).ready(function(){
         $(".btnTabClick").click(function(){
             $("#tabtitle").html('<i class="fa fa-th" ></i> '+$(this).text());
+        });
+        $("#btnLiveDbConnecTest").click(function(){
+            var server=$("#db_live_server").val();
+            var dbname=$("#db_live_dbname").val();
+            var login=$("#db_live_login").val();
+            var password=$("#db_live_password").val();
+            if($.trim(server)==""
+              ||$.trim(dbname)==""
+              ||$.trim(login)==""
+              ||$.trim(password)==""){
+              info("数据库相关连接信息不能为空");
+            }
+            $("#btnLiveDbConnecTest").attr("disabled", true);
+            var json={action:"testconnect",server,
+            dbname:dbname,login:login,password:password
+            };
+            getJSON("{{$rootpath}}api/mysql", json, function (data) {
+                if (data.code == 0) {
+                    info("数据库连接成功");
+                } else  {
+                    error(data.result);
+                }
+            },function(){
+              $("#btnLiveDbConnecTest").attr("disabled", false);
+            });
         });
     });
     function goTab(tabname){

@@ -35,9 +35,9 @@ function error(context,okfunction){
 }
 
 function privatealert(title,context,className,okfunction){
-    $("#dlgAlert .modal-header").attr("className","modal-header");
+    $("#dlgAlert .modal-header").removeClass("bg-info").removeClass("bg-warning").removeClass("bg-danger");
     $("#dlgAlert .modal-header").addClass("bg-"+className);
-    $("#dlgBtnAlertOK").attr("className","btn");
+    $("#dlgBtnAlertOK").removeClass("btn-info").removeClass("btn-warning").removeClass("btn-danger");
     $("#dlgBtnAlertOK").addClass("btn-"+className);
     $("#dlgAlert .modal-title").html(title);
     $("#dlgAlert .modal-body").html(context);

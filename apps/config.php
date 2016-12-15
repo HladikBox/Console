@@ -16,6 +16,7 @@
 
   $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["id"]);
   $appinfo["dev_password"]=md5($User["login"]."_".$appinfo["alias"]);
+  $appinfo["dev_ftppassword"]=md5($User["login"]."_".$appinfo["alias"]);
   //print_r($appinfo);
   $smarty->assign("appinfo",$appinfo);
   $smarty->display(ROOT.'/templates/apps/config.html');
