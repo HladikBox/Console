@@ -9,12 +9,15 @@ function encode($str)
 {
 	return mb_convert_encoding($str,'UTF-8');
 }
-function parameter_filter($param)
+function parameter_filter($param,$htmlchange=true)
 {
 	$arr=array("'"=>"''");
-  $param = trim($param);
+      $param = trim($param);
 	$param = strtr($param,$arr);
 	$param = mysql_escape_string($param);
+      if($htmlchange){
+         $param = htmlspecialchars($param);
+      }
 	return $param;
 }
 function ParentRedirect($url)

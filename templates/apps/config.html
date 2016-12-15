@@ -22,60 +22,236 @@
     <section class="content">
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs pull-right">
-              <li class="active"><a href="#tab_1-1" data-toggle="tab" class="btnTabClick">基本信息</a></li>
-              <li><a href="#tab_2-2" data-toggle="tab" class="btnTabClick">数据库配置</a></li>
-              <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                  操作 <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu">
-                  <li role="presentation"><a role="menuitem" tabindex="-1" href="#">保存</a></li>
-                  <li role="presentation"><a role="menuitem" tabindex="-1" href="#">复原</a></li>
-                  <li role="presentation" class="divider"></li>
-                  <li role="presentation"><a role="menuitem" tabindex="-1" href="/apps">返回</a></li>
-                </ul>
-              </li>
-              <li class="pull-left header" id="tabtitle"><i class="fa fa-th" ></i> Tab 1</li>
+              <li class="active"><a href="#tab_1" id="btn_tab_1" data-toggle="tab" class="btnTabClick">基本信息</a></li>
+              <li><a href="#tab_2" id="btn_tab_2" data-toggle="tab" class="btnTabClick">数据库配置</a></li>
+              <li><a href="#tab_3" id="btn_tab_3" data-toggle="tab" class="btnTabClick">发布配置</a></li>
+              <li class="pull-left header" id="tabtitle"><i class="fa fa-th" ></i> 基本信息</li>
             </ul>
             <div class="tab-content">
-              <div class="tab-pane active" id="tab_1-1">
+              <div class="tab-pane active" id="tab_1">
                 
               <!-- form start -->
               <form class="form-horizontal">
                 <div class="box-body">
                   <div class="form-group">
-                    <label for="appname" class="col-sm-2 control-label">应用名称</label>
+                    <label for="app_name" class="col-sm-2 control-label"><span style="color:red;">*</span> 应用名称</label>
                     <div class="col-sm-10">
-                      <input type="text" class="form-control" id="appname" placeholder="应用名称">
+                      <input type="text" class="form-control" value="{{$appinfo.name}}" id="app_name" placeholder="请输入应用名称">
                     </div>
                   </div>
-                            <div class="form-group" >
-                                <label  class="col-sm-2 control-label">应用类型</label>
-                                <div class="col-sm-10">
-                                    <select class="form-control" id="apptype" >
-                                        {{foreach from=$app_type_list item=rs}}
-                                        <option value="{{$rs.id}}" {{if $rs.id==$appinfo.type}}selected{{/if}}>{{$rs.name}}</option>
-                                        {{/foreach}}
-                                    </select>
-                                </div>
-                                <span class="help-block col-sm-offset-4"></span>
-                            </div>
+                    <div class="form-group" >
+                        <label for="app_type"  class="col-sm-2 control-label"><span style="color:red;">*</span> 应用类型</label>
+                        <div class="col-sm-10">
+                            <select class="form-control" id="app_type" >
+                                {{foreach from=$app_type_list item=rs}}
+                                <option value="{{$rs.id}}" {{if $rs.id==$appinfo.type}}selected{{/if}}>{{$rs.name}}</option>
+                                {{/foreach}}
+                            </select>
+                        </div>
+                        <span class="help-block col-sm-offset-4"></span>
+                    </div>
+                  <div class="form-group">
+                    <label for="app_alias" class="col-sm-2 control-label">应用代号</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" readonly="readonly" value="{{$appinfo.alias}}" id="app_alias" placeholder="代号作为应用的识别码，用于生成各种标示，请接收15位以下英文字符，自动转换为小写">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="info_description" class="col-sm-2 control-label">应用介绍</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="info_description" placeholder="请简单的介绍一下你的应用">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="info_contact_name" class="col-sm-2 control-label">联系人姓名</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="info_contact_name" placeholder="请输入你的姓名，在有问题的时候我们能够找到你">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="info_contact_online" class="col-sm-2 control-label">联系人在线联系方式</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="info_contact_online" placeholder="请输入随便一种网上的联络方式，我们会优先在网上找你">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="info_contact_mobile" class="col-sm-2 control-label">联系人手机号码</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="info_contact_mobile" placeholder="请输入你的联系人手机号码，必要时我们可以找到你本人">
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-default" onclick="goTab('tab_2')"><<配置数据库</button>
                 </div>
                 <!-- /.box-body -->
 
               </form>
               </div>
               <!-- /.tab-pane -->
-              <div class="tab-pane" id="tab_2-2">
-                The European languages are members of the same family. Their separate existence is a myth.
-                For science, music, sport, etc, Europe uses the same vocabulary. The languages only differ
-                in their grammar, their pronunciation and their most common words. Everyone realizes why a
-                new common language would be desirable: one could refuse to pay expensive translators. To
-                achieve this, it would be necessary to have uniform grammar, pronunciation and more common
-                words. If several languages coalesce, the grammar of the resulting language is more simple
-                and regular than that of the individual languages.
+              <div class="tab-pane" id="tab_2">
+                
+                <div class="box box-info">
+                  <div class="box-header with-border">
+                    <h3 class="box-title">开发环境数据库配置</h3>
+                  </div>
+                  <!-- /.box-header -->
+                  <!-- form start -->
+                  <form class="form-horizontal">
+                    <div class="box-body">
+                      <div class="form-group">
+                        <label for="db_dev_server" class="col-sm-2 control-label">数据库连接</label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control" value="mysql.app-link.org:3306" readonly="readonly" id="db_dev_server" placeholder="数据库的连接字符串，例如mysql.app-link.org:3306">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="db_dev_db_name" class="col-sm-2 control-label">数据库名称</label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control" id="db_dev_db_name"  readonly="readonly" value="{{$User.login}}_{{$appinfo.alias}}" placeholder="连接数据库的scheme名称">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="db_dev_login" class="col-sm-2 control-label">用户名</label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control" id="db_dev_login"  readonly="readonly" value="{{$User.login}}" placeholder="连接数据库使用的用户名">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="db_dev_password" class="col-sm-2 control-label">密码</label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control" id="db_dev_password"  readonly="readonly" value="{{$appinfo.dev_password}}" placeholder="连接数据库使用的密码">
+                        </div>
+                      </div>
+                    </div>
+                    <!-- /.box-footer -->
+                  </form>
+                </div>
+
+
+                
+                <div class="box box-success">
+                  <div class="box-header with-border">
+                    <h3 class="box-title">正式环境数据库配置 <small class="badge bg-green">可待开发完成后发布时再配置</small></h3>
+                  </div>
+                  <!-- /.box-header -->
+                  <!-- form start -->
+                  <form class="form-horizontal">
+                    <div class="box-body">
+                      <div class="form-group">
+                        <label for="db_live_server" class="col-sm-2 control-label">数据库连接</label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control"  id="db_live_server" placeholder="数据库的连接字符串，例如mysql.app-link.org:3306">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="db_live_db_name" class="col-sm-2 control-label">数据库名称</label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control" id="db_live_db_name" placeholder="连接数据库的scheme名称">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="db_live_login" class="col-sm-2 control-label">用户名</label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control" id="db_live_login"   placeholder="连接数据库使用的用户名">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="db_live_password" class="col-sm-2 control-label">密码</label>
+                        <div class="col-sm-10">
+                          <input type="password" class="form-control" id="db_live_password" placeholder="连接数据库使用的密码">
+                        </div>
+                      </div>
+                    </div>
+                    <!-- /.box-footer -->
+                  </form>
+                </div>
+
+
+                  <button type="button" class="btn btn-default" onclick="goTab('tab_3')"><<配置发布环境</button>
+                  <button type="button" class="btn btn-default pull-right" onclick="goTab('tab_1')">>>填写基本信息</button>
+
               </div>
               <!-- /.tab-pane -->
+
+              <div class="tab-pane" id="tab_3">
+                
+
+                <div class="box box-info">
+                  <div class="box-header with-border">
+                    <h3 class="box-title">开发环境工作目录</h3>
+                  </div>
+                  <!-- /.box-header -->
+                  <!-- form start -->
+                  <form class="form-horizontal">
+                    <div class="box-body">
+                      <div class="form-group">
+                        <label for="workspace_dev_ftpserver" class="col-sm-2 control-label">FTP路径</label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control" value="ftp://ftp.app-link.org:21/{{$User.login}}/{{$appinfo.alias}}" readonly="readonly" id="workspace_dev_ftpserver" placeholder="代码的FTP服务器地址">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="workspace_dev_ftplogin" class="col-sm-2 control-label">用户名</label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control" id="workspace_dev_ftplogin"  readonly="readonly" value="{{$User.login}}" placeholder="连接使用的用户名">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="workspace_dev_ftppassword" class="col-sm-2 control-label">密码</label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control" id="workspace_dev_ftppassword"  readonly="readonly" value="{{$appinfo.dev_ftppassword}}" placeholder="连接数据库使用的密码">
+                        </div>
+                      </div>
+                    </div>
+                    <!-- /.box-footer -->
+                  </form>
+                </div>
+
+
+                
+                <div class="box box-success">
+                  <div class="box-header with-border">
+                    <h3 class="box-title">正式环境数据库配置 <small class="badge bg-green">可待开发完成后发布时再配置</small></h3>
+                  </div>
+                  <!-- /.box-header -->
+                  <!-- form start -->
+                  <form class="form-horizontal">
+                    <div class="box-body">
+                      <div class="form-group">
+                        <label for="db_live_server" class="col-sm-2 control-label">数据库连接</label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control"  id="db_live_server" placeholder="数据库的连接字符串，例如mysql.app-link.org:3306">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="db_live_db_name" class="col-sm-2 control-label">数据库名称</label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control" id="db_live_db_name" placeholder="连接数据库的scheme名称">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="db_live_login" class="col-sm-2 control-label">用户名</label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control" id="db_live_login"   placeholder="连接数据库使用的用户名">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="db_live_password" class="col-sm-2 control-label">密码</label>
+                        <div class="col-sm-10">
+                          <input type="password" class="form-control" id="db_live_password" placeholder="连接数据库使用的密码">
+                        </div>
+                      </div>
+                    </div>
+                    <!-- /.box-footer -->
+                  </form>
+                </div>
+
+
+
+
+
+              </div>
+
+
             </div>
             <!-- /.tab-content -->
           </div>
@@ -96,4 +272,7 @@
             $("#tabtitle").html('<i class="fa fa-th" ></i> '+$(this).text());
         });
     });
+    function goTab(tabname){
+        $("#btn_"+tabname).click();
+    }
 </script>

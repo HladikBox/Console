@@ -103,6 +103,13 @@
                                 </div>
                                 <span class="help-block col-sm-offset-4"></span>
                             </div>
+                            <div class="form-group" id="appalias_fg">
+                                <label  class="col-sm-3 control-label"><span style="color:red;">*</span> 应用代号</label>
+                                <div class="col-sm-9">
+                                    <input type="text" maxlength="15" class="form-control" id="appalias" placeholder="代号作为应用的识别码，用于生成各种标示，请接收15位以下英文字符，自动转换为小写">
+                                </div>
+                                <span class="help-block col-sm-offset-4"></span>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -140,10 +147,12 @@
 
             var name = $("#appname").val();
             var type = $("#apptype").val();
+            var alias = $("#appalias").val();
             var json = {
                 action: "createapp",
                 name: name,
-                type:type
+                type:type,
+                alias:alias
             };
             $("#btnCreatApp").attr("disabled", true);
             $(".has-error .help-block").html("");
