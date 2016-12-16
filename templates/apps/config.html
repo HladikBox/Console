@@ -180,28 +180,34 @@
 
                 <div class="box box-info">
                   <div class="box-header with-border">
-                    <h3 class="box-title">开发环境FTP工作目录</h3>
+                    <h3 class="box-title">开发环境工作目录</h3>
                   </div>
                   <!-- /.box-header -->
                   <!-- form start -->
                   <form class="form-horizontal">
                     <div class="box-body">
                       <div class="form-group">
-                        <label for="workspace_dev_ftpurl" class="col-md-2 control-label">FTP路径</label>
-                        <div class="col-md-10">
-                          <input type="text" class="form-control" value="ftp://ftp.app-link.org:21/{{$User.login}}/{{$appinfo.alias}}" readonly="readonly" id="workspace_dev_ftpurl" placeholder="代码的FTP服务器地址">
+                        <label for="workspace_dev_remote_server" class="col-md-2 control-label">路径</label>
+                        <div class="col-md-1">
+                            <select class="form-control" id="workspace_dev_remote_type" disabled="disabled"  >
+                                <option value="SSH" selected="selected">SSH</option>
+                                <option value="FTP">FTP</option>
+                            </select>
+                        </div>
+                        <div class="col-md-9">
+                          <input type="text" class="form-control" value="remote.app-link.org:21/{{$User.login}}/{{$appinfo.alias}}" readonly="readonly" id="workspace_dev_remote_server" placeholder="部署代码的远程服务器地址">
                         </div>
                       </div>
                       <div class="form-group">
-                        <label for="workspace_dev_ftplogin" class="col-md-2 control-label">用户名</label>
+                        <label for="workspace_dev_remote_login" class="col-md-2 control-label">用户名</label>
                         <div class="col-md-10">
-                          <input type="text" class="form-control" id="workspace_dev_ftplogin"  readonly="readonly" value="{{$User.login}}" placeholder="连接FTP目录使用的用户名">
+                          <input type="text" class="form-control" id="workspace_dev_remote_login"  readonly="readonly" value="{{$User.login}}" placeholder="连接目录使用的用户名">
                         </div>
                       </div>
                       <div class="form-group">
-                        <label for="workspace_dev_ftppassword" class="col-md-2 control-label">密码</label>
+                        <label for="workspace_dev_remote_password" class="col-md-2 control-label">密码</label>
                         <div class="col-md-10">
-                          <input type="text" class="form-control" id="workspace_dev_ftppassword"  readonly="readonly" value="{{$appinfo.dev_ftppassword}}" placeholder="连接FTP使用的密码">
+                          <input type="text" class="form-control" id="workspace_dev_remote_password"  readonly="readonly" value="{{$appinfo.dev_remote_password}}" placeholder="连接使用的密码">
                         </div>
                       </div>
                     </div>
@@ -220,24 +226,27 @@
                   <form class="form-horizontal">
                     <div class="box-body">
                       <div class="form-group">
-                        <label for="workspace_live_ftpurl" class="col-md-2 control-label">FTP路径</label>
-                        <div class="col-md-10">
-                          <input type="text" class="form-control" value="{{$appinfo.live_ftpurl}}" id="workspace_live_ftpurl" placeholder="代码的FTP服务器地址">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label for="workspace_live_ftplogin" class="col-md-2 control-label">用户名</label>
-                        <div class="col-md-10">
-                          <input type="text" class="form-control" id="workspace_live_ftplogin" value="{{$appinfo.live_ftplogin}}" placeholder="连接FTP目录使用的用户名">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label for="workspace_live_ftppassword" class="col-md-2 control-label">密码</label>
-                        <div class="col-md-9">
-                          <input type="text" class="form-control" id="workspace_live_ftppassword" value="{{$appinfo.live_ftppassword}}" placeholder="连接FTP使用的密码">
-                        </div>
+                        <label for="workspace_live_remote_server" class="col-md-2 control-label">路径</label>
                         <div class="col-md-1">
-                          <button type="button" class="btn btn-block btn-info" >测试</button>
+                            <select class="form-control" id="workspace_live_remote_type" disabled="disabled"  >
+                                <option value="SSH" selected="selected">SSH</option>
+                                <option value="FTP">FTP</option>
+                            </select>
+                        </div>
+                        <div class="col-md-9">
+                          <input type="text" class="form-control" value="" readonly="readonly" id="workspace_live_remote_server" placeholder="部署代码的远程服务器地址">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="workspace_live_remote_login" class="col-md-2 control-label">用户名</label>
+                        <div class="col-md-10">
+                          <input type="text" class="form-control" id="workspace_live_remote_login"  readonly="readonly" value="{{$User.login}}" placeholder="连接目录使用的用户名">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="workspace_live_remote_password" class="col-md-2 control-label">密码</label>
+                        <div class="col-md-10">
+                          <input type="text" class="form-control" id="workspace_live_remote_password"  readonly="readonly" value="{{$appinfo.live_remote_password}}" placeholder="连接使用的密码">
                         </div>
                       </div>
                     </div>
