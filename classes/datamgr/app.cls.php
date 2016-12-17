@@ -98,6 +98,36 @@
        $sql="update tb_app set `status`='D' where user_id=$UID and id=$id ";
        $query = $this->dbmgr->query($sql);
     }
+
+    public function saveConfig($app_id,$arr){
+      $app_id=$app_id+0;
+      $name=parameter_filter($arr["name"]);
+      $type=parameter_filter($arr["type"]);
+      $alias=parameter_filter($arr["alias"]);
+
+      $description=parameter_filter($arr["description"]);
+      $contact_name=parameter_filter($arr["contact_name"]);
+      $contact_online=parameter_filter($arr["contact_online"]);
+      $contact_mobile=parameter_filter($arr["contact_mobile"]);
+
+
+      $live_server=parameter_filter($arr["live_server"]);
+      $live_dbname=parameter_filter($arr["live_dbname"]);
+      $live_login=parameter_filter($arr["live_login"]);
+      $live_password=parameter_filter($arr["live_password"]);
+
+
+
+      $live_remote_type=parameter_filter($arr["live_remote_type"]);
+      $live_remote_server=parameter_filter($arr["live_remote_server"]);
+      $live_remote_login=parameter_filter($arr["live_remote_login"]);
+      $live_remote_password=parameter_filter($arr["live_remote_password"]);
+
+      
+
+
+    }
+
  }
  
  $appMgr=AppMgr::getInstance();

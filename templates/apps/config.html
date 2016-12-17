@@ -59,25 +59,25 @@
                   <div class="form-group">
                     <label for="info_description" class="col-md-2 control-label">应用介绍</label>
                     <div class="col-md-10">
-                      <input type="text" class="form-control" id="info_description" placeholder="请简单的介绍一下你的应用">
+                      <input type="text" class="form-control" id="info_description" placeholder="请简单的介绍一下你的应用" value="{{$appinfo.description}}">
                     </div>
                   </div>
                   <div class="form-group">
                     <label for="info_contact_name" class="col-md-2 control-label">联系人姓名</label>
                     <div class="col-md-10">
-                      <input type="text" class="form-control" id="info_contact_name" placeholder="请输入你的姓名，在有问题的时候我们能够找到你">
+                      <input type="text" class="form-control" id="info_contact_name" placeholder="请输入你的姓名，在有问题的时候我们能够找到你" value="{{$appinfo.contact_name}}">
                     </div>
                   </div>
                   <div class="form-group">
                     <label for="info_contact_online" class="col-md-2 control-label">联系人在线联系方式</label>
                     <div class="col-md-10">
-                      <input type="text" class="form-control" id="info_contact_online" placeholder="请输入随便一种网上的联络方式，我们会优先在网上找你">
+                      <input type="text" class="form-control" id="info_contact_online" value="{{$appinfo.contact_online}}" placeholder="请输入随便一种网上的联络方式，我们会优先在网上找你">
                     </div>
                   </div>
                   <div class="form-group">
                     <label for="info_contact_mobile" class="col-md-2 control-label">联系人手机号码</label>
                     <div class="col-md-10">
-                      <input type="text" class="form-control" id="info_contact_mobile" placeholder="请输入你的联系人手机号码，必要时我们可以找到你本人">
+                      <input type="text" class="form-control" id="info_contact_mobile" placeholder="请输入你的联系人手机号码，必要时我们可以找到你本人" value="{{$appinfo.contact_mobile}}">
                     </div>
                   </div>
                   <button type="button" class="btn btn-default" onclick="goTab('tab_2')"><<配置数据库</button>
@@ -217,9 +217,9 @@
 
 
                 
-                <div class="box box-info">
+                <div class="box box-success">
                   <div class="box-header with-border">
-                    <h3 class="box-title">正式环境FTP发布目录 <small class="badge bg-green">可待开发完成后发布时再配置</small></h3>
+                    <h3 class="box-title">正式环境发布目录 <small class="badge bg-green">可待开发完成后发布时再配置</small></h3>
                   </div>
                   <!-- /.box-header -->
                   <!-- form start -->
@@ -228,25 +228,28 @@
                       <div class="form-group">
                         <label for="workspace_live_remote_server" class="col-md-2 control-label">路径</label>
                         <div class="col-md-1">
-                            <select class="form-control" id="workspace_live_remote_type" disabled="disabled"  >
-                                <option value="SSH" selected="selected">SSH</option>
-                                <option value="FTP">FTP</option>
+                            <select class="form-control" id="workspace_live_remote_type"  >
+                                <option value="SSH" {{if $live_remote_type=="SSH"}}selected="selected"{{/if}}>SSH</option>
+                                <option value="FTP" {{if $live_remote_type=="FTP"}}selected="selected"{{/if}}>FTP</option>
                             </select>
                         </div>
                         <div class="col-md-9">
-                          <input type="text" class="form-control" value="" readonly="readonly" id="workspace_live_remote_server" placeholder="部署代码的远程服务器地址">
+                          <input type="text" class="form-control" value="{{$live_remote_server}}" id="workspace_live_remote_server" placeholder="部署代码的远程服务器地址">
                         </div>
                       </div>
                       <div class="form-group">
                         <label for="workspace_live_remote_login" class="col-md-2 control-label">用户名</label>
                         <div class="col-md-10">
-                          <input type="text" class="form-control" id="workspace_live_remote_login"  readonly="readonly" value="{{$User.login}}" placeholder="连接目录使用的用户名">
+                          <input type="text" class="form-control" id="workspace_live_remote_login"  value="{{$appinfo.live_remote_login}}" placeholder="连接目录使用的用户名">
                         </div>
                       </div>
                       <div class="form-group">
                         <label for="workspace_live_remote_password" class="col-md-2 control-label">密码</label>
-                        <div class="col-md-10">
-                          <input type="text" class="form-control" id="workspace_live_remote_password"  readonly="readonly" value="{{$appinfo.live_remote_password}}" placeholder="连接使用的密码">
+                        <div class="col-md-9">
+                          <input type="password" class="form-control" id="workspace_live_remote_password" value="{{$appinfo.live_remote_password}}" placeholder="连接使用的密码">
+                        </div>
+                        <div class="col-md-1">
+                          <button type="button" class="btn btn-block btn-info" id="btnLiveRemoteConnecTest" >测试</button>
                         </div>
                       </div>
                     </div>
@@ -255,9 +258,9 @@
                 </div>
 
                   {{if $appinfo.run_status=='C'}}
-                  <button type="button" class="btn btn-success" >生成应用</button>
+                  <button type="button" class="btn btn-success btnCreateApp" >生成应用</button>
                   {{else}}
-                  <button type="button" class="btn btn-primary" >保存</button>
+                  <button type="button" class="btn btn-primary btnSaveApp" >保存</button>
                   {{/if}}
                   <button type="button" class="btn btn-default pull-right" onclick="goTab('tab_2')">>>配置数据库</button>
 
@@ -271,9 +274,9 @@
           <!-- nav-tabs-custom -->
           <button class="btn  ">返回</button>
                   {{if $appinfo.run_status=='C'}}
-                  <button type="button" class="btn btn-success" >生成应用</button>
+                  <button type="button" class="btn btn-success btnCreateApp" >生成应用</button>
                   {{else}}
-                  <button type="button" class="btn btn-primary" >保存</button>
+                  <button type="button" class="btn btn-primary btnSaveApp" >保存</button>
                   {{/if}}
 
     </section>
@@ -299,7 +302,7 @@
               info("数据库相关连接信息不能为空");
             }
             $("#btnLiveDbConnecTest").attr("disabled", true);
-            var json={action:"testconnect",server,
+            var json={action:"testconnect",server:server,
             dbname:dbname,login:login,password:password
             };
             getJSON("{{$rootpath}}api/mysql", json, function (data) {
@@ -312,6 +315,36 @@
               $("#btnLiveDbConnecTest").attr("disabled", false);
             });
         });
+        $("#btnLiveRemoteConnecTest").click(function(){
+            var type=$("#workspace_live_remote_type").val();
+            var server=$("#workspace_live_remote_server").val();
+            var login=$("#workspace_live_remote_login").val();
+            var password=$("#live_remote_password").val();
+            if($.trim(server)==""
+              ||$.trim(dbname)==""
+              ||$.trim(login)==""
+              ||$.trim(password)==""){
+              info("发布目录相关连接信息不能为空");
+            }
+            $("#btnLiveRemoteConnecTest").attr("disabled", true);
+            var json={action:"testconnect",type:type,
+            server:server,login:login,password:password
+            };
+            getJSON("{{$rootpath}}api/remote", json, function (data) {
+                if (data.code == 0) {
+                    info("正式环境发布目录连接成功");
+                } else  {
+                    error(data.result);
+                }
+            },function(){
+              $("#btnLiveRemoteConnecTest").attr("disabled", false);
+            });
+        });
+
+        $(".btnCreateApp")click("")
+
+
+
     });
     function goTab(tabname){
         $("#btn_"+tabname).click();
