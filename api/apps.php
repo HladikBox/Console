@@ -18,10 +18,12 @@
   }elseif ($action=="deleteapp") {
   	outputJson($appMgr->deleteApp($UID,$_REQUEST["id"]));
   }elseif($action=="saveconfig"){
+    sleep(2);
+    outputJSON(outResult("-1","找不到你要调用的请求","找不到你要调用的请求"));
     $appMgr->saveConfig($_REQUEST["app_id"],$_REQUEST);
   }
 
-outputJSON(outResult("-1","找不到你要调用的请求",""));
+outputJSON(outResult("-1","找不到你要调用的请求","找不到你要调用的请求"));
 
   
 ?>

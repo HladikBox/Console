@@ -24,7 +24,8 @@
             <ul class="nav nav-tabs pull-right">
               <li class="active"><a href="#tab_1" id="btn_tab_1" data-toggle="tab" class="btnTabClick">基本信息</a></li>
               <li><a href="#tab_2" id="btn_tab_2" data-toggle="tab" class="btnTabClick">数据库配置</a></li>
-              <li><a href="#tab_3" id="btn_tab_3" data-toggle="tab" class="btnTabClick">发布配置</a></li>
+              <li><a href="#tab_3" id="btn_tab_3" data-toggle="tab" class="btnTabClick">发布环境配置</a></li>
+              <li><a href="#tab_4" id="btn_tab_4" data-toggle="tab" class="btnTabClick">生成应用</a></li>
               <li class="pull-left header" id="tabtitle"><i class="fa fa-th" ></i> 基本信息</li>
             </ul>
             <div class="tab-content">
@@ -80,7 +81,7 @@
                       <input type="text" class="form-control" id="info_contact_mobile" placeholder="请输入你的联系人手机号码，必要时我们可以找到你本人" value="{{$appinfo.contact_mobile}}">
                     </div>
                   </div>
-                  <button type="button" class="btn btn-default" onclick="goTab('tab_2')"><<配置数据库</button>
+                  <button type="button" class="btn btn-default" onclick="goTab('tab_2')">&lt;&lt;配置数据库</button>
                 </div>
                 <!-- /.box-body -->
 
@@ -169,8 +170,8 @@
                 </div>
 
 
-                  <button type="button" class="btn btn-default" onclick="goTab('tab_3')"><<配置发布环境</button>
-                  <button type="button" class="btn btn-default pull-right" onclick="goTab('tab_1')">>>填写基本信息</button>
+                  <button type="button" class="btn btn-default" onclick="goTab('tab_3')">&lt;&lt;配置发布环境</button>
+                  <button type="button" class="btn btn-default pull-right" onclick="goTab('tab_1')">&gt;&gt;填写基本信息</button>
 
               </div>
               <!-- /.tab-pane -->
@@ -188,13 +189,13 @@
                     <div class="box-body">
                       <div class="form-group">
                         <label for="workspace_dev_remote_server" class="col-md-2 control-label">路径</label>
-                        <div class="col-md-1">
+                        <div class="col-md-2">
                             <select class="form-control" id="workspace_dev_remote_type" disabled="disabled"  >
                                 <option value="SSH" selected="selected">SSH</option>
                                 <option value="FTP">FTP</option>
                             </select>
                         </div>
-                        <div class="col-md-9">
+                        <div class="col-md-8">
                           <input type="text" class="form-control" value="remote.app-link.org:21/{{$User.login}}/{{$appinfo.alias}}" readonly="readonly" id="workspace_dev_remote_server" placeholder="部署代码的远程服务器地址">
                         </div>
                       </div>
@@ -227,13 +228,13 @@
                     <div class="box-body">
                       <div class="form-group">
                         <label for="workspace_live_remote_server" class="col-md-2 control-label">路径</label>
-                        <div class="col-md-1">
+                        <div class="col-md-2">
                             <select class="form-control" id="workspace_live_remote_type"  >
                                 <option value="SSH" {{if $live_remote_type=="SSH"}}selected="selected"{{/if}}>SSH</option>
                                 <option value="FTP" {{if $live_remote_type=="FTP"}}selected="selected"{{/if}}>FTP</option>
                             </select>
                         </div>
-                        <div class="col-md-9">
+                        <div class="col-md-8">
                           <input type="text" class="form-control" value="{{$live_remote_server}}" id="workspace_live_remote_server" placeholder="部署代码的远程服务器地址">
                         </div>
                       </div>
@@ -258,14 +259,89 @@
                 </div>
 
                   {{if $appinfo.run_status=='C'}}
-                  <button type="button" class="btn btn-success btnCreateApp" >生成应用</button>
+                  <button type="button" class="btn btn-success btnCreateApp"  onclick="goTab('tab_4')">生成应用</button>
                   {{else}}
-                  <button type="button" class="btn btn-primary btnSaveApp" >保存</button>
+                  <button type="button" class="btn btn-primary btnCreateApp"  onclick="goTab('tab_4')">重新生成应用</button>
                   {{/if}}
-                  <button type="button" class="btn btn-default pull-right" onclick="goTab('tab_2')">>>配置数据库</button>
+                  <button type="button" class="btn btn-default pull-right" onclick="goTab('tab_2')">&gt;&gt;配置数据库</button>
 
 
               </div>
+
+
+
+              <div class="tab-pane" id="tab_4">
+                
+      <div class="box box-success">
+            <div class="box-header">
+              <h3 class="box-title" id="txtCreateAppTitle">发布应用到开发环境</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body no-padding">
+              <table class="table table-striped">
+                <tr>
+                  <th style="width: 10px">#</th>
+                  <th>任务</th>
+                  <th>状态</th>
+                  <th >结果</th>
+                </tr>
+                <tr id="pre_job_1" class="pre_job">
+                  <td>1.</td>
+                  <td>保存数据</td>
+                  <td class="pre_job_status"><span class="label label-default">待启动</span></td>
+                  <td class="pre_job_result"><span class="badge"></span></td>
+                </tr>
+                <tr id="pre_job_2" class="pre_job">
+                  <td>2.</td>
+                  <td>创建开发环境MYSQL数据库</td>
+                  <td class="pre_job_status"><span class="label label-default">待启动</span></td>
+                  <td class="pre_job_result"><span class="badge"></span></td>
+                </tr>
+                <tr id="pre_job_3" class="pre_job">
+                  <td>3.</td>
+                  <td>创建开发环境MYSQL数据库管理员表</td>
+                  <td class="pre_job_status"><span class="label label-default">待启动</span></td>
+                  <td class="pre_job_result"><span class="badge"></span></td>
+                </tr>
+                <tr id="pre_job_4" class="pre_job">
+                  <td>4.</td>
+                  <td>创建开发环境MYSQL数据库开发者登录账户</td>
+                  <td class="pre_job_status"><span class="label label-default">待启动</span></td>
+                  <td class="pre_job_result"><span class="badge"></span></td>
+                </tr>
+                <tr id="pre_job_5" class="pre_job">
+                  <td>5.</td>
+                  <td>创建开发环境远程工作目录</td>
+                  <td class="pre_job_status"><span class="label label-default">待启动</span></td>
+                  <td class="pre_job_result"><span class="badge"></span></td>
+                </tr>
+                <tr id="pre_job_6" class="pre_job">
+                  <td>6.</td>
+                  <td>初始化开发环境远程工作目录相关代码</td>
+                  <td class="pre_job_status"><span class="label label-default">待启动</span></td>
+                  <td class="pre_job_result"><span class="badge"></span></td>
+                </tr>
+                <tr id="pre_job_7" class="pre_job">
+                  <td>7.</td>
+                  <td>创建开发环境远程工作目录的登录账号</td>
+                  <td class="pre_job_status"><span class="label label-default">待启动</span></td>
+                  <td class="pre_job_result"><span class="badge"></span></td>
+                </tr>
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+
+
+
+
+                  <button type="button" class="btn btn-default" >返回我的应用</button>
+                  <button type="button" class="btn btn-default pull-right" onclick="goTab('tab_3')">&gt;&gt;配置发布环境</button>
+
+
+              </div>
+
 
 
             </div>
@@ -273,11 +349,10 @@
           </div>
           <!-- nav-tabs-custom -->
           <button class="btn  ">返回</button>
-                  {{if $appinfo.run_status=='C'}}
-                  <button type="button" class="btn btn-success btnCreateApp" >生成应用</button>
-                  {{else}}
-                  <button type="button" class="btn btn-primary btnSaveApp" >保存</button>
-                  {{/if}}
+          {{if $appinfo.run_status=='C'}}
+          <button type="button" class="btn btn-success btnCreateApp" >生成应用</button>
+          {{/if}}
+          <button type="button" class="btn btn-primary btnSaveApp" >保存</button>
 
     </section>
     <!-- /.content -->
@@ -341,11 +416,70 @@
             });
         });
 
-        $(".btnCreateApp")click("")
+        $(".btnCreateApp").click(function(){
+          goTab('tab_4');
+          prepare_job();
+          $(".btnCreateApp")
+        });
+
+        function prepare_job(){
+          $("#txtCreateAppTitle").text("正在生成应用开发环境...");
+          $(".pre_job .pre_job_status").html('<span class="label label-default">待启动</span>');
+          $(".pre_job .pre_job_result").html('<span class="badge"></span>');
+
+          job_1_saveconfig();
+        }
+
+        function job_1_saveconfig(nonext){
+          jobchangetoRunning(1);
+          var json={action:"saveconfig",name:$("app_name").val(),type:$("app_type").val(),alias:$("app_alias").val()
+          ,description:$("info_description").val(),contact_name:$("info_contact_name").val(),contact_online:$("info_contact_online").val(),contact_mobile:$("info_contact_mobile").val()
+          ,live_server:$("db_live_server").val(),live_dbname:$("db_live_dbname").val(),live_login:$("db_live_login").val(),live_password:$("db_live_password").val()
+          ,live_remote_type:$("workspace_live_remote_type").val(),live_remote_server:$("workspace_live_remote_server").val(),live_remote_login:$("workspace_live_remote_login").val(),live_remote_password:$("workspace_live_remote_password").val()
+            };
+
+            getJSON("/api/apps",json,function(data){
+              alert(data.result);
+                if(data.code=="0"){
+                    jobchangetofinish(1,"success","成功","运行成功");
+                }else if(data.code=="1"){
+
+                    jobchangetofinish(1,"warning","警告",data.result);
+                }else if(data.code=="-1"){
+
+                    jobchangetofinish(1,"danger","错误",data.result,"job_1_saveconfig");
+                }
+            },function(){
+                finish_jobs();
+            },function(){
+              jobchangetofinish(1,"danger","错误","未知错误原因，请联系系统管理员","job_1_saveconfig");
+            });
+          
+
+        }
+
+        function jobchangetoRunning(num){
+          $("#pre_job_"+num+" .pre_job_status").html('<span class="label label-info">启动中</span>');
+          $(".pre_job_"+num+" .pre_job_result").html('<span class="badge"></span>');
+        }
+        function jobchangetofinish(num,status,status_name,result,rejob){
+          var rejob_str="";
+          if(rejob!=null){
+            rejob_str="<a href='javascript:"+rejob+"(false);'>重新运行</a>";
+          }
+          $("#pre_job_"+num+" .pre_job_status").html('<span class="label label-'+status+'">'+status_name+'</span>');
+          $(".pre_job_"+num+" .pre_job_result").html('<span class="badge">'+result+rejob_str+'</span>');
+        }
+        function finish_jobs(){
+          $("#txtCreateAppTitle").text("应用环境生成结束");
+
+        }
+
 
 
 
     });
+
     function goTab(tabname){
         $("#btn_"+tabname).click();
     }

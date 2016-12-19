@@ -14,11 +14,11 @@
     if($type=="SSH"){
 
     }else if($type=="FTP"){
-
+      
     }
     outputJson(outResult(0,""));
   }
-outputJSON(outResult("-1","找不到你要调用的请求",""));
+ outputJSON(outResult("-1","找不到你要调用的请求",""));
 
 
 
