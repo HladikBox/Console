@@ -327,6 +327,12 @@
                   <td class="pre_job_status"><span class="label label-default">待启动</span></td>
                   <td class="pre_job_result"></td>
                 </tr>
+                  <tr id="pre_job_8" class="pre_job">
+                      <td>8.</td>
+                      <td>设置为已完成配置状态</td>
+                      <td class="pre_job_status"><span class="label label-default">待启动</span></td>
+                      <td class="pre_job_result"></td>
+                  </tr>
               </table>
             </div>
             <!-- /.box-body -->
@@ -336,7 +342,7 @@
 
 
 
-                  <button type="button" class="btn btn-default" >返回我的应用</button>
+                  <a href="/apps" class="btn btn-default" >返回我的应用</a>
                   <button type="button" class="btn btn-default pull-right" onclick="goTab('tab_3')">&gt;&gt;配置发布环境</button>
 
 
@@ -364,6 +370,29 @@
     $(document).ready(function(){
         $(".btnTabClick").click(function(){
             $("#tabtitle").html('<i class="fa fa-th" ></i> '+$(this).text());
+        });
+        $(".btnSaveApp").click(function () {
+            var json = {
+                action: "saveconfig", app_id: "{{$appinfo.id}}", name: $("#app_name").val(), type: $("#app_type").val(), alias: $("#app_alias").val()
+          , description: $("#info_description").val(), contact_name: $("#info_contact_name").val(), contact_online: $("#info_contact_online").val(), contact_mobile: $("#info_contact_mobile").val()
+          , live_server: $("#db_live_server").val(), live_dbname: $("#db_live_dbname").val(), live_login: $("#db_live_login").val(), live_password: $("#db_live_password").val()
+          , live_remote_type: $("#workspace_live_remote_type").val(), live_remote_server: $("#workspace_live_remote_server").val(), live_remote_login: $("#workspace_live_remote_login").val(), live_remote_password: $("#workspace_live_remote_password").val()
+            };
+            //alert(json.length);
+
+            getJSON("/api/apps", json, function (data) {
+                //alert(data.result);
+                if (data.code == "0") {
+                    info("保存成功");
+                } else {
+                    error("保存失败，未知错误原因，请联系系统管理员");
+                }
+            }, function () {
+                
+            }, function () {
+                
+            });
+
         });
         $("#btnLiveDbConnecTest").click(function(){
             var server=$("#db_live_server").val();
@@ -486,7 +515,7 @@
                     jobchangetofinish(2,"danger","错误",data.result,"job_2_createdatabase");
                 }
             },function(){
-                finish_jobs();
+                job_3_createdadmintable();
             },function(){
               jobchangetofinish(2,"danger","错误","未知错误原因，请联系系统管理员","job_2_createdatabase");
             });
@@ -494,6 +523,161 @@
 
         }
 
+        function job_3_createdadmintable(nonext) {
+            var step = 3;
+            jobchangetoRunning(step);
+            var json = { action: "createdadmintable", app_id: "{{$appinfo.id}}" };
+            //alert(json.length);
+
+            getJSON("/api/apps", json, function (data) {
+                //alert(data.result);
+                if (data.code == "0") {
+                    jobchangetofinish(step, "success", "成功", "运行成功");
+                } else if (data.code == "1") {
+
+                    jobchangetofinish(step, "warning", "警告", data.result);
+                } else if (data.code == "-1") {
+
+                    jobchangetofinish(step, "danger", "错误", data.result, "job_3_createdadmintable");
+                }
+            }, function () {
+                job_4_setdbaccount();
+            }, function () {
+                jobchangetofinish(step, "danger", "错误", "未知错误原因，请联系系统管理员", "job_3_createdadmintable");
+            });
+
+
+        }
+
+        function job_4_setdbaccount(nonext) {
+            var step = 4;
+            jobchangetoRunning(step);
+            var json = { action: "setdbaccount", app_id: "{{$appinfo.id}}" };
+            //alert(json.length);
+
+            getJSON("/api/apps", json, function (data) {
+                //alert(data.result);
+                if (data.code == "0") {
+                    jobchangetofinish(step, "success", "成功", "运行成功");
+                } else if (data.code == "1") {
+
+                    jobchangetofinish(step, "warning", "警告", data.result);
+                } else if (data.code == "-1") {
+
+                    jobchangetofinish(step, "danger", "错误", data.result, "job_4_setdbaccount");
+                }
+            }, function () {
+                job_5_setworkspace();
+            }, function () {
+                jobchangetofinish(step, "danger", "错误", "未知错误原因，请联系系统管理员", "job_4_setdbaccount");
+            });
+
+
+        } 
+
+        function job_5_setworkspace(nonext) {
+            var step = 5;
+            jobchangetoRunning(step);
+            var json = { action: "setworkspace", app_id: "{{$appinfo.id}}" };
+            //alert(json.length);
+
+            getJSON("/api/apps", json, function (data) {
+                //alert(data.result);
+                if (data.code == "0") {
+                    jobchangetofinish(step, "success", "成功", "运行成功");
+                } else if (data.code == "1") {
+
+                    jobchangetofinish(step, "warning", "警告", data.result);
+                } else if (data.code == "-1") {
+
+                    jobchangetofinish(step, "danger", "错误", data.result, "job_5_setworkspace");
+                }
+            }, function () {
+                job_6_initworkspace();
+            }, function () {
+                jobchangetofinish(step, "danger", "错误", "未知错误原因，请联系系统管理员", "job_5_setworkspace");
+            });
+
+
+        }
+
+        function job_6_initworkspace(nonext) {
+            var step = 6;
+            jobchangetoRunning(step);
+            var json = { action: "initworkspace", app_id: "{{$appinfo.id}}" };
+            //alert(json.length);
+
+            getJSON("/api/apps", json, function (data) {
+                //alert(data.result);
+                if (data.code == "0") {
+                    jobchangetofinish(step, "success", "成功", "运行成功");
+                } else if (data.code == "1") {
+
+                    jobchangetofinish(step, "warning", "警告", data.result);
+                } else if (data.code == "-1") {
+
+                    jobchangetofinish(step, "danger", "错误", data.result, "job_6_initworkspace");
+                }
+            }, function () {
+                job_7_initworkspace();
+            }, function () {
+                jobchangetofinish(step, "danger", "错误", "未知错误原因，请联系系统管理员", "job_6_initworkspace");
+            });
+
+
+        }
+        function job_7_initworkspace(nonext) {
+            var step = 7;
+            jobchangetoRunning(step);
+            var json = { action: "setworkspaceaccount", app_id: "{{$appinfo.id}}" };
+            //alert(json.length);
+
+            getJSON("/api/apps", json, function (data) {
+                //alert(data.result);
+                if (data.code == "0") {
+                    jobchangetofinish(step, "success", "成功", "运行成功");
+                } else if (data.code == "1") {
+
+                    jobchangetofinish(step, "warning", "警告", data.result);
+                } else if (data.code == "-1") {
+
+                    jobchangetofinish(step, "danger", "错误", data.result, "job_7_initworkspace");
+                }
+            }, function () {
+                job_8_configdone();
+            }, function () {
+                jobchangetofinish(step, "danger", "错误", "未知错误原因，请联系系统管理员", "job_7_initworkspace");
+            });
+
+
+        }
+        function job_8_configdone(nonext) {
+            var step = 8;
+            jobchangetoRunning(step);
+            var json = { action: "configdone", app_id: "{{$appinfo.id}}" };
+            //alert(json.length);
+
+            getJSON("/api/apps", json, function (data) {
+                //alert(data.result);
+                if (data.code == "0") {
+                    jobchangetofinish(step, "success", "成功", "运行成功");
+                } else if (data.code == "1") {
+
+                    jobchangetofinish(step, "warning", "警告", data.result);
+                } else if (data.code == "-1") {
+
+                    jobchangetofinish(step, "danger", "错误", data.result, "job_8_configdone");
+
+                }
+            }, function () {
+                finish_jobs();
+            }, function () {
+                jobchangetofinish(step, "danger", "错误", "未知错误原因，请联系系统管理员", "job_8_configdone");
+            });
+
+
+        }
+        
         function jobchangetoRunning(num){
           $("#pre_job_"+num+" .pre_job_status").html('<span class="label label-info">运行中</span>');
           $("#pre_job_"+num+" .pre_job_result").html('');
@@ -510,6 +694,13 @@
         }
         function finish_jobs(){
           $("#txtCreateAppTitle").text("应用环境生成结束");
-
+          var havedanger = $(".pre_job .label-danger").length > 0;
+          if (havedanger) {
+              error("很遗憾，应用配置过程中出现一些错误，请重试或者联系管理员，谢谢你的使用。");
+          } else {
+              info("恭喜你，应用已经成功进行初始化配置，接下来你可以开始一段奇妙之旅", function () {
+                  window.location.href = "/apps/board?id={{$appinfo.id}}";
+              });
+          }
         }
 </script>

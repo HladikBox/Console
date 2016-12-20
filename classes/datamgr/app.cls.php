@@ -196,6 +196,141 @@
       return outResult(0,"保存成功","");
     }
 
+    
+    function createAdminTable($app_id){
+      Global $UID,$User;
+      $info=$this->getAppInfo($UID,$app_id);
+      //print_r($info);
+      $alias=$info["alias"];
+      //{{$User.login}}_{{$appinfo.alias}}
+      $dbname=$User["login"]."_".$alias;
+      if($this->dbmgr->checkHave("information_schema.SCHEMATA","SCHEMA_NAME='$dbname'")){
+        
+        if(!$this->dbmgr->checkHave("information_schema.TABLES","TABLE_SCHEMA='$dbname' and TABLE_NAME='tb_user'")){
+            $sql="CREATE TABLE `$dbname`.`tb_user` (
+  `id` int(11) NOT NULL,
+  `login_id` varchar(50) NOT NULL,
+  `password` varchar(50) NOT NULL,
+  `user_name` varchar(50) NOT NULL,
+  `email` varchar(150) NOT NULL,
+  `is_admin` varchar(1) NOT NULL,
+  `remarks` varchar(350) NOT NULL,
+  `status` varchar(1) NOT NULL,
+  `created_date` datetime NOT NULL,
+  `created_user` int(11) NOT NULL,
+  `updated_date` datetime NOT NULL,
+  `updated_user` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;";   
+            $this->dbmgr->query($sql);
+            
+            $sql="INSERT INTO `$dbname`.`tb_user` VALUES 
+(1,'admin','21232f297a57a5a743894a0e4a801fc3','系统管理员','邮箱','Y','遇到问题，请联系QQ359304951','A',now(),1,now(),1),
+(2,'editor','21232f297a57a5a743894a0e4a801fc3','数据编辑员','邮箱','N','遇到问题，请联系QQ359304951','A',now(),1,now(),1);";
+            $this->dbmgr->query($sql);
+
+            return outResult(0,"保存成功","");
+
+        }else{
+            return outResult(1,"数据库tb_user表已经创建","");
+        }
+
+
+      }else{
+        return outResult(-1,"数据库".$dbname."还没有创建","");
+      }
+      return outResult(0,"保存成功","");
+    }
+
+    function setDBAccount($app_id){
+      Global $UID,$User;
+      $info=$this->getAppInfo($UID,$app_id);
+      //print_r($info);
+      $alias=$info["alias"];
+      $login=$User["login"];
+      //{{$User.login}}_{{$appinfo.alias}}
+      $password=md5($login."_49339");
+      $dbname=$login."_".$alias;
+      if($this->dbmgr->checkHave("information_schema.SCHEMATA","SCHEMA_NAME='$dbname'")){
+        //CREATE USER 'alucard263096'@'mysql.app-link.org' IDENTIFIED BY 'a6c3bc0575df7d9d676890e861130a9a';
+        //mysql.user
+        if(!$this->dbmgr->checkHave("mysql.user","User='$login' and Host='%'")){
+            $sql="CREATE USER '$login'@'%' IDENTIFIED BY '$password'; ";
+            $this->dbmgr->query($sql);
+        }
+
+        $sql="GRANT ALL ON $dbname.* TO '$login'@'%' ";
+        $this->dbmgr->query($sql);
+
+        return outResult(0,"保存成功","");
+
+      }else{
+        return outResult(-1,"数据库".$dbname."还没有创建","");
+      }
+      return outResult(0,"保存成功","");
+    }
+    
+    function setWorkspace($app_id){
+      Global $UID,$User,$CONFIG;
+
+      $path=$CONFIG['workspace']['path'];
+      $info=$this->getAppInfo($UID,$app_id);
+      //print_r($info);
+      $alias=$info["alias"];
+      $login=$User["login"];
+      $subfolder="\\$login\\$alias";
+      $path=$path.$subfolder;
+      if (is_dir($path)){  
+        return outResult(1,"用户文件夹 $subfolder 已经存在","");
+      }else{
+        mkdir($path,0777,true);
+      }
+      return outResult(0,"保存成功","");
+
+    }
+    function initWorkspace($app_id){
+      Global $UID,$User,$CONFIG;
+
+      $path=$CONFIG['workspace']['path'];
+      $info=$this->getAppInfo($UID,$app_id);
+      //print_r($info);
+      $alias=$info["alias"];
+      $login=$User["login"];
+      $subfolder="\\$login\\$alias";
+      $path=$path.$subfolder;
+      if (!is_dir($path)){  
+        return outResult(-1,"用户文件夹 $subfolder 不存在","");
+      }else{
+        if(scandir($path)==false){
+            recurse_copy(ROOT."/workspace_init",$path);
+        }else{
+            return outResult(1,"用户文件夹 $subfolder 已经有内容，不会再进行初始化","");
+        }
+      }
+      return outResult(0,"保存成功","");
+
+    }
+    
+    function setWorkspaceAccount($app_id){
+       return outResult(1,"技术不好，没办法做到动态添加远程账户，将尽快为你设置，请耐心等待","");
+
+    }
+    function configDone($app_id){
+      Global $UID,$User,$CONFIG;
+
+      $sql="select * from tb_app where id=$app_id";
+      $query = $this->dbmgr->query($sql);
+      $result = $this->dbmgr->fetch_array($query);
+
+      $status=$result["run_status"];
+      if($status!="C"){
+        outResult(1,"你早已经完成配置，谢谢你的使用","");
+      }else{
+        $sql="update tb_app set run_status='P' where id=$app_id";
+        $this->dbmgr->query($sql);
+      }
+      return outResult(0,"保存成功","");
+    }
  }
  
  $appMgr=AppMgr::getInstance();

@@ -16,8 +16,8 @@
 
   $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["id"]);
   //print_r($appinfo);
-  $appinfo["dev_password"]=md5($User["login"]."_".$appinfo["alias"]);
-  $appinfo["dev_remote_password"]=md5($User["login"]."_".$appinfo["alias"]);
+  $appinfo["dev_password"]=md5($User["login"]."_49339");
+  $appinfo["dev_remote_password"]=md5($User["login"]."_49339");
   //print_r($appinfo);
   $smarty->assign("appinfo",$appinfo);
   $smarty->display(ROOT.'/templates/apps/config.html');

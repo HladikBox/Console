@@ -18,7 +18,7 @@
   }elseif ($action=="deleteapp") {
   	outputJson($appMgr->deleteApp($UID,$_REQUEST["id"]));
   }elseif($action=="saveconfig"){
-    sleep(2);
+    //sleep(2);
     //outputJSON(outResult("-1","找不到你要调用的请求","找不到你要调用的请求"));
     //print_r($_REQUEST);
     outputJSON($appMgr->saveConfig($_REQUEST["app_id"],$_REQUEST));
@@ -27,6 +27,24 @@
     //outputJSON(outResult("-1","找不到你要调用的请求","找不到你要调用的请求"));
     //print_r($_REQUEST);
     outputJSON($appMgr->createDataBase($_REQUEST["app_id"]));
+  }elseif($action=="createdadmintable"){
+    sleep(2);
+    outputJSON($appMgr->createAdminTable($_REQUEST["app_id"]));
+  }elseif($action=="setdbaccount"){
+    sleep(2);
+    outputJSON($appMgr->setDBAccount($_REQUEST["app_id"]));
+  }elseif($action=="setworkspace"){
+    sleep(2);
+    outputJSON($appMgr->setWorkspace($_REQUEST["app_id"]));
+  }elseif($action=="initworkspace"){
+    sleep(2);
+    outputJSON($appMgr->initWorkspace($_REQUEST["app_id"]));
+  }elseif($action=="setworkspaceaccount"){
+    sleep(2);
+    outputJSON($appMgr->setWorkspaceAccount($_REQUEST["app_id"]));
+  }elseif($action=="configdone"){
+    sleep(2);
+    outputJSON($appMgr->configDone($_REQUEST["app_id"]));
   }
 
 outputJSON(outResult("-1","找不到你要调用的请求","找不到你要调用的请求"));
