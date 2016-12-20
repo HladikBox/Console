@@ -15,6 +15,7 @@
   $smarty->assign("app_type_list",$app_type_list);
 
   $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["id"]);
+  //print_r($appinfo);
   $appinfo["dev_password"]=md5($User["login"]."_".$appinfo["alias"]);
   $appinfo["dev_remote_password"]=md5($User["login"]."_".$appinfo["alias"]);
   //print_r($appinfo);

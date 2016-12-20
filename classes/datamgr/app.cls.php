@@ -86,8 +86,11 @@
       return $result;
     }
     public function getAppInfo($UID,$id){
-      $sql="select a.*,ap.name type_name from tb_app a
+      $sql="select a.*,ai.*,ad.*,aw.*,ap.name type_name from tb_app a
       inner join tb_app_type ap on a.type=ap.id 
+      left join tb_app_info ai on a.id=ai.app_id 
+      left join tb_app_db ad on a.id=ad.app_id 
+      left join tb_app_workspace aw on a.id=aw.app_id 
       where user_id=$UID and a.id=$id ";
       $query = $this->dbmgr->query($sql);
       $result = $this->dbmgr->fetch_array($query);
@@ -100,10 +103,24 @@
     }
 
     public function saveConfig($app_id,$arr){
+
+      Global $UID ;
+      //print_r($arr);
       $app_id=$app_id+0;
+      //echo $app_id;
       $name=parameter_filter($arr["name"]);
       $type=parameter_filter($arr["type"]);
-      $alias=parameter_filter($arr["alias"]);
+      //$alias=parameter_filter($arr["alias"]);
+
+      if(empty($name)||strlen($name)>15){
+        return outResult("-1","应用名称不能为空并控制在15个字符以内","appname");
+      }
+      $sql="select 1 from tb_app where name='$name' and user_id=$UID and status<>'D' and id<>$app_id ";
+      $query = $this->dbmgr->query($sql);
+      $result = $this->dbmgr->fetch_array($query);
+      if($result[0]!=""){
+        return outResult("-1","这个应用名称已经用过了","appname");
+      }
 
       $description=parameter_filter($arr["description"]);
       $contact_name=parameter_filter($arr["contact_name"]);
@@ -123,8 +140,39 @@
       $live_remote_login=parameter_filter($arr["live_remote_login"]);
       $live_remote_password=parameter_filter($arr["live_remote_password"]);
 
-      
+      $this->dbmgr->begin_trans();
 
+      $sql="update tb_app set name='$name', `type`=$type,alias='$alias' where id=$app_id ";
+      $this->dbmgr->query($sql);
+
+      if($this->dbmgr->checkHave("tb_app_info","app_id=$app_id")){
+        $sql="update tb_app_info set description='$description',contact_name='$contact_name',contact_online='$contact_online',contact_mobile='$contact_mobile',updated_date=now() where app_id=$app_id";
+      }else{
+        $sql="insert into tb_app_info (app_id,description,contact_name,contact_online,contact_mobile,updated_date) values
+        ($app_id,'$description','$contact_name','$contact_online','$contact_mobile',now())";
+      }
+      $this->dbmgr->query($sql);
+
+      if($this->dbmgr->checkHave("tb_app_db","app_id=$app_id")){
+        $sql="update tb_app_db set live_server='$live_server',live_dbname='$live_dbname',live_login='$live_login',live_password='$live_password',updated_date=now() where app_id=$app_id";
+      }else{
+        $sql="insert into tb_app_db (app_id,live_server,live_dbname,live_login,live_password,updated_date) values
+        ($app_id,'$live_server','$live_dbname','$live_login','$live_password',now())";
+      }
+      $this->dbmgr->query($sql);
+
+      if($this->dbmgr->checkHave("tb_app_workspace","app_id=$app_id")){
+        $sql="update tb_app_workspace set live_remote_type='$live_remote_type',live_remote_server='$live_remote_server',live_remote_login='$live_remote_login',live_remote_password='$live_remote_password',updated_date=now() where app_id=$app_id";
+      }else{
+        $sql="insert into tb_app_workspace (app_id,live_remote_type,live_remote_server,live_remote_login,live_remote_password,updated_date) values
+        ($app_id,'$live_remote_type','$live_remote_server','$live_remote_login','$live_remote_password',now())";
+      }
+      $this->dbmgr->query($sql);
+
+
+      $this->dbmgr->commit_trans();
+
+      return outResult(0,"保存成功","");
 
     }
 

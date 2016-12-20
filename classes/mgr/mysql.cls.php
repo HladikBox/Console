@@ -8,7 +8,7 @@ class DbMysql
 	* @var resource
 	*/
 	public $conn;
-	public $in_trans;
+	public $in_trans=0;
 
 	/**
 	* calculate executed sql statement num
@@ -73,22 +73,32 @@ class DbMysql
 	
 	function begin_trans()
 	{
-		if (mysql_query("BEGIN") == false)
-		{
-		     echo "Could not begin transaction.\n";
-		     die( print_r( sqlsrv_errors(), true ));
+		if($this->in_trans==0){
+			if (mysql_query("BEGIN") == false)
+			{
+			     echo "Could not begin transaction.\n";
+			     die( print_r( sqlsrv_errors(), true ));
+			}
 		}
-		$this->in_trans=true;
+		$this->in_trans++;
+		
+		//echo "begin ".$this->in_trans."<br />";
 	}
 	function commit_trans()
 	{
+		$this->in_trans--;
+		//echo "commint ".$this->in_trans."<br />";
+		if($this->in_trans>0){
+			return;
+		}
+		//echo "ready commit ".$this->in_trans."<br />";
 		mysql_query("COMMIT");
-		$this->in_trans=false;
+		$this->in_trans=0;
 	}
 	function rollback_trans()
 	{
 		mysql_query("ROOLBACK");
-		$this->in_trans=false;
+		$this->in_trans=0;
 	}
 
 	/**
@@ -104,7 +114,7 @@ class DbMysql
 		if(!($query = @mysql_query($sql)))
 		{
 			logger_mgr::logError("sql error :$sql");
-			if($this->in_trans)
+			if($this->in_trans>0)
 			{
 				$this->rollback_trans();
 			}
@@ -124,6 +134,14 @@ class DbMysql
 		$result = $this->fetch_array($query); 
 		$id=$result[0];
 		return $id;
+	}
+	
+	function checkHave($tablename,$where){
+		$sql="select 1 checkid from ".$tablename." where ".$where;
+		$query = $this->query($sql);
+		$result = $this->fetch_array($query); 
+		$id=$result["checkid"];
+		return $id=="1";
 	}
 	function getDate(){
 		return " now() ";
