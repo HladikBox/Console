@@ -22,6 +22,11 @@
     //outputJSON(outResult("-1","找不到你要调用的请求","找不到你要调用的请求"));
     //print_r($_REQUEST);
     outputJSON($appMgr->saveConfig($_REQUEST["app_id"],$_REQUEST));
+  }elseif($action=="createdb"){
+    sleep(2);
+    //outputJSON(outResult("-1","找不到你要调用的请求","找不到你要调用的请求"));
+    //print_r($_REQUEST);
+    outputJSON($appMgr->createDataBase($_REQUEST["app_id"]));
   }
 
 outputJSON(outResult("-1","找不到你要调用的请求","找不到你要调用的请求"));

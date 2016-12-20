@@ -122,6 +122,10 @@
         return outResult("-1","这个应用名称已经用过了","appname");
       }
 
+       if(!$this->dbmgr->checkHave("tb_app","id=$app_id and user_id=$UID")){
+          return outResult("-1","找不到提交的应用","appname");
+       }
+
       $description=parameter_filter($arr["description"]);
       $contact_name=parameter_filter($arr["contact_name"]);
       $contact_online=parameter_filter($arr["contact_online"]);
@@ -142,7 +146,7 @@
 
       $this->dbmgr->begin_trans();
 
-      $sql="update tb_app set name='$name', `type`=$type,alias='$alias' where id=$app_id ";
+      $sql="update tb_app set name='$name', `type`=$type where id=$app_id ";
       $this->dbmgr->query($sql);
 
       if($this->dbmgr->checkHave("tb_app_info","app_id=$app_id")){
@@ -174,6 +178,22 @@
 
       return outResult(0,"保存成功","");
 
+    }
+
+    function createDataBase($app_id){
+      Global $UID,$User;
+      $info=$this->getAppInfo($UID,$app_id);
+      //print_r($info);
+      $alias=$info["alias"];
+      //{{$User.login}}_{{$appinfo.alias}}
+      $dbname=$User["login"]."_".$alias;
+      if($this->dbmgr->checkHave("information_schema.SCHEMATA","SCHEMA_NAME='$dbname'")){
+        return outResult(1,"数据库".$dbname."已经存在","");
+      }else{
+        $sql="create database $dbname";
+        $this->dbmgr->query($sql);
+      }
+      return outResult(0,"保存成功","");
     }
 
  }

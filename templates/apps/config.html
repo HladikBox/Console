@@ -461,9 +461,34 @@
                     jobchangetofinish(1,"danger","错误",data.result,"job_1_saveconfig");
                 }
             },function(){
-                finish_jobs();
+                job_2_createdatabase();
             },function(){
               jobchangetofinish(1,"danger","错误","未知错误原因，请联系系统管理员","job_1_saveconfig");
+            });
+          
+
+        }
+
+        function job_2_createdatabase(nonext){
+          jobchangetoRunning(2);
+          var json={action:"createdb",app_id:"{{$appinfo.id}}" };
+            //alert(json.length);
+
+            getJSON("/api/apps",json,function(data){
+              //alert(data.result);
+                if(data.code=="0"){
+                    jobchangetofinish(2,"success","成功","运行成功");
+                }else if(data.code=="1"){
+
+                    jobchangetofinish(2,"warning","警告",data.result);
+                }else if(data.code=="-1"){
+
+                    jobchangetofinish(2,"danger","错误",data.result,"job_2_createdatabase");
+                }
+            },function(){
+                finish_jobs();
+            },function(){
+              jobchangetofinish(2,"danger","错误","未知错误原因，请联系系统管理员","job_2_createdatabase");
             });
           
 
