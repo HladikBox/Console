@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `applink` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `applink`;
 -- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
 --
 -- Host: localhost    Database: applink
@@ -30,6 +32,7 @@ CREATE TABLE `tb_app` (
   `created_date` datetime DEFAULT NULL,
   `status` char(1) DEFAULT NULL,
   `run_status` char(1) DEFAULT NULL,
+  `alias` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -40,7 +43,7 @@ CREATE TABLE `tb_app` (
 
 LOCK TABLES `tb_app` WRITE;
 /*!40000 ALTER TABLE `tb_app` DISABLE KEYS */;
-INSERT INTO `tb_app` VALUES (1,621332,'aaa',1,'2016-12-12 17:50:22','A','C');
+INSERT INTO `tb_app` VALUES (1,621332,'aaa',1,'2016-12-12 17:50:22','D','C','aaa'),(2,621332,'aaaa',1,'2016-12-14 15:47:01','A','C','aaaa'),(3,621332,'aaaaa',1,'2016-12-14 15:48:35','A','C','aaaaa'),(4,621332,'aaaaaa',2,'2016-12-14 15:49:26','A','C','aaaaaa'),(5,621332,'aaaaaaaa',1,'2016-12-14 16:03:51','A','C','');
 /*!40000 ALTER TABLE `tb_app` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -53,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-12-13 17:40:08
+-- Dump completed on 2016-12-20 17:44:30

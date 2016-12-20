@@ -1,10 +1,10 @@
-CREATE DATABASE  IF NOT EXISTS `applink` /*!40100 DEFAULT CHARACTER SET latin1 */;
+CREATE DATABASE  IF NOT EXISTS `applink` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `applink`;
--- MySQL dump 10.13  Distrib 5.7.12, for osx10.9 (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: applink
+-- Host: localhost    Database: applink
 -- ------------------------------------------------------
--- Server version	5.7.17
+-- Server version	5.7.10-enterprise-commercial-advanced-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -32,7 +32,7 @@ CREATE TABLE `tb_app_db` (
   `live_password` varchar(45) DEFAULT NULL,
   `updated_date` datetime DEFAULT NULL,
   PRIMARY KEY (`app_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,6 +41,7 @@ CREATE TABLE `tb_app_db` (
 
 LOCK TABLES `tb_app_db` WRITE;
 /*!40000 ALTER TABLE `tb_app_db` DISABLE KEYS */;
+INSERT INTO `tb_app_db` VALUES (5,'数据库连接','数据库名称','用户名','密码','2016-12-20 17:41:35');
 /*!40000 ALTER TABLE `tb_app_db` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -53,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-12-18  0:06:32
+-- Dump completed on 2016-12-20 17:44:30
