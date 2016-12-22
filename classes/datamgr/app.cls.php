@@ -291,6 +291,7 @@
     function initWorkspace($app_id){
       Global $UID,$User,$CONFIG;
 
+
       $path=$CONFIG['workspace']['path'];
       $info=$this->getAppInfo($UID,$app_id);
       //print_r($info);
@@ -298,11 +299,34 @@
       $login=$User["login"];
       $subfolder="\\$login\\$alias";
       $path=$path.$subfolder;
+      $password=md5($login."_49339");
+
+      
+
       if (!is_dir($path)){  
         return outResult(-1,"用户文件夹 $subfolder 不存在","");
       }else{
-        if(scandir($path)==false){
+        //echo $path;
+        //print_r(scandir($path)>2);
+        if(scandir($path)==false||count(scandir($path))<3){
             recurse_copy(ROOT."/workspace_init",$path);
+            $configfile=$path."/config.inc.php";
+            $content = @file_get_contents($configfile);
+            if(!$content){
+              return outResult(-1,"Config文件初始化失败","");
+            }
+            $content = str_replace("{{AppName}}", $info["name"], $content);
+            $content = str_replace("{{login}}", $login, $content);
+            $content = str_replace("{{alias}}", $alias, $content);
+            $content = str_replace("{{db_password}}", $password, $content);
+            $content="<?php
+            $content
+            ?>";
+            if(file_put_contents($configfile, $content)==false){
+              return outResult(-1,"Config文件初始化失败","");
+            }
+
+
         }else{
             return outResult(1,"用户文件夹 $subfolder 已经有内容，不会再进行初始化","");
         }

@@ -43,6 +43,7 @@ $CONFIG['fileupload']['try_interval']		= "1";//second
 $CONFIG['github']['client_id']	= "5ea64adab67fb0db7c52";
 $CONFIG['github']['client_secret']	= "7eaadd7a27c6942b512dfab1e8fce61f8b51af73";
 
-$CONFIG['workspace']['path']	= "D:\\Apache2.2\\htdocs\\FooterCMSWorkspace";
+$CONFIG['workspace']['path']	= "D:\\Apache2.2\\htdocs\\HladikBox\\FooterCMSDEV\\Users";
+$CONFIG['workspace']['domain']  = "http://cmsdev.app-link.org";
 
 ?>
