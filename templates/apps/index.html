@@ -33,15 +33,26 @@
                 <div class="row">
                     <div class="col-md-3">{{$rs.name}}</div>
                     <div class="col-md-2">{{$rs.type_name}}类应用</div>
-                    <div class="col-md-2"><span>{{getDateStr date=$rs.created_date}} 创建</span></div>
-                    <div class="col-md-3">
-                        {{if $rs.run_status=="C"}}
+                    <div class="col-md-3"><span>{{getDateStr date=$rs.created_date}} 创建</span></div>
+                    {{if $rs.run_status=="C"}}
+                    <div class="col-md-2">
                         <a href="/apps/config?id={{$rs.id}}" class="badge bg-yellow-active"> 等待配置</a>
-                        {{else}}
-                        <i class="fa fa-play"></i> 
-                        <i class="fa fa-stop"></i>
-                        {{/if}}
                     </div>
+                    {{elseif $rs.run_status=="P"}}
+                    <div class="col-md-1">
+                        <a class="badge bg-green-active" appid="{{$rs.id}}">运行中</a>
+                    </div>
+                    <div class="col-md-1">
+                        <a class="fa fa-stop btnStopApp" href="#" appid="{{$rs.id}}"> 立即停止</a>
+                    </div>
+                    {{else}}
+                    <div class="col-md-1">
+                        <a class="badge bg-gray-active" appid="{{$rs.id}}">已停止</a>
+                    </div>
+                    <div class="col-md-1">
+                        <a class="fa fa-play btnStartApp" href="#" appid="{{$rs.id}}"> 立即启动</a>
+                    </div>
+                    {{/if}}
                     <div class="col-md-1">
                         <a href="#" class="fa fa-trash btnDeleteApp" aid="{{$rs.id}}" ></a>
                     </div>
@@ -180,6 +191,19 @@
                 getJSON("{{$rootpath}}api/apps",json);
                 $("#app_"+id).remove();
                 checkIfShowNoaPP();
+            });
+        });
+
+        $(".btnStopApp").click(function () {
+            var id = $(this).attr("appid");
+            var json = {
+                action: "start",
+                id: id
+            };
+            info("启动后数据管理员将可以进行修改，继续请按确定", function () {
+                getJSON("{{$rootpath}}api/apps", json, function (data) {
+                    
+                });
             });
         });
         
