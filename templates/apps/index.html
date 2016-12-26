@@ -40,19 +40,17 @@
                     </div>
                     {{elseif $rs.run_status=="P"}}
                     <div class="col-md-1">
-                        <a class="badge bg-green-active" appid="{{$rs.id}}">运行中</a>
-                    </div>
-                    <div class="col-md-1">
-                        <a class="fa fa-stop btnStopApp" href="#" appid="{{$rs.id}}"> 立即停止</a>
+                        <a class="badge bg-green-active run_status" href="#" appid="{{$rs.id}}">运行中</a>
                     </div>
                     {{else}}
                     <div class="col-md-1">
-                        <a class="badge bg-gray-active" appid="{{$rs.id}}">已停止</a>
-                    </div>
-                    <div class="col-md-1">
-                        <a class="fa fa-play btnStartApp" href="#" appid="{{$rs.id}}"> 立即启动</a>
+                        <a class="badge bg-gray-active run_status" href="#" appid="{{$rs.id}}">已停止</a>
                     </div>
                     {{/if}}
+                    <div class="col-md-1">
+                        <a class="btnStopApp {{if $rs.run_status=='S'}}hide{{/if}}" href="#" appid="{{$rs.id}}"><i class="fa fa-stop"></i> 立即停止</a>
+                        <a class="btnStartApp {{if $rs.run_status=='P'}}hide{{/if}}" href="#" appid="{{$rs.id}}"> <i class="fa fa-play"></i> 立即启动</a>
+                    </div>
                     <div class="col-md-1">
                         <a href="#" class="fa fa-trash btnDeleteApp" aid="{{$rs.id}}" ></a>
                     </div>
@@ -203,16 +201,37 @@
         $(".btnStopApp").click(function () {
             var id = $(this).attr("appid");
             var json = {
-                action: "start",
-                id: id
+                action: "stop",
+                app_id: id
             };
-            info("启动后数据管理员将可以进行修改，继续请按确定", function () {
-                getJSON("{{$rootpath}}api/apps", json, function (data) {
-                    
-                });
+            //alert(id);
+            getJSON("{{$rootpath}}api/apps", json, function (data) {
+                if(data.code!="0"){
+                    info(data.result);
+                }else{
+                    $("#app_"+id+" .run_status").removeClass("bg-green-active").addClass("bg-gray-active").text("已停止");
+                    $("#app_"+id+" .btnStopApp").addClass("hide");
+                    $("#app_"+id+" .btnStartApp").removeClass("hide");
+                }        
             });
         });
         
+        $(".btnStartApp").click(function () {
+            var id = $(this).attr("appid");
+            var json = {
+                action: "start",
+                app_id: id
+            };
+            getJSON("{{$rootpath}}api/apps", json, function (data) {
+                if(data.code!="0"){
+                    info(data.result);
+                }else{
+                    $("#app_"+id+" .run_status").removeClass("bg-gray-active").addClass("bg-green-active").text("运行中");
+                    $("#app_"+id+" .btnStartApp").addClass("hide");
+                    $("#app_"+id+" .btnStopApp").removeClass("hide");
+                }        
+            });
+        });
     });
     
 </script>

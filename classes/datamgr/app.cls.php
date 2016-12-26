@@ -85,6 +85,22 @@
 
       return $result;
     }
+
+    public function getAppInfoByLoginAlias($login,$alias){
+      $login=parameter_filter($login);
+      $alias=parameter_filter($alias);
+      $sql="select a.*,ai.*,ad.*,aw.*,ap.name type_name from tb_app a
+      inner join tb_user_github ug on a.user_id=ug.id
+      inner join tb_app_type ap on a.type=ap.id 
+      left join tb_app_info ai on a.id=ai.app_id 
+      left join tb_app_db ad on a.id=ad.app_id 
+      left join tb_app_workspace aw on a.id=aw.app_id 
+      where ug.login='$login' and a.alias='$alias' and a.status<>'D' ";
+      $query = $this->dbmgr->query($sql);
+      $result = $this->dbmgr->fetch_array($query);
+      
+      return $result;
+    }
     public function getAppInfo($UID,$id){
       $sql="select a.*,ai.*,ad.*,aw.*,ap.name type_name from tb_app a
       inner join tb_app_type ap on a.type=ap.id 
@@ -342,9 +358,7 @@
     function configDone($app_id){
       Global $UID,$User,$CONFIG;
 
-      $sql="select * from tb_app where id=$app_id";
-      $query = $this->dbmgr->query($sql);
-      $result = $this->dbmgr->fetch_array($query);
+      $info=$this->getAppInfo($UID,$app_id);
 
       $status=$result["run_status"];
       if($status!="C"){
@@ -354,6 +368,35 @@
         $this->dbmgr->query($sql);
       }
       return outResult(0,"保存成功","");
+    }
+    //function logOperation($app_id,$step_code){
+
+    //}
+    function startApp($app_id){
+      Global $UID,$User,$CONFIG;
+      $info=$this->getAppInfo($UID,$app_id);
+      $status=$result["run_status"];
+      if($status=="C"){
+        return outResult(-1,"你还没有完成配置","");
+      }elseif ($status=="P") {
+        return outResult(-1,"你的应用已经正在运行中","");
+      }
+      $sql="update tb_app set run_status='P' where id=$app_id";
+      $this->dbmgr->query($sql);
+      return outResult(0,"成功","");
+    }
+    function stopApp($app_id){
+      Global $UID,$User,$CONFIG;
+      $info=$this->getAppInfo($UID,$app_id);
+      $status=$result["run_status"];
+      if($status=="C"){
+        return outResult(-1,"你还没有完成配置","");
+      }elseif ($status=="S") {
+        return outResult(-1,"你的应用已经是停止状态","");
+      }
+      $sql="update tb_app set run_status='S' where id=$app_id";
+      $this->dbmgr->query($sql);
+      return outResult(0,"成功","");
     }
  }
  

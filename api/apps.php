@@ -46,8 +46,9 @@
     sleep(2);
     outputJSON($appMgr->configDone($_REQUEST["app_id"]));
   }elseif($action=="start"){
-    sleep(2);
     outputJSON($appMgr->startApp($_REQUEST["app_id"]));
+  }elseif($action=="stop"){
+    outputJSON($appMgr->stopApp($_REQUEST["app_id"]));
   }
 
 outputJSON(outResult("-1","找不到你要调用的请求","找不到你要调用的请求"));
