@@ -31,5 +31,6 @@ $smarty->register_function("getDateStr","smarty_getDateStr");
  $smarty->assign('Url',$CONFIG['URL']);
  $smarty->assign('uploadpath',$CONFIG['smarty']['rootpath']."/".$CONFIG['fileupload']['upload_path']);
  $smarty->assign('request_url_encode',base64_encode($_SERVER["REQUEST_URI"]));
+ $smarty->assign('Config',$CONFIG);
 
 ?>
