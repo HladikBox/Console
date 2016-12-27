@@ -9,8 +9,8 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            应用配置
-            <small>{{$appinfo.name}} <span class="badge bg-green">{{$appinfo.type_name}}</span></small>
+            {{$model.name}}模型编辑/新增
+            <small>{{$model.description}} </small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="/apps"><i class="fa fa-th"></i> 我的应用</a></li>
@@ -23,7 +23,7 @@
     <section class="content">
 
         <div class="row">
-            <div class="col-md-9">
+            <div class="col-md-8">
                 <div class="box box-primary">
                     <div class="box-header with-border">
                       <h3 class="box-title">字段列表</h3>
@@ -35,14 +35,12 @@
                       <!-- /.box-tools -->
                     </div>
                     <div class="box-body no-padding">
-                      <table class="table ">
-                          <tr>
-                              <th>字段类型</th>
-                              <th>字段名</th>
+                      <table class="table table-hover">
+                          <tr class="th">
+                              <th>字段名称</th>
                               <th>数据库字段</th>
-                              <th>列表显示</th>
-                              <th>非空</th>
-                              <th  style="width: 250px;">描述</th>
+                              <th>字段类型</th>
+                              <th>描述</th>
                               <th>操作</th>
                           </tr>
                           {{foreach from=$model.fields.field item=rs}}
@@ -50,12 +48,10 @@
                             <td class="field_typename">{{$rs.typename}}</td>
                             <td class="field_name">{{$rs.name}}</td>
                             <td class="field_key">{{$rs.key}}</td>
-                            <td class="field_displayinlistname">{{if $rs.displayinlist=="1"}}是{{else}}否{{/if}}</td>
-                            <td class="field_notnullname">{{if $rs.notnull=="1"}}是{{else}}否{{/if}}</td>
                             <td class="field_description">{{$rs.description}}</td>
                             <td>
-                                <a href="#" class="btnFieldUp"><i class="fa fa-arrow-up"></i></a>
-                                <a href="#" class="btnFieldDown"><i class="fa fa-arrow-down"></i></a>
+                                <a href="#" class="tr_up"><i class="fa fa-arrow-up"></i></a>
+                                <a href="#" class="tr_down"><i class="fa fa-arrow-down"></i></a>
                                 <a href="#" class="btnFieldEditor"><i class="fa fa-pencil-square-o"></i></a>
                                 <textarea class="field_json hide">{{$rs.json}}</textarea>
                             </td>
@@ -65,7 +61,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="box box-success">
                     <div class="box-header with-border">
                       <h3 class="box-title">服务</h3>
@@ -77,8 +73,8 @@
                       <!-- /.box-tools -->
                     </div>
                     <div class="box-body no-padding">
-                      <table class="table">
-                          <tr>
+                      <table class="table table-hover">
+                          <tr class="th">
                               <th>名称</th>
                               <th>类型</th>
                               <th>操作</th>
@@ -88,8 +84,8 @@
                             <td class="option_name">{{$rs.name}}</td>
                             <td class="option_typename">{{if $rs.type=="function"}}方法{{else}}超链接{{/if}}</td>
                             <td>
-                                <a href="#" class="btnOptionUp"><i class="fa fa-arrow-up"></i></a>
-                                <a href="#" class="btnOptionDown"><i class="fa fa-arrow-down"></i></a>
+                                <a href="#" class="tr_up"><i class="fa fa-arrow-up"></i></a>
+                                <a href="#" class="tr_down"><i class="fa fa-arrow-down"></i></a>
                                 <a href="#" class="btnOptionEditor"><i class="fa fa-pencil-square-o"></i></a>
                                 <textarea class="option_json hide">{{$rs.json}}</textarea></td>
                           </tr>
@@ -98,7 +94,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="box box-info">
                     <div class="box-header with-border">
                       <h3 class="box-title">引用JS文件</h3>
@@ -110,9 +106,9 @@
                       <!-- /.box-tools -->
                     </div>
                     <div class="box-body no-padding">
-                      <table class="table">
+                      <table class="table table-hover">
                           <tr>
-                              <th>名称</th>
+                              <th>文件路径</th>
                               <th>操作</th>
                           </tr>
                           {{foreach from=$model.javascripts.javascript item=rs}}
@@ -132,4 +128,199 @@
     <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
+
+
+
+
+
+<div class="modal fade" id="dlgFieldEditor">
+    <div class="modal-dialog" style="width:1000px;">
+        <div class="modal-content">
+            <div class="modal-header bg-light-blue-active">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">编辑字段</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form class="form-horizontal">
+                            <section>
+                                <h4  class="page-header">基础</h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group" id="fdiv_name">
+                                            <label class="col-sm-4 control-label"><span style="color:red;">*</span> 字段名称</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" maxlength="15" class="form-control" id="f_name" placeholder="字段的名称，请不要太长">
+                                            </div>
+                                            <span class="help-block col-sm-offset-4"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group" id="fdiv_key">
+                                            <label class="col-sm-4 control-label"><span style="color:red;">*</span> 数据库字段</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" maxlength="15" class="form-control" id="f_key" placeholder="对应数据库表的字段" data-toggle="tooltip" title="保存后请尽量不要修改本字段">
+                                            </div>
+                                            <span class="help-block col-sm-offset-4"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group" id="fdiv_type">
+                                            <label class="col-sm-4 control-label"><span style="color:red;">*</span> 字段类型</label>
+                                            <div class="col-sm-8">
+                                                <select class="form-control" id="f_type">
+                                                    <option>请选择字段类型</option>
+                                                    {{foreach from=$keytypelist item=rs key=key}}
+                                                    <option value="{{$key}}">{{$rs}}</option>
+                                                    {{/foreach}}
+                                                </select>
+                                            </div>
+                                            <span class="help-block col-sm-offset-4"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                            <section>
+                                <h4 class="page-header">显示/可用</h4>
+                                <div class="row">
+                                    <div class="col-md-2 col-md-offset-1" data-toggle="tooltip" title="用户在列表界面进行搜索后，本字段将会在搜索结果字段中作为列显示">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" id="f_displayinlist">
+                                                <b>列表搜索结果显示</b>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 " data-toggle="tooltip" title="作为结果显示后，可以点击本字段进入详情页，列表搜索结果显示勾选后本字段才有效">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" id="f_gotodetail">
+                                                <b>列表结果进入详情</b>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 " data-toggle="tooltip" title="本字段可作为列表页的搜索字段">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" id="f_search">
+                                                <b>列表页搜索条件</b>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 " data-toggle="tooltip" title="在详情页中作为必录字段">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" id="f_notnull">
+                                                <b>必录字段</b>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 " data-toggle="tooltip" title="在详情页中不可编辑，但是如果拥有管理员权限则可以">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" id="f_disableindetail">
+                                                <b>不可编辑</b>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                            <br />
+                            <section>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group" id="fdiv_description">
+                                            <label class="col-sm-2 control-label"> 字段描述</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" maxlength="15" class="form-control" id="f_description" placeholder="本字段的相关描述，防止以后忘记这个字段干嘛用">
+                                            </div>
+                                            <span class="help-block col-sm-offset-4"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="btnConfirmField">确定</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 {{include  file="$smarty_root/footer.html" }}
+
+<script>
+    $(document).ready(function () {
+        $(".tr_up").click(function () {
+            var this_tr = $(this).parent().parent();
+            var prev_tr = this_tr.prev();
+            if (prev_tr.hasClass("th")) {
+                return;
+            }
+            if (prev_tr.length > 0) {
+                prev_tr.insertAfter(this_tr);
+            }
+        });
+        $(".tr_down").click(function () {
+            var this_tr = $(this).parent().parent();
+            var next_tr = this_tr.next();
+            
+            if (next_tr.length > 0) {
+                next_tr.insertBefore(this_tr);
+            }
+        });
+        $(".btnFieldEditor").click(function () {
+            var jsonobj = $(this).parent().children(".field_json");
+            //alert(jsonobj.val());
+            OpenFieldEditor(jsonobj.val(),jsonobj);
+        });
+    });
+    function OpenFieldEditor(json,returnobj) {
+        if (json != null) {
+            json = JSON.parse(json);
+        }
+        $("#dlgFieldEditor .modal-title").text(json == null ? "新增字段" : "编辑字段");
+        if (json != null) {
+            $("#f_name").val(json.name);
+            $("#f_key").val(json.key);
+            $("#f_type").val(json.type);
+            $("#f_description").val(json.description);
+
+            $("#f_displayinlist").attr("checked", json.displayinlist == "1");
+            $("#f_gotodetail").attr("checked", json.gotodetail == "1");
+            $("#f_notnull").attr("checked", json.notnull == "1");
+            $("#f_search").attr("checked", json.search == "1");
+            $("#f_disableindetail").attr("checked", json.disableindetail == "1");
+
+        }
+        $("#dlgFieldEditor").modal("show");
+    }
+</script>

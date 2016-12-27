@@ -17,9 +17,7 @@
   $model=$cmsAppMgr->getModel($User["login"],$appinfo["alias"],$_REQUEST["model"]);
   $smarty->assign("model",$model);
 
-  $keytype=array();
-  $keytype["text"]="文本";
-  $smarty->assign("keytype",$keytype);
+  $smarty->assign("keytypelist",$cmsAppMgr->keytypename);
 
 
   $smarty->display(ROOT.'/templates/apps/model.html');
