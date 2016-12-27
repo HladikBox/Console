@@ -2,6 +2,7 @@
 <root>
   <name>用户</name>
   <tablename>tb_user</tablename>
+  <description>这是系统默认自带的数据对象，主要是管理数据中心的管理员或者其他角色登录使用。</description>
   <searchcondition>r_main.status&lt;&gt;'D'</searchcondition>
   <fields>
     <field>
@@ -13,12 +14,14 @@
       <notnull>1</notnull>
       <search>1</search>
       <disableindetail>1</disableindetail>
+      <description>数据中心登录用户名，数据中心用户登录数据中心使用</description>
     </field>
     <field>
       <name>密码</name>
       <key>password</key>
       <type>password</type>
       <notnull>1</notnull>
+      <description>登录密码</description>
     </field>
     <field>
       <name>是否管理员</name>
@@ -27,6 +30,7 @@
       <displayinlist>1</displayinlist>
       <yvalue>是</yvalue>
       <nvalue>否</nvalue>
+      <description>是否管理员, 权限相对于非管理员多一点</description>
     </field>
     <field>
       <name>用户姓名</name>
@@ -36,6 +40,7 @@
       <gotodetail>1</gotodetail>
       <notnull>1</notnull>
       <search>1</search>
+      <description>用户的真实姓名</description>
     </field>
     <field>
       <name>邮箱地址</name>
@@ -43,11 +48,13 @@
       <type>text</type>
       <search>1</search>
       <notnull>1</notnull>
+      <description>用户的邮箱地址</description>
     </field>
     <field>
       <name>备注</name>
       <key>remarks</key>
       <type>longtext</type>
+      <description>备注</description>
     </field>
     <field>
       <name>状态</name>
@@ -66,6 +73,7 @@
       </options>
       <search>1</search>
       <notnull>1</notnull>
+      <description>登录状态</description>
     </field>
   </fields>
   <options>

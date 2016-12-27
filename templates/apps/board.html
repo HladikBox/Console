@@ -9,7 +9,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            应用配置
+            应用管理
             <small>{{$appinfo.name}} <span class="badge bg-green">{{$appinfo.type_name}}</span></small>
         </h1>
         <ol class="breadcrumb">
@@ -34,13 +34,27 @@
 
                     <div class="row">
                         <div class="col-md-12">
-
+                            
                         </div>
                     </div>
-
-
-
-
+                    <table class="table">
+                        <tr>
+                          <th style="width: 10px">#</th>
+                          <th>模型名称</th>
+                          <th>名称</th>
+                          <th>数据来源</th>
+                          <th>描述</th>
+                        </tr>
+                        {{foreach from=$modellist item=rs key=key}}
+                        <tr>
+                            <td>{{$key+1}}</td>
+                            <td><a href="/apps/model?app_id={{$appinfo.id}}&model={{$rs.modelname}}">{{$rs.modelname}}</a></td>
+                            <td><a href="/apps/model?app_id={{$appinfo.id}}&model={{$rs.modelname}}">{{$rs.name}}</a></td>
+                            <td><a href="/apps/model?app_id={{$appinfo.id}}&model={{$rs.modelname}}">{{$rs.tablename}}</a></td>
+                            <td>{{$rs.description}}</td>
+                        </tr>
+                        {{/foreach}}
+                    </table>
                 </div>
                 <div class="tab-pane" id="tab_2">tab_2</div>
                 <div class="tab-pane" id="tab_3">tab_3</div>

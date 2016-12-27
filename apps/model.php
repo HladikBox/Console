@@ -11,11 +11,16 @@
   include ROOT.'/classes/datamgr/app.cls.php';
   include ROOT.'/classes/datamgr/cmsapp.cls.php';
 
-  $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["id"]);
+  $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
   $smarty->assign("appinfo",$appinfo);
 
-  $modellist=$cmsAppMgr->getModelList($User["login"],$appinfo["alias"]);
-  $smarty->assign("modellist",$modellist);
+  $model=$cmsAppMgr->getModel($User["login"],$appinfo["alias"],$_REQUEST["model"]);
+  $smarty->assign("model",$model);
 
-  $smarty->display(ROOT.'/templates/apps/board.html');
+  $keytype=array();
+  $keytype["text"]="文本";
+  $smarty->assign("keytype",$keytype);
+
+
+  $smarty->display(ROOT.'/templates/apps/model.html');
 ?>
