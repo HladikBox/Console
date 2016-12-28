@@ -21,7 +21,7 @@
     $this->keytypename=array();
     $this->keytypename["text"]="文本";
     $this->keytypename["password"]="密码";
-    $this->keytypename["check"]="选中";
+    $this->keytypename["check"]="选中框";
     $this->keytypename["longtext"]="长文本";
     $this->keytypename["select"]="下拉";
     $this->keytypename["html"]="HTML编辑";
@@ -69,8 +69,10 @@
         $path=$folder.$filenamearr[0].".xml";
         $fp = fopen($path,"r");
         $str = fread($fp,filesize($path));
-        $model=json_decode(json_encode((array) simplexml_load_string($str)), true);
-        $filectime=filectime($path);
+        $model=$this->getModel($login,$alias,$filenamearr[0]);//json_decode(json_encode((array) simplexml_load_string($str)), true);
+        //print_r($model);
+        //exit();
+        $filectime=filectime($login,$alias,$path);
         $model["modelname"]=$filenamearr[0];
         $model["createdtime"]=$filectime;
         if($this->checkModelFormat($model)){
@@ -110,6 +112,13 @@
     for ($i=0; $i < count($model["fields"]["field"]); $i++) { 
       $model["fields"]["field"][$i]["typename"]=$this->keytypename[$model["fields"]["field"][$i]["type"]];
       $model["fields"]["field"][$i]["json"]=json_encode($model["fields"]["field"][$i]);
+      if($model["fields"]["field"][$i]["type"]=="select"){
+        if($model["fields"]["field"][$i]["options"]["option"][0]==""&&$model["fields"]["field"][$i]["options"]["option"]["name"]!=""){
+          $temp=$model["fields"]["field"][$i]["options"]["option"];
+          $model["fields"]["field"][$i]["options"]["option"]=array();
+          $model["fields"]["field"][$i]["options"]["option"][]=$temp;
+        }
+      }
     }
 
     for ($i=0; $i < count($model["options"]["option"]); $i++) { 
@@ -119,8 +128,6 @@
     for ($i=0; $i < count($model["javascripts"]["javascript"]); $i++) { 
       $model["javascripts"]["javascript"][$i]["json"]=json_encode($model["javascripts"]["javascript"][$i]);
     }
-    
-
     return $model;
   }
 

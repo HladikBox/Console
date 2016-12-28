@@ -23,6 +23,42 @@
     <section class="content">
 
         <div class="row">
+            <div class="col-md-4">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                      <h3 class="box-title">模型基本信息</h3>
+                      <!-- tools box -->
+                      <div class="pull-right box-tools">
+                        <button type="button" class="btn  btn-sm" data-widget="collapse" data-toggle="tooltip" title="Collapse">
+                          <i class="fa fa-minus"></i></button>
+                      </div>
+                      <!-- /.box-tools -->
+                    </div>
+                    <div class="box-body no-padding">
+                      <form role="form">
+                      <div class="box-body">
+                        <div class="form-group">
+                          <label class="control-label"><span style="color:red;">*</span> 模型名称</label>
+                            <input type="text" class="form-control" id="m_name" value="{{$model.name}}" placeholder="模型的基本名称">
+                        </div>
+                        <div class="form-group">
+                          <label class=" control-label"><span style="color:red;">*</span> 数据库表</label>
+                            <input type="text" class="form-control" id="m_tablename" value="{{$model.tablename}}" placeholder="数据来源的表或者视图">
+                        </div>
+                        <div class="form-group">
+                          <label class=" control-label">强制搜索条件</label>
+                            <input type="text" class="form-control" id="m_searchcondition" value="{{$model.searchcondition}}" placeholder="数据库表的强制搜索条件，当用户进行任何的查询动作，都会加上这个搜索条件。">
+                        </div>
+                        <div class="form-group">
+                          <label class="control-label">模型描述</label>
+                            <textarea  class="form-control" id="m_description"  placeholder="用于不要忘记这个模型是干嘛的。">{{$model.description}}</textarea>
+                        </div>
+                      </div>
+                      <!-- /.box-body -->
+                    </form> 
+                    </div>
+                </div>
+            </div>
             <div class="col-md-8">
                 <div class="box box-primary">
                     <div class="box-header with-border">
@@ -181,6 +217,15 @@
                                             <span class="help-block col-sm-offset-4"></span>
                                         </div>
                                     </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group" id="fdiv_description">
+                                            <label class="col-sm-2 control-label"> 字段描述</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" maxlength="15" class="form-control" id="f_description" placeholder="本字段的相关描述，防止以后忘记这个字段干嘛用">
+                                            </div>
+                                            <span class="help-block col-sm-offset-4"></span>
+                                        </div>
+                                    </div>
                                 </div>
                             </section>
                             <section>
@@ -229,19 +274,281 @@
                                 </div>
                             </section>
                             <br />
-                            <section>
+                            <section class="type_section text_class hide">
+                                <h4 class="page-header">文本类型字段专属</h4>
                                 <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group" id="fdiv_description">
-                                            <label class="col-sm-2 control-label"> 字段描述</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" maxlength="15" class="form-control" id="f_description" placeholder="本字段的相关描述，防止以后忘记这个字段干嘛用">
+                                    <div class="col-md-2 col-md-offset-1" data-toggle="tooltip" title="当保存时，会去数据库检查字段的值是否已经被使用">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" id="f_text_unique">
+                                                <b>唯一</b>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 " data-toggle="tooltip" title="当保存时，会连同其它标记为组合唯一的字段一起去数据库检查值是否被使用">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" id="f_text_unionunique">
+                                                <b>组合唯一</b>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group" >
+                                            <label class="col-sm-4 control-label">格式化</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" maxlength="15" class="form-control" id="f_text_format" placeholder="输入正则表达式，当用户的提交的数据不符合正则要求，则报错提示。" data-toggle="tooltip" title="输入正则表达式">
+                                            </div>
+                                            <span class="help-block col-sm-offset-4"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group" >
+                                            <label class="col-sm-4 control-label">默认值</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" maxlength="15" class="form-control" id="f_text_default" placeholder="新增时自动填充的默认值" data-toggle="tooltip" title="新增时的默认值">
                                             </div>
                                             <span class="help-block col-sm-offset-4"></span>
                                         </div>
                                     </div>
                                 </div>
                             </section>
+                            <section class="type_section check_class hide">
+                                <h4 class="page-header">选中框类型字段专属</h4>
+                                <div class="row">
+                                    <div class="col-md-2 col-md-offset-1" data-toggle="tooltip" title="新增时默认为选中">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" id="f_check_default">
+                                                <b>默认选中</b>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2" data-toggle="tooltip" title="表唯一选中，保存时，将表数据其它数据设置为不选中">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" id="f_check_unique">
+                                                <b>唯一选中</b>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group" >
+                                            <label class="col-sm-4 control-label">选中值</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" maxlength="15" class="form-control" id="f_check_yvalue" placeholder="显示在列表界面的中选中的值" data-toggle="tooltip" title="显示在列表界面的中选中的值">
+                                            </div>
+                                            <span class="help-block col-sm-offset-4"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group" >
+                                            <label class="col-sm-4 control-label">不选值</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" maxlength="15" class="form-control" id="f_check_nvalue" placeholder="显示在列表界面的中不选中的值" data-toggle="tooltip" title="显示在列表界面的中不选中的值">
+                                            </div>
+                                            <span class="help-block col-sm-offset-4"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section class="type_section longtext_class hide">
+                                <h4 class="page-header">长文本类型字段专属</h4>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group" >
+                                            <label class="col-sm-2 control-label">默认值</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" maxlength="15" class="form-control" id="f_longtext_default" placeholder="新增时自动填充的默认值" data-toggle="tooltip" title="新增时的默认值">
+                                            </div>
+                                            <span class="help-block col-sm-offset-4"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section class="type_section select_class hide">
+                                <h4 class="page-header">下拉类型字段专属</h4>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn" id="btn_f_select_addoption">添加选项</button>
+                                    </div>
+                                    <div class="col-md-10" id="f_select_options">
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section class="type_section number_class hide">
+                                <h4 class="page-header">数值类型字段专属</h4>
+                                <div class="row">
+                                    <div class="col-md-2 col-md-offset-1" data-toggle="tooltip" title="有小数，通常为小数点后两位数">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" id="f_number_isdecimal">
+                                                <b>带小数</b>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group" >
+                                            <label class="col-sm-4 control-label">最大值</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" maxlength="15" class="form-control" id="f_number_maxvalue" />
+                                            </div>
+                                            <span class="help-block col-sm-offset-4"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group" >
+                                            <label class="col-sm-4 control-label">最小值</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" maxlength="15" class="form-control" id="f_number_minvalue" />
+                                            </div>
+                                            <span class="help-block col-sm-offset-4"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section class="type_section upload_class hide">
+                                <h4 class="page-header">上传类型字段专属</h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group" >
+                                            <label class="col-sm-4 control-label"> 文件夹</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" maxlength="15" class="form-control" id="f_upload_uploadmodule" placeholder="上传的文件将会在upload目录下面" data-toggle="tooltip" title="上传的文件将会在upload目录下面">
+                                            </div>
+                                            <span class="help-block col-sm-offset-4"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group" id="fdiv_type">
+                                            <label class="col-sm-4 control-label"><span style="color:red;">*</span> 字段类型</label>
+                                            <div class="col-sm-8">
+                                                <select class="form-control" id="f_upload_filetype">
+                                                    <option value="image">图片</option>
+                                                    <option>普通文件</option>
+                                                </select>
+                                            </div>
+                                            <span class="help-block col-sm-offset-4"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section class="type_section grid_class hide">
+                                <h4 class="page-header">下级数据类型字段专属</h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group" >
+                                            <label class="col-sm-4 control-label">字段类型</label>
+                                            <div class="col-sm-8">
+                                                <select class="form-control" id="f_grid_fkey">
+                                                    <option>请选择</option>
+                                                  {{foreach from=$modellist item=rs}}
+                                                  <optgroup label="{{$rs.name}}">
+                                                    {{foreach from=$rs.fields.field item=rss}}
+                                                    {{if $rss.type=="fkey" && $rss.select=="1"}}
+                                                    <option value ="{{$rs.modelname}}-{{$rss.key}}">{{$rss.name}}</option>
+                                                    {{/if}}
+                                                    {{/foreach}}
+                                                  </optgroup>
+                                                  {{/foreach}}
+                                                </select>
+                                            </div>
+                                            <span class="help-block col-sm-offset-4"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section class="type_section fkey_class hide">
+                                <h4 class="page-header">表关联下拉类型字段专属</h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group" >
+                                            <label class="col-sm-4 control-label"> 关联表</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" maxlength="15" class="form-control" id="f_fkey_tablename" placeholder="关联的表" data-toggle="tooltip" title="将会在这个表中进行查询获取">
+                                            </div>
+                                            <span class="help-block col-sm-offset-4"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group" >
+                                            <label class="col-sm-4 control-label"> 关联表别名</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" maxlength="15" class="form-control" id="f_fkey_ntbname" placeholder="请设置一个别名" data-toggle="tooltip" title="请设置一个别名，请注意不要使用r_main或者和其它字段的别名重复">
+                                            </div>
+                                            <span class="help-block col-sm-offset-4"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group" >
+                                            <label class="col-sm-4 control-label"> 查找条件</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" maxlength="15" class="form-control" id="f_fkey_condition" placeholder="搜索，排序SQL条件" data-toggle="tooltip" title="自由编写，通常是 别名.status<>'D' order by xxx之类的">
+                                            </div>
+                                            <span class="help-block col-sm-offset-4"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group" >
+                                            <label class="col-sm-4 control-label"> 显示字段</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" maxlength="15" class="form-control" id="f_fkey_displayfield" placeholder="显示在下拉菜单的字段，可以按照sql语句编写" data-toggle="tooltip" title="显示在下拉菜单的字段">
+                                            </div>
+                                            <span class="help-block col-sm-offset-4"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section class="type_section flist_class hide">
+                                <h4 class="page-header">表关联多选类型字段专属</h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group" >
+                                            <label class="col-sm-4 control-label"> 关联表</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" maxlength="15" class="form-control" id="f_flist_tablename" placeholder="关联的表" data-toggle="tooltip" title="将会在这个表中进行查询获取">
+                                            </div>
+                                            <span class="help-block col-sm-offset-4"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group" >
+                                            <label class="col-sm-4 control-label"> 关联表别名</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" maxlength="15" class="form-control" id="f_flist_ntbname" placeholder="请设置一个别名" data-toggle="tooltip" title="请设置一个别名，请注意不要使用r_main或者和其它字段的别名重复">
+                                            </div>
+                                            <span class="help-block col-sm-offset-4"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group" >
+                                            <label class="col-sm-4 control-label"> 查找条件</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" maxlength="15" class="form-control" id="f_flist_condition" placeholder="搜索，排序SQL条件" data-toggle="tooltip" title="自由编写，通常是 别名.status<>'D' order by xxx之类的">
+                                            </div>
+                                            <span class="help-block col-sm-offset-4"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group" >
+                                            <label class="col-sm-4 control-label"> 显示字段</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" maxlength="15" class="form-control" id="f_flist_displayfield" placeholder="显示在下拉菜单的字段，可以按照sql语句编写" data-toggle="tooltip" title="显示在下拉菜单的字段">
+                                            </div>
+                                            <span class="help-block col-sm-offset-4"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+
                         </form>
                     </div>
                 </div>
@@ -261,24 +568,15 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 {{include  file="$smarty_root/footer.html" }}
 
 <script>
     $(document).ready(function () {
+        $("#f_grid_fkey optgroup").each(function(){
+            if($(this).children().length==0){
+                $(this).remove();
+            }
+        });
         $(".tr_up").click(function () {
             var this_tr = $(this).parent().parent();
             var prev_tr = this_tr.prev();
@@ -302,12 +600,54 @@
             //alert(jsonobj.val());
             OpenFieldEditor(jsonobj.val(),jsonobj);
         });
+        $("#f_type").change(function(){
+            $(".type_section").addClass("hide");
+            $("."+$("#f_type").val()+"_class").removeClass("hide");
+            var field_type=$("#f_type").val();
+
+            $("#f_displayinlist").prop("disabled",false);
+            $("#f_gotodetail").prop("disabled",false);
+            $("#f_search").prop("disabled",false);
+            $("#f_notnull").prop("disabled",false);
+            $("#f_disableindetail").prop("disabled",false);
+
+            if(field_type=="password"){
+                $("#f_displayinlist").prop("disabled",true);
+                $("#f_gotodetail").prop("disabled",true);
+                $("#f_search").prop("disabled",true);
+            }else if(field_type=="check"){
+                $("#f_notnull").prop("disabled",true);
+            }else if(field_type=="html"){
+                $("#f_displayinlist").prop("disabled",true);
+                $("#f_gotodetail").prop("disabled",true);
+                $("#f_search").prop("disabled",true);
+                $("#f_notnull").prop("disabled",true);
+            }else if(field_type=="upload"){
+                $("#f_search").prop("disabled",true);
+            }else if(field_type=="grid"){
+                $("#f_displayinlist").prop("disabled",true);
+                $("#f_gotodetail").prop("disabled",true);
+                $("#f_search").prop("disabled",true);
+                $("#f_notnull").prop("disabled",true);
+                $("#f_disableindetail").prop("disabled",true);
+            }
+        });
+        $("#btn_f_select_addoption").click(function(){
+            AddSelectOption("","","");
+        });
+        
     });
+
     function OpenFieldEditor(json,returnobj) {
         if (json != null) {
             json = JSON.parse(json);
         }
         $("#dlgFieldEditor .modal-title").text(json == null ? "新增字段" : "编辑字段");
+
+
+        $("#f_check_yvalue").val("是");
+        $("#f_check_nvalue").val("否");
+
         if (json != null) {
             $("#f_name").val(json.name);
             $("#f_key").val(json.key);
@@ -320,7 +660,80 @@
             $("#f_search").attr("checked", json.search == "1");
             $("#f_disableindetail").attr("checked", json.disableindetail == "1");
 
+            $("#f_type").change();
+            var field_type=$("#f_type").val();
+            if(field_type=="text"){
+                $("#f_"+field_type+"_unique").attr("checked", json.unique == "1");
+                $("#f_"+field_type+"_unionunique").attr("checked", json.unionunique == "1");
+                $("#f_"+field_type+"_format").val(json.format);
+                $("#f_"+field_type+"_default").val(json.default);
+            }else if(field_type=="check"){
+                $("#f_"+field_type+"_default").attr("checked", json.default == "1");
+                $("#f_"+field_type+"_unique").attr("checked", json.unique == "1");
+                $("#f_"+field_type+"_yvalue").val(json.yvalue);
+                $("#f_"+field_type+"_nvalue").val(json.nvalue);
+            }else if(field_type=="longtext"){
+                $("#f_"+field_type+"_default").val(json.default);
+            }else if(field_type=="longtext"){
+                $("#f_"+field_type+"_default").val(json.default);
+            }else if(field_type=="select"){
+                for(var i=0;i<json.options.option.length;i++){
+                    var option=json.options.option[i];
+                    AddSelectOption(option.name,option.value,option.default);
+                }
+            }else if(field_type=="number"){
+                $("#f_"+field_type+"_isdecimal").attr("checked", json.isdecimal == "1");
+                $("#f_"+field_type+"_maxvalue").val(json.maxvalue);
+                $("#f_"+field_type+"_minvalue").val(json.minvalue);
+            }else if(field_type=="upload"){
+                $("#f_"+field_type+"_uploadmodule").val(json.uploadmodule);
+                $("#f_"+field_type+"_filetype").val(json.filetype);
+            }else if(field_type=="grid"){
+                $("#f_"+field_type+"_fkey").val(json.model+"-"+json.modelkey);
+            }else if(field_type=="fkey"){
+                $("#f_"+field_type+"_displayfield").val(json.displayfield);
+                $("#f_"+field_type+"_tablename").val(json.tablename);
+                $("#f_"+field_type+"_ntbname").val(json.ntbname);
+                $("#f_"+field_type+"_condition").val(json.condition);
+            }else if(field_type=="flist"){
+                $("#f_"+field_type+"_displayfield").val(json.displayfield);
+                $("#f_"+field_type+"_tablename").val(json.tablename);
+                $("#f_"+field_type+"_ntbname").val(json.ntbname);
+                $("#f_"+field_type+"_condition").val(json.condition);
+            }
         }
+
+
+
+
+
+
         $("#dlgFieldEditor").modal("show");
     }
+
+
+    function AddSelectOption(name,value,is_default){
+            var str='<div class="row  f_select_option">'+
+                    '<div class="form-group" >'+
+                    '<label class="col-sm-2 control-label">显示值</label>'+
+                    '<div class="col-sm-2">'+
+                    '<input type="text" maxlength="15" class="form-control f_select_option_name" value='+name+'  placeholder="显示值" >'+
+                    '</div>'+
+                    '<label class="col-sm-2 control-label">存储值</label>'+
+                    '<div class="col-sm-2">'+
+                    '<input type="text" maxlength="15" class="form-control f_select_option_value" value='+value+'  placeholder="存储值" >'+
+                    '</div>'+
+                    '<div class="radio col-sm-2">'+
+                    '<label>'+
+                    '<input type="radio" class="f_select_option_default" name="optionsRadios" '+(is_default=="1"?"checked":"")+' >默认</label>'+
+                    '</div>'+
+                    '<div class="col-sm-1 "><a href="#" class="f_select_option_delete" >删除</a></div>'+
+                    '</div>'+
+                    '</div>';
+            $("#f_select_options").append(str);
+            $(".f_select_option_delete").click(function(){
+                var thisdiv=$(this).parent().parent().parent().remove();
+            });
+    }
+
 </script>

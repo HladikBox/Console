@@ -20,5 +20,10 @@
   $smarty->assign("keytypelist",$cmsAppMgr->keytypename);
 
 
+  $modellist=$cmsAppMgr->getModelList($User["login"],$appinfo["alias"]);
+
+  $smarty->assign("modellist",$modellist);
+
+
   $smarty->display(ROOT.'/templates/apps/model.html');
 ?>
