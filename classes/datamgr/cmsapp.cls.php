@@ -88,11 +88,15 @@
     $login=parameter_filter($login);
     $alias=parameter_filter($alias);
     $model=parameter_filter($model);
+    $modelname=$model;
     $folder=$CONFIG['workspace']['path']."\\$login\\$alias\\model\\";
     $path=$folder.$model.".xml";
     $fp = fopen($path,"r");
     $str = fread($fp,filesize($path));
-    $model=json_decode(json_encode((array) simplexml_load_string($str)), true);
+
+    $xmlstring = simplexml_load_string($str, 'SimpleXMLElement',  LIBXML_NOBLANKS); 
+    $model = json_decode(json_encode($xmlstring),true); 
+
     if($model["options"]["option"][0]==""&&$model["options"]["option"]["name"]!=""){
       $temp=$model["options"]["option"][0];
       $model["options"]["option"]=array();
@@ -128,7 +132,22 @@
     for ($i=0; $i < count($model["javascripts"]["javascript"]); $i++) { 
       $model["javascripts"]["javascript"][$i]["json"]=json_encode($model["javascripts"]["javascript"][$i]);
     }
+    $model["modelname"]=$modelname;
+    $model=$this->setArrayNoNull($model);
     return $model;
+  }
+
+  public function setArrayNoNull($arr){
+    foreach($arr as $key=>$value){
+        if(is_array($value)){
+            if(count($value)==0){
+                $arr[$key]="";
+            }else{
+                $arr[$key]=$this->setArrayNoNull($value);
+            }
+        }
+    }
+    return $arr;
   }
 
 
@@ -136,11 +155,11 @@
     return !empty($model["name"])&&!empty($model["tablename"])&&!empty($model["fields"]);
   }
 
-  public function saveModel($login,$alias,$model){
+  public function saveModel($login,$alias,$modelname,$model){
       Global $CONFIG;
       $login=parameter_filter($login);
       $alias=parameter_filter($alias);
-      $path=$CONFIG['workspace']['path']."\\$login\\$alias\\model\\$model.xml";
+      $path=$CONFIG['workspace']['path']."\\$login\\$alias\\model\\$modelname.xml";
 
       $data = array('total_stud' => 500);
 
@@ -158,22 +177,46 @@
               foreach ($field as $fkey => $fvalue) {
                 if($fkey=="options"){
 
+                    $options=$field["options"]["option"];
+                    $optionsnode = $fieldnode->addChild("options");
+                    foreach ($options as $option) {
+                      $optionnode = $optionsnode ->addChild("option");
+                      foreach ($option as $fkey => $fvalue) {
+                        $optionnode->addChild($fkey,htmlspecialchars($fvalue));
+                      }
+                    }
+
                 }else {
                   $fieldnode->addChild($fkey,htmlspecialchars($fvalue));
                 }
               }
             }
           }elseif ($key=="options") {
-            
+            $options=$model["options"]["option"];
+            $optionsnode = $xml_data->addChild("options");
+            foreach ($options as $option) {
+              $optionnode = $optionsnode ->addChild("option");
+              foreach ($option as $fkey => $fvalue) {
+                $optionnode->addChild($fkey,htmlspecialchars($fvalue));
+              }
+            }
           }else{
-            $xml_data->addChild("$key",htmlspecialchars("$value"));
+            $this->addChild($xml_data,$key,$value);
           }
       }
 
       //saving generated xml file; 
-      $result = $xml_data->asXML("name.xml");
+      //echo $path;
+      $result = $xml_data->asXML($path);
       return outResult(0,"保存成功","");
   }
+  function addChild(&$node,$key,$value){
+            if(trim($value)==""){
+                $node->addChild($key);
+            }else{
+                $node->addChild($key,htmlspecialchars($value));
+            }
+    }
 
 
   // function array_to_xml( $data,$upcome, &$xml_data ) {

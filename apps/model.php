@@ -15,6 +15,8 @@
   $smarty->assign("appinfo",$appinfo);
 
   $model=$cmsAppMgr->getModel($User["login"],$appinfo["alias"],$_REQUEST["model"]);
+  //print_r($model);
+  //exit;
   $smarty->assign("model",$model);
 
   $smarty->assign("keytypelist",$cmsAppMgr->keytypename);

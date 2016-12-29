@@ -14,7 +14,7 @@
   $action=$_REQUEST["action"];
   if($action=="savemodel"){
     $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
-    outputJSON($cmsAppMgr->saveModel($User["login"],$appinfo["alias"],$_REQUEST["model"]));
+    outputJSON($cmsAppMgr->saveModel($User["login"],$appinfo["alias"],$_REQUEST["modelname"],$_REQUEST["model"]));
   }
 
 outputJSON(outResult("-1","找不到你要调用的请求","找不到你要调用的请求"));

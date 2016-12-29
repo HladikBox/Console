@@ -25,7 +25,7 @@
         <div class="row">
             <div class="col-md-4">
               <a href="#" class="btn btn-primary btn-block margin-bottom" id="btnSave" >保存</a>
-              <textarea id="txtConsole"></textarea>
+              <textarea class="hide" id="txtConsole"></textarea>
                 <div class="box box-primary">
                     <div class="box-header with-border">
                       <h3 class="box-title">模型基本信息</h3>
@@ -805,7 +805,7 @@
             $("#txtConsole").val(JSON.stringify(json));
             //alert("保存成功");
 
-            var savejson={action:"savemodel",app_id:"{{$appinfo.id}}",moddelname:"{{$model.modelname}}",model:json};
+            var savejson={action:"savemodel",app_id:"{{$appinfo.id}}",modelname:"{{$model.modelname}}",model:json};
 
             $("#btnSave").attr("disabled", true);
             getJSON("{{$rootpath}}api/model", savejson, function (data) {
