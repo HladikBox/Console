@@ -24,6 +24,8 @@
 
         <div class="row">
             <div class="col-md-4">
+              <a href="#" class="btn btn-primary btn-block margin-bottom" id="btnSave" >保存</a>
+              <textarea id="txtConsole"></textarea>
                 <div class="box box-primary">
                     <div class="box-header with-border">
                       <h3 class="box-title">模型基本信息</h3>
@@ -56,6 +58,11 @@
                           <div class="checkbox" data-toggle="tooltip" title="常用于设置类型的表，仅会在数据库中存储一条数据">
                               <label>
                                   <input type="checkbox" id="m_nolist" {{if $model.nolist=="1"}}checked{{/if}}>单条数据模式
+                              </label>
+                          </div>
+                          <div class="checkbox" data-toggle="tooltip" title="允许导入数据">
+                              <label>
+                                  <input type="checkbox" id="m_import" {{if $model.import=="1"}}checked{{/if}}>允许导入数据
                               </label>
                           </div>
                       </div>
@@ -97,6 +104,7 @@
                                 <a href="#" class="tr_up"><i class="fa fa-arrow-up"></i></a>
                                 <a href="#" class="tr_down"><i class="fa fa-arrow-down"></i></a>
                                 <a href="#" class="btnFieldEditor"><i class="fa fa-pencil-square-o"></i></a>
+                                <a href="#" class="tr_del"><i class="fa fa-times"></i></a>
                                 <textarea class="field_json hide">{{$rs.json}}</textarea>
                             </td>
                           </tr>
@@ -111,13 +119,16 @@
                       <h3 class="box-title">服务</h3>
                       <!-- tools box -->
                       <div class="pull-right box-tools">
+                          <button type="button" class="btn btn-primary btn-sm" id="btnAddOption">
+                              添加服务
+                          </button>
                         <button type="button" class="btn  btn-sm" data-widget="collapse" data-toggle="tooltip" title="Collapse">
                           <i class="fa fa-minus"></i></button>
                       </div>
                       <!-- /.box-tools -->
                     </div>
                     <div class="box-body no-padding">
-                      <table class="table table-hover">
+                      <table class="table table-hover" id="option_table">
                           <tr class="th">
                               <th>名称</th>
                               <th>类型</th>
@@ -131,36 +142,8 @@
                                 <a href="#" class="tr_up"><i class="fa fa-arrow-up"></i></a>
                                 <a href="#" class="tr_down"><i class="fa fa-arrow-down"></i></a>
                                 <a href="#" class="btnOptionEditor"><i class="fa fa-pencil-square-o"></i></a>
+                                <a href="#" class="tr_del"><i class="fa fa-times"></i></a>
                                 <textarea class="option_json hide">{{$rs.json}}</textarea></td>
-                          </tr>
-                          {{/foreach}}
-                      </table>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="box box-info">
-                    <div class="box-header with-border">
-                      <h3 class="box-title">引用JS文件</h3>
-                      <!-- tools box -->
-                      <div class="pull-right box-tools">
-                        <button type="button" class="btn  btn-sm" data-widget="collapse" data-toggle="tooltip" title="Collapse">
-                          <i class="fa fa-minus"></i></button>
-                      </div>
-                      <!-- /.box-tools -->
-                    </div>
-                    <div class="box-body no-padding">
-                      <table class="table table-hover">
-                          <tr>
-                              <th>文件路径</th>
-                              <th>操作</th>
-                          </tr>
-                          {{foreach from=$model.javascripts.javascript item=rs}}
-                          <tr>
-                            <td class="option_filename">{{$rs.filename}}</td>
-                            <td>
-                                <a href="#" class="btnJavascriptEditor"><i class="fa fa-pencil-square-o"></i></a>
-                                <textarea class="option_json hided">{{$rs.json}}</textarea></td>
                           </tr>
                           {{/foreach}}
                       </table>
@@ -572,7 +555,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary" id="btnConfirmField">确定</button>
+                <button type="button" class="btn btn-primary" id="btnConfirmFieldNext">保存并新增</button>
+                <button type="button" class="btn btn-primary" id="btnConfirmField">保存</button>
             </div>
         </div>
         <!-- /.modal-content -->
@@ -583,6 +567,100 @@
 
 
 
+
+
+
+<div class="modal fade" id="dlgOptionEditor">
+    <div class="modal-dialog" style="width:1000px;">
+        <div class="modal-content">
+            <div class="modal-header bg-light-blue-active">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">编辑服务</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form class="form-horizontal">
+                            <section>
+                                <h4  class="page-header">基础</h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group" >
+                                            <label class="col-sm-4 control-label"><span style="color:red;">*</span> 服务名称</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" maxlength="15" class="form-control" id="o_name" placeholder="服务的名称，请不要太长">
+                                            </div>
+                                            <span class="help-block col-sm-offset-4"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group" >
+                                            <label class="col-sm-4 control-label"><span style="color:red;">*</span> 服务类型</label>
+                                            <div class="col-sm-8">
+                                                <select class="form-control" id="o_type">
+                                                    <option value="">请选择字段类型</option>
+                                                    <option value="addnew">新增</option>
+                                                    <option value="delete">删除</option>
+                                                    <option value="function">自定义JS方法</option>
+                                                    <option value="link">自定义超链接</option>
+                                                </select>
+                                            </div>
+                                            <span class="help-block col-sm-offset-4"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group" >
+                                            <label class="col-sm-4 control-label"><span style="color:red;">*</span> 自定义内容</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="o_function" placeholder="自定义内容，例如alert()或者http://www.baidu.com">
+                                            </div>
+                                            <span class="help-block col-sm-offset-4"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-md-offset-1" data-toggle="tooltip" title="详情页显示">
+                                          <div class="checkbox">
+                                              <label>
+                                                  <input type="checkbox" id="o_detail">
+                                                  <b>详情页显示</b>
+                                              </label>
+                                          </div>
+                                    </div>
+                                    <div class="col-md-2 " data-toggle="tooltip" title="列表页显示">
+                                          <div class="checkbox">
+                                              <label>
+                                                  <input type="checkbox" id="o_search">
+                                                  <b>列表页显示</b>
+                                              </label>
+                                          </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group" >
+                                            <label class="col-sm-2 control-label"> 服务描述描述</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" maxlength="15" class="form-control" id="o_description" placeholder="本字段的相关描述，防止以后忘记这个字段干嘛用">
+                                            </div>
+                                            <span class="help-block col-sm-offset-4"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="btnConfirmOptionNext">保存并新增</button>
+                <button type="button" class="btn btn-primary" id="btnConfirmOption">保存</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 
 
 {{include  file="$smarty_root/footer.html" }}
@@ -612,13 +690,26 @@
                 next_tr.insertBefore(this_tr);
             }
         });
-        $(document).on("click",".btnFieldEditor",function () {
+        $(document).on("click",".tr_del",function () {
+            var this_tr = $(this).parent().parent();
+            this_tr.remove();
+            
+        });
+        $("#field_table").on("click",".btnFieldEditor",function () {
             var jsonobj = $(this).parent().children(".field_json");
             //alert(jsonobj.val());
             OpenFieldEditor(jsonobj.val(),jsonobj);
         });
         $("#btnAddField").click(function () {
             OpenFieldEditor(null, null);
+        });
+        $("#option_table").on("click",".btnOptionEditor",function () {
+            var jsonobj = $(this).parent().children(".option_json");
+            //alert(jsonobj.val());
+            OpenOptionEditor(jsonobj.val(),jsonobj);
+        });
+        $("#btnAddOption").click(function () {
+            OpenOptionEditor(null, null);
         });
         $("#f_type").change(function(){
             $(".type_section").addClass("hide");
@@ -655,15 +746,196 @@
         $("#btn_f_select_addoption").click(function(){
             AddSelectOption("","","");
         });
+
+        $("#o_type").change(function(){
+
+
+            if($("#o_type").val()=="addnew"){
+                $("#o_function").prop("disabled",true);
+                $("#o_name").prop("disabled",true);
+            }
+            else if($("#o_type").val()=="delete"){
+                $("#o_function").prop("disabled",true);
+                $("#o_name").prop("disabled",true);
+            }else{
+              $("#o_function").prop("disabled",false);
+              $("#o_name").prop("disabled",false);
+            }
+        });
         
+        $("#btnSave").click(function(){
+            var json={name:$("#m_name").val(),tablename:$("#m_tablename").val(),searchcondition:$("#m_searchcondition").val(),description:$("#m_description").val(),nolist:$("#m_nolist").prop("checked")?"1":"0",import:$("#m_import").prop("checked")?"1":"0"};
+            if($.trim(json.name)==""){
+              warning("模型名称不能为空");
+              return;
+            }
+            if($.trim(json.tablename)==""){
+              warning("数据库表不能为空");
+              return;
+            }
+            var fields=Array();
+            $("#field_table .field_json").each(function(){
+              var field_jsonstr=$(this).val();
+              try{
+                var field_json=JSON.parse(field_jsonstr);
+                fields.push(field_json);
+              }catch(e){
+
+              }
+            });
+            if(fields.length==0){
+              warning("请先添加字段");
+              return;
+            }
+            json.fields={field:fields};
+
+
+            var options=Array();
+            $("#option_table .option_json").each(function(){
+              var option_jsonstr=$(this).val();
+              try{
+                var option_json=JSON.parse(option_jsonstr);
+                options.push(option_json);
+              }catch(e){
+                
+              }
+            });
+
+            json.options={option:options};
+            $("#txtConsole").val(JSON.stringify(json));
+            //alert("保存成功");
+
+            var savejson={action:"savemodel",app_id:"{{$appinfo.id}}",moddelname:"{{$model.modelname}}",model:json};
+
+            $("#btnSave").attr("disabled", true);
+            getJSON("{{$rootpath}}api/model", savejson, function (data) {
+                if (data.code == 0) {
+                    info("保存成功，请尝试使用单元测试");
+                } else {
+                  error(data.result);
+                }
+            }, function () {
+                $("#btnSave").attr("disabled", false);
+            });
+
+        });
+
     });
+
+    function OpenOptionEditor(json,returnobj){
+      if (json != null) {
+            json = JSON.parse(json);
+        }
+        $("#dlgOptionEditor .modal-title").text(json == null ? "新增服务" : "编辑服务");
+        if(json!=null){
+          $("#btnConfirmOptionNext").hide();
+        }else{
+          $("#btnConfirmOptionNext").show();
+        }
+
+        if (json != null) {
+            $("#o_name").val(json.name);
+            $("#o_type").val(json.type);
+            $("#o_function").val(json.function);
+            $("#o_description").val(json.description);
+
+            $("#f_detail").prop("checked", json.detail == "1");
+            $("#f_search").prop("checked", json.search == "1");
+            if(json.function=="addNew()"){
+              $("#o_type").val("addnew");
+            }else if(json.function=="btnDeleteInList()"){
+              $("#o_type").val("delete");
+            }
+            
+
+        }else{
+
+            $("#o_name").val("");
+            $("#o_type").val("");
+            $("#o_function").val("");
+            $("#o_description").val("");
+
+            $("#f_detail").prop("checked", false);
+            $("#f_search").prop("checked", false);
+
+        }
+
+        $("#o_type").change();
+
+
+        $("#btnConfirmOption").unbind("click");
+        $("#btnConfirmOption").click(function () {
+
+            if(SaveOption(returnobj))
+            {
+                $("#dlgOptionEditor").modal("hide");
+            }
+        });
+
+
+        $("#btnConfirmOptionNext").unbind("click");
+        $("#btnConfirmOptionNext").click(function () {
+
+            if(SaveOption(returnobj))
+            {
+                OpenOptionEditor(null,null);
+            }
+        });
+
+        $("#dlgOptionEditor").modal("show");
+
+    }
+
+    function SaveOption(returnobj){
+      var newjson = { name: $("#o_name").val(), type: $("#o_type").val(), function: $("#o_function").val(), description: $("#o_description").val() };
+
+      if(newjson.type=="addnew"){
+        newjson.name="新增";
+        newjson.type="function";
+        newjson.function="addNew()";
+      }else if(newjson.type=="delete"){
+        newjson.name="删除";
+        newjson.type="function";
+        newjson.function="btnDeleteInList()";
+      }
+
+
+        var newjonstr = JSON.stringify(newjson);
+            //alert(newjonstr);
+            if (returnobj != null) {
+                returnobj.val(newjonstr);
+                returnobj.parent().parent().children(".field_name").text(newjson.name);
+                returnobj.parent().parent().children(".field_typename").text(newjson.type!="link"?"方法":"超链接");
+            } else {
+
+                var cobj = $('<tr class="field_row">'
+                + '<td class="field_name">' + newjson.name + '</td>'
+                + '<td class="field_typename">' + (newjson.type!="link"?"方法":"超链接") + '</td>'
+                + '<td>'
+                + '<a href="#" class="tr_up"><i class="fa fa-arrow-up"></i></a> '
+                + '<a href="#" class="tr_down"><i class="fa fa-arrow-down"></i></a> '
+                + '<a href="#" class="btnOptionEditor"><i class="fa fa-pencil-square-o"></i></a> '
+                + '<a href="#" class="tr_del"><i class="fa fa-times"></i></a> '
+                + '<textarea class="option_json hide"></textarea> '
+                + '</td>'
+                + '</tr>');
+                cobj.children("td").children(".option_json").val(newjonstr);
+                $("#option_table").append(cobj);
+            }
+            return true;
+
+    }
 
     function OpenFieldEditor(json,returnobj) {
         if (json != null) {
             json = JSON.parse(json);
         }
         $("#dlgFieldEditor .modal-title").text(json == null ? "新增字段" : "编辑字段");
-
+        if(json!=null){
+          $("#btnConfirmFieldNext").hide();
+        }else{
+          $("#btnConfirmFieldNext").show();
+        }
 
         if (json != null) {
             $("#f_name").val(json.name);
@@ -780,6 +1052,27 @@
 
         $("#btnConfirmField").unbind("click");
         $("#btnConfirmField").click(function () {
+
+            if(SaveField(returnobj))
+            {
+                $("#dlgFieldEditor").modal("hide");
+            }
+        });
+
+
+        $("#btnConfirmFieldNext").unbind("click");
+        $("#btnConfirmFieldNext").click(function () {
+
+            if(SaveField(returnobj))
+            {
+                OpenFieldEditor(null,null);
+            }
+        });
+
+        $("#dlgFieldEditor").modal("show");
+    }
+
+    function SaveField(returnobj){
 
             var newjson = { name: $("#f_name").val(), key: $("#f_key").val(), type: $("#f_type").val(), description: $("#f_description").val() };
 
@@ -944,16 +1237,14 @@
                 + '<a href="#" class="tr_up"><i class="fa fa-arrow-up"></i></a> '
                 + '<a href="#" class="tr_down"><i class="fa fa-arrow-down"></i></a> '
                 + '<a href="#" class="btnFieldEditor"><i class="fa fa-pencil-square-o"></i></a> '
-                + '<textarea class="field_json hide"></textarea>'
+                + '<a href="#" class="tr_del"><i class="fa fa-times"></i></a> '
+                + '<textarea class="field_json hide"></textarea> '
                 + '</td>'
                 + '</tr>');
                 cobj.children("td").children(".field_json").val(newjonstr);
                 $("#field_table").append(cobj);
             }
-            $("#dlgFieldEditor").modal("hide");
-        });
-
-        $("#dlgFieldEditor").modal("show");
+            return true;
     }
 
 

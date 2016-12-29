@@ -136,6 +136,60 @@
     return !empty($model["name"])&&!empty($model["tablename"])&&!empty($model["fields"]);
   }
 
+  public function saveModel($login,$alias,$model){
+      Global $CONFIG;
+      $login=parameter_filter($login);
+      $alias=parameter_filter($alias);
+      $path=$CONFIG['workspace']['path']."\\$login\\$alias\\model\\$model.xml";
+
+      $data = array('total_stud' => 500);
+
+      // creating object of SimpleXMLElement
+      $xml_data = new SimpleXMLElement('<?xml version="1.0"?><root></root>');
+
+      // function call to convert array to xml
+      //$this->array_to_xml($model,"",$xml_data);
+      foreach( $model as $key => $value ) {
+          if($key=="fields"){
+            $fields=$model["fields"]["field"];
+            $fieldsnode = $xml_data->addChild("fields");
+            foreach ($fields as $field) {
+              $fieldnode = $fieldsnode ->addChild("field");
+              foreach ($field as $fkey => $fvalue) {
+                if($fkey=="options"){
+
+                }else {
+                  $fieldnode->addChild($fkey,htmlspecialchars($fvalue));
+                }
+              }
+            }
+          }elseif ($key=="options") {
+            
+          }else{
+            $xml_data->addChild("$key",htmlspecialchars("$value"));
+          }
+      }
+
+      //saving generated xml file; 
+      $result = $xml_data->asXML("name.xml");
+      return outResult(0,"保存成功","");
+  }
+
+
+  // function array_to_xml( $data,$upcome, &$xml_data ) {
+  //   foreach( $data as $key => $value ) {
+  //       if( is_numeric($key) ){
+  //           $key = $upcome+; //dealing with <0/>..<n/> issues
+  //       }
+  //       if( is_array($value) ) {
+  //           $subnode = $xml_data->addChild($key);
+  //           $this->array_to_xml($value,$key, $subnode);
+  //       } else {
+  //           $xml_data->addChild("$key",htmlspecialchars("$value"));
+  //       }
+  //    }
+  // }
+
  }
  
  $cmsAppMgr=CmsAppMgr::getInstance();
