@@ -316,6 +316,14 @@
     function executeSql($login,$alias,$modelname,$userdbmgr){
       $modelsql=$this->getExecuteSql($login,$alias,$modelname);
       $sqls=$modelsql["result"];
+      $rsqls=array();
+      foreach ($sqls as  $sql) {
+        $sql=trim($sql);
+        if($sql!="#"){
+          $rsqls[]=$sql;
+        }
+      }
+      $sqls=$rsqls;
       $succ=0;
       $fail=0;
       $failsql=array();
@@ -328,7 +336,7 @@
         }
       }
       if($fail>=count($sqls)){
-        return outResult(-1,"完全运行失败，请检查模型并重试","");
+        return outResult(-1,"完全运行失败，请检查模型并重试",$failsql);
       }elseif ($fail>0) {
         return outResult(1,"部分Sql语句执行失败，请复制SQL并连接数据库重试",$failsql);
       }else{

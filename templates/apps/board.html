@@ -27,23 +27,25 @@
                 <li class="active"><a href="#tab_1" id="btn_tab_1" data-toggle="tab" >数据对象</a></li>
                 <li><a href="#tab_2" id="btn_tab_2" data-toggle="tab" >应用菜单</a></li>
                 <li><a href="#tab_3" id="btn_tab_3" data-toggle="tab" >版本管理</a></li>
-                <li><a href="#tab_4" id="btn_tab_4" data-toggle="tab" >时间线</a></li>
+                <li><a href="#tab_4" id="btn_tab_4" data-toggle="tab" >里程碑</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="tab_1">
 
                     <div class="row">
                         <div class="col-md-12">
-                            
+                            <a href="#" class="btn btn-warning margin-bottom" id="btnExecuteMysql" >批量更新数据库</a>
                         </div>
                     </div>
-                    <table class="table">
+                    <table class="table table-condensed">
                         <tr>
                           <th style="width: 10px">#</th>
                           <th>模型名称</th>
                           <th>名称</th>
-                          <th>数据来源</th>
-                          <th>描述</th>
+                          <th >数据来源</th>
+                          <th  >描述</th>
+                          <th class="db_op_th hide">SQL执行</th>
+                          <th class="ut_op hide">单元测试</th>
                         </tr>
                         {{foreach from=$modellist item=rs key=key}}
                         <tr>
@@ -52,6 +54,8 @@
                             <td><a href="/apps/model?app_id={{$appinfo.id}}&model={{$rs.modelname}}">{{$rs.name}}</a></td>
                             <td><a href="/apps/model?app_id={{$appinfo.id}}&model={{$rs.modelname}}">{{$rs.tablename}}</a></td>
                             <td>{{$rs.description}}</td>
+                            <td class="db_op hide" modelname="{{$rs.modelname}}"></td>
+                            <td class="ut_op hide"></td>
                         </tr>
                         {{/foreach}}
                     </table>
@@ -62,9 +66,57 @@
             </div>
             <!-- /.tab-content -->
         </div>
-
     </section>
     <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
 {{include  file="$smarty_root/footer.html" }}
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#btnExecuteMysql").click(function(){
+            if($(".db_op").length==0){
+                info("清先添加模型");
+                return;
+            }
+            $(".db_op").removeClass("hide");
+            $(".db_op_th").removeClass("hide");
+            $(".db_op").removeClass("ready");
+            $(".db_op").addClass("ready");
+            $(".db_op").html('<i class="fa fa-spinner fa-spin"></i>');
+            $("#btnExecuteMysql").attr("disabled",true);
+            batchExecute();
+        });
+    });
+    function batchExecute(){
+        if($(".db_op.ready").length==0){
+            $("#btnExecuteMysql").attr("disabled",false);
+            return;
+        }
+        var dp=$(".db_op.ready:first");
+        var modelname=dp.attr("modelname");
+            var json={action:"executesql",app_id:"{{$appinfo.id}}",modelname:modelname};
+            getJSON("{{$rootpath}}api/model", json, function (data) {
+                //alert(1);
+                dp.removeClass("ready");
+                setTimeout("batchExecute()", 1000 );
+                    if(data.code==0){
+                      dp.html('<span class="text-green">执行成功</span>');
+                    }else if(data.code==1){
+                      var ret="";
+                      for(var i=0;i<data.return.length;i++){
+                        ret+="<p>"+data.return[i]+"</p>";
+                      }
+                      dp.html('<span class="text-yellow">'+data.result+ret+'</span>');
+                    }else{
+
+                      var ret="";
+                      for(var i=0;i<data.return.length;i++){
+                        ret+="<p>"+data.return[i]+"</p>";
+                      }
+                      dp.html('<span class="text-red">'+data.result+ret+'</span>');
+                    }
+                });
+        
+    }
+</script>
