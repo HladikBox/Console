@@ -20,7 +20,7 @@
     </section>
 
     <!-- Main content -->
-    <section class="content">
+    <section class="content" id="model_content">
 
         <div class="row">
             <div class="col-md-4">
@@ -98,9 +98,9 @@
                           </tr>
                           {{foreach from=$model.fields.field item=rs}}
                           <tr class="field_row">
+                              <td class="field_name">{{$rs.name}}</td>
+                              <td class="field_key">{{$rs.key}}</td>
                             <td class="field_typename">{{$rs.typename}}</td>
-                            <td class="field_name">{{$rs.name}}</td>
-                            <td class="field_key">{{$rs.key}}</td>
                             <td class="field_description">{{$rs.description}}</td>
                             <td>
                                 <a href="#" class="tr_up"><i class="fa fa-arrow-up"></i></a>
@@ -835,13 +835,13 @@
             json.options={option:options};
             $("#txtConsole").val(JSON.stringify(json));
             //alert("保存成功");
-
+            datachanged = false;
             var savejson={action:"savemodel",app_id:"{{$appinfo.id}}",modelname:"{{$model.modelname}}",model:json};
 
             $("#btnSave").attr("disabled", true);
             getJSON("{{$rootpath}}api/model", savejson, function (data) {
                 if (data.code == 0) {
-                    info("保存成功，请尝试使用单元测试");
+                    info("保存成功，请立即更新数据表并使用单元测试");
                 } else {
                   error(data.result);
                 }
@@ -910,8 +910,25 @@
                     $("#btnExecuteNow").attr("disabled", false);
                 });
         });
-        
+        $("#model_content").on("change", "input", function () {
+            datachanged = true;
+        });
+        $("#model_content").on("change", "textarea", function () {
+            datachanged = true;
+        });
+        $("#model_content").on("change", "radio", function () {
+            datachanged = true;
+        });
+        $(window).bind('beforeunload', function () {
+            if (datachanged) {
+                return '您输入的内容尚未保存，确定离开此页面吗？';
+            } else {
+                return;
+            }
+        });
     });
+
+    var datachanged = false;
 
     function OpenOptionEditor(json,returnobj){
       if (json != null) {
@@ -930,8 +947,8 @@
             $("#o_function").val(json.function);
             $("#o_description").val(json.description);
 
-            $("#f_detail").prop("checked", json.detail == "1");
-            $("#f_search").prop("checked", json.search == "1");
+            $("#o_detail").prop("checked", json.detail == "1");
+            $("#o_search").prop("checked", json.search == "1");
             if(json.function=="addNew()"){
               $("#o_type").val("addnew");
             }else if(json.function=="btnDeleteInList()"){
@@ -978,7 +995,7 @@
     }
 
     function SaveOption(returnobj){
-      var newjson = { name: $("#o_name").val(), type: $("#o_type").val(), function: $("#o_function").val(), description: $("#o_description").val() };
+        var newjson = { name: $("#o_name").val(), type: $("#o_type").val(), "function": $("#o_function").val(), description: $("#o_description").val(), search: $("#o_search").prop("checked") ? "1" : "0", detail: $("#o_detail").prop("checked") ? "1" : "0" };
 
       if(newjson.type=="addnew"){
         newjson.name="新增";
@@ -1313,9 +1330,9 @@
             //alert(newjonstr);
             if (returnobj != null) {
                 returnobj.val(newjonstr);
-                returnobj.parent().parent().children(".field_typename").text($("#f_type option:checked").text());
                 returnobj.parent().parent().children(".field_name").text(newjson.name);
                 returnobj.parent().parent().children(".field_key").text(newjson.key);
+                returnobj.parent().parent().children(".field_typename").text($("#f_type option:checked").text());
                 returnobj.parent().parent().children(".field_description").text(newjson.description);
             } else {
 
