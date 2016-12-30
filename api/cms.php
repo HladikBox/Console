@@ -7,7 +7,7 @@
  */
   require '../include/common.inc.php';
 
-  include ROOT.'/classes/datamgr/app.cls.php';
+  include_once ROOT.'/classes/datamgr/app.cls.php';
 
   $action=$_REQUEST["action"];
   if($action=="appinfo"){

@@ -9,7 +9,7 @@
   include ROOT.'/include/init.inc.php';
 
   include ROOT.'/classes/datamgr/model.cls.php';
-  include ROOT.'/classes/datamgr/app.cls.php';
+  include_once ROOT.'/classes/datamgr/app.cls.php';
 
   $action=$_REQUEST["action"];
   if($action=="savemodel"){

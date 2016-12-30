@@ -45,13 +45,13 @@
       $name=parameter_filter($name);
       $alias=strtolower(parameter_filter($alias));
       $type=$type+0;
-      if(empty($name)||strlen($name)>15){
+      if(empty($name)||mb_strlen($name,'UTF8')>15){
         return outResult("-1","应用名称不能为空并控制在15个字符以内","appname");
       }
       if($type==0){
         return outResult("-1","请选择应用类型","apptype");
       }
-      if(empty($alias)||strlen($alias)>15){
+      if(empty($alias)||mb_strlen($alias,'UTF8')>15){
         return outResult("-1","应用代号不能为空并控制在15个字符以内","appalias");
       }
       if (preg_match("/^[a-z]/i", $alias)==false) {
@@ -138,7 +138,7 @@
       $type=parameter_filter($arr["type"]);
       //$alias=parameter_filter($arr["alias"]);
 
-      if(empty($name)||strlen($name)>15){
+      if(empty($name)||mb_strlen($name,'UTF8')>15){
         return outResult("-1","应用名称不能为空并控制在15个字符以内","appname");
       }
       $sql="select 1 from tb_app where name='$name' and user_id=$UID and status<>'D' and id<>$app_id ";
@@ -369,11 +369,11 @@
     function configDone($app_id){
       Global $UID,$User,$CONFIG;
 
-      $info=$this->getAppInfo($UID,$app_id);
+      $result=$this->getAppInfo($UID,$app_id);
 
-      $status=$result["run_status"];
+      echo $status=$result["run_status"];
       if($status!="C"){
-        outResult(1,"你早已经完成配置，谢谢你的使用","");
+        return outResult(1,"你早已经完成配置，谢谢你的使用","");
       }else{
         $sql="update tb_app set run_status='P' where id=$app_id";
         $this->dbmgr->query($sql);
@@ -385,7 +385,7 @@
     //}
     function startApp($app_id){
       Global $UID,$User,$CONFIG;
-      $info=$this->getAppInfo($UID,$app_id);
+      $result=$this->getAppInfo($UID,$app_id);
       $status=$result["run_status"];
       if($status=="C"){
         return outResult(-1,"你还没有完成配置","");
@@ -398,7 +398,7 @@
     }
     function stopApp($app_id){
       Global $UID,$User,$CONFIG;
-      $info=$this->getAppInfo($UID,$app_id);
+      $result=$this->getAppInfo($UID,$app_id);
       $status=$result["run_status"];
       if($status=="C"){
         return outResult(-1,"你还没有完成配置","");

@@ -8,7 +8,7 @@
 
   require '../include/common.inc.php';
   include ROOT.'/include/init.inc.php';
-  include ROOT.'/classes/datamgr/app.cls.php';
+  include_once ROOT.'/classes/datamgr/app.cls.php';
   include ROOT.'/classes/datamgr/model.cls.php';
 
   $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
