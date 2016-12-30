@@ -25,6 +25,8 @@
         <div class="row">
             <div class="col-md-4">
               <a href="#" class="btn btn-primary btn-block margin-bottom" id="btnSave" >保存</a>
+              <a href="#" class="btn btn-warning btn-block margin-bottom" id="btnExecuteMysql" >生成数据库表</a>
+              <a href="#" class="btn btn-success btn-block margin-bottom" id="btnUnitTest" >进行单元测试</a>
               <textarea class="hide" id="txtConsole"></textarea>
                 <div class="box box-primary">
                     <div class="box-header with-border">
@@ -147,6 +149,35 @@
                           </tr>
                           {{/foreach}}
                       </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 hide" id="divExecuteMysql">
+                <div class="box box-warning">
+                    <div class="box-header with-border">
+                      <h3 class="box-title">Sql语句</h3>
+                      <!-- tools box -->
+                      <div class="pull-right box-tools">
+                          <button type="button" class="btn btn-primary btn-sm" id="btnExecuteNow">
+                              执行
+                          </button>
+                          <button type="button" class="btn btn-info btn-sm" id="btnRefreshSql">
+                              刷新
+                          </button>
+                        <button type="button" class="btn  btn-sm" data-widget="collapse" data-toggle="tooltip" title="Collapse">
+                          <i class="fa fa-minus"></i></button>
+                      </div>
+                      <!-- /.box-tools -->
+                    </div>
+                    <div class="box-body ">
+                      <div class="row">
+                          <code>
+                            <div class="col-md-12" id="txtSql">
+                              select * from tb_app;
+                            </div>
+                            <p></p>
+                          </code>
+                      </div>
                     </div>
                 </div>
             </div>
@@ -820,6 +851,66 @@
 
         });
 
+        $("#btnExecuteMysql").click(function(){
+            info("请确保你的模型已经进行保存，再进行数据库表的生成，确定继续吗？",function(){
+
+                var json={action:"getexecutesql",app_id:"{{$appinfo.id}}",modelname:"{{$model.modelname}}"};
+                $("#btnExecuteMysql").attr("disabled", true);
+                getJSON("{{$rootpath}}api/model", json, function (data) {
+                    
+                    $("#divExecuteMysql").removeClass("hide");
+                    var ret="";
+                    for(var i=0;i<data.result.length;i++){
+                      ret+="<p>"+data.result[i]+"</p>";
+                    }
+                    $("#txtSql").html(ret);
+
+                }, function () {
+                    $("#btnExecuteMysql").attr("disabled", false);
+                });
+            });
+
+        });
+
+        $("#btnRefreshSql").click(function(){
+              var json={action:"getexecutesql",app_id:"{{$appinfo.id}}",modelname:"{{$model.modelname}}"};
+                $("#btnRefreshSql").attr("disabled", true);
+                getJSON("{{$rootpath}}api/model", json, function (data) {
+                    
+                    var ret="";
+                    for(var i=0;i<data.result.length;i++){
+                      ret+="<p>"+data.result[i]+"</p>";
+                    }
+                    $("#txtSql").html(ret);
+
+                }, function () {
+                    $("#btnRefreshSql").attr("disabled", false);
+                });
+
+        });
+
+        $("#btnExecuteNow").click(function(){
+            var json={action:"executesql",app_id:"{{$appinfo.id}}",modelname:"{{$model.modelname}}"};
+                $("#btnExecuteNow").attr("disabled", true);
+                getJSON("{{$rootpath}}api/model", json, function (data) {
+                    if(data.code==0){
+                      info("执行成功，数据表已经生成");
+                    }else if(data.code==1){
+                      var ret="";
+                      for(var i=0;i<data.return.length;i++){
+                        ret+="<p>"+data.return[i]+"</p>";
+                      }
+                      warning(data.result+ret);
+                    }else{
+                      error(data.result);
+                    }
+                    
+
+                }, function () {
+                    $("#btnExecuteNow").attr("disabled", false);
+                });
+        });
+        
     });
 
     function OpenOptionEditor(json,returnobj){

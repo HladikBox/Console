@@ -6,16 +6,17 @@
  * Window - Preferences - PHPeclipse - PHP - Code Templates
  */
 
- class CmsAppMgr
+ class ModelMgr
  {
  	private static $instance = null;
 	public static $dbmgr = null;
 	public static function getInstance() {
-		return self :: $instance != null ? self :: $instance : new CmsAppMgr();
+		return self :: $instance != null ? self :: $instance : new ModelMgr();
 	}
 
 
   public $keytypename;
+  public $keydbtype;
 
 	private function __construct() {
     $this->keytypename=array();
@@ -31,6 +32,20 @@
     $this->keytypename["datetime"]="日期时间";
     $this->keytypename["fkey"]="表关联下拉";
     $this->keytypename["flist"]="表关联多选";
+
+
+    $this->keydbtype=array();
+    $this->keydbtype["text"]="varchar(255)";
+    $this->keydbtype["password"]="varchar(255)";
+    $this->keydbtype["check"]="char(1)";
+    $this->keydbtype["longtext"]="varchar(4000)";
+    $this->keydbtype["select"]="varchar(15)";
+    $this->keydbtype["html"]="text";
+    $this->keydbtype["number"]="int";
+    $this->keydbtype["upload"]="varchar(1000)";
+    $this->keydbtype["datetime"]="datetime";
+    $this->keydbtype["fkey"]="int";
+    $this->keydbtype["flist"]="varchar(4000)";
 	}
 	
 	public  function __destruct ()
@@ -210,6 +225,7 @@
       $result = $xml_data->asXML($path);
       return outResult(0,"保存成功","");
   }
+
   function addChild(&$node,$key,$value){
             if(trim($value)==""){
                 $node->addChild($key);
@@ -218,25 +234,113 @@
             }
     }
 
+    function getExecuteSql($login,$alias,$modelname){
 
-  // function array_to_xml( $data,$upcome, &$xml_data ) {
-  //   foreach( $data as $key => $value ) {
-  //       if( is_numeric($key) ){
-  //           $key = $upcome+; //dealing with <0/>..<n/> issues
-  //       }
-  //       if( is_array($value) ) {
-  //           $subnode = $xml_data->addChild($key);
-  //           $this->array_to_xml($value,$key, $subnode);
-  //       } else {
-  //           $xml_data->addChild("$key",htmlspecialchars("$value"));
-  //       }
-  //    }
-  // }
+      $model=$this->getModel($login,$alias,$modelname);
+      $dbname=$login."_".$alias;
+      $sql[]="use `$dbname` ;";
+      $tablename=parameter_filter($model["tablename"]);
+
+      if($this->dbmgr->checkHave("information_schema.VIEWS","TABLE_SCHEMA='$dbname' and TABLE_NAME='$tablename'")){
+        $sql[]="#您使用的表名 $tablename 为视图，不需要生成数据表 ";
+        return outResult(0,$sql,"");
+      }
+
+
+
+
+      $tablename_description=parameter_filter($model["description"]);
+      if(!$this->dbmgr->checkHave("information_schema.TABLES","TABLE_SCHEMA='$dbname' and TABLE_NAME='$tablename'")){
+        $sql[]="CREATE TABLE `$tablename` (`id` int primary key,`created_date` datetime,`created_user` int,`updated_date` datetime,`updated_user` int) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='$tablename_description';";
+      }else{
+        $sql[]="#表 $tablename 已经存在";
+        $sql[]="alter table `$tablename` comment='$tablename_description';";
+      }
+
+      $sql[]="#以下生成数据库表字段";
+      foreach ($model["fields"]["field"] as $key => $field) {
+        $field_type=parameter_filter($field["type"]);
+        $field_key=parameter_filter($field["key"]);
+        $field_name=parameter_filter($field["name"]);
+        $field_description=$field_name.".\r\n".parameter_filter($field["description"]);
+
+        $column_type=$this->keydbtype[$field_type];
+        if($field_type=="number"&&$field["isdecimal"]==1){
+          $column_type="decimal(12,2)";
+        }
+        if($field_type=="flist"&&!(empty($field["relatetable"]))){
+          $column_type="";
+          $field_relatetable=parameter_filter($field["relatetable"]);
+          $field_tablename=parameter_filter($field["tablename"]);
+          if(!$this->dbmgr->checkHave("information_schema.TABLES","TABLE_SCHEMA='$dbname' and TABLE_NAME='$field_relatetable'")){
+            $sql[]="CREATE TABLE `$field_relatetable` (`pid` int,`fid` int) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='$field_tablename 的外键关系表';";
+          }else{
+            $sql[]="#$field_tablename 的外键关系表已经存在";
+          }
+        }
+        if($field_type=="select"){
+          foreach ($field["options"]["option"] as  $option) {
+            $option_name=parameter_filter($option["name"]);
+            $option_value=parameter_filter($option["value"]);
+            $field_description.="\r\n $option_name = $option_value";
+          }
+        }
+        if(!empty($column_type)){
+          $sql[]=$this->getFieldUpdateStr($dbname,$tablename,$field_key,$column_type,$field_description);
+        }
+
+
+      }
+
+      return outResult(0,$sql,"");
+
+    }
+
+    function getFieldUpdateStr($dbname,$tablename,$column,$column_type,$comment){
+
+        $dbname=parameter_filter($dbname);
+        $tablename=parameter_filter($tablename);
+        $column=parameter_filter($column);
+        $column_type=parameter_filter($column_type);
+        $comment=parameter_filter($comment);
+        //return "TABLE_SCHEMA='$dbname' and TABLE_NAME='$tablename' and COLUMN_NAME='$field_key'";
+
+      if(!$this->dbmgr->checkHave("information_schema.COLUMNS", "TABLE_SCHEMA='$dbname' and TABLE_NAME='$tablename' and COLUMN_NAME='$column'")){
+              $sql="ALTER TABLE `$tablename` ADD `$column` $column_type COMMENT '$comment';";
+          }else{
+              $sql="ALTER TABLE `$tablename` MODIFY COLUMN `$column`  $column_type COMMENT '$comment' ;";
+          }
+          return $sql;
+    }
+
+    function executeSql($login,$alias,$modelname,$userdbmgr){
+      $modelsql=$this->getExecuteSql($login,$alias,$modelname);
+      $sqls=$modelsql["result"];
+      $succ=0;
+      $fail=0;
+      $failsql=array();
+      foreach ($sqls as  $sql) {
+        try{
+          $userdbmgr->query($sql);
+        }catch(Exception $ex){
+          $fail++;
+          $failsql[]=$sql;
+        }
+      }
+      if($fail>=count($sqls)){
+        return outResult(-1,"完全运行失败，请检查模型并重试","");
+      }elseif ($fail>0) {
+        return outResult(1,"部分Sql语句执行失败，请复制SQL并连接数据库重试",$failsql);
+      }else{
+        return outResult(0,"","");
+      }
+
+    }
 
  }
  
- $cmsAppMgr=CmsAppMgr::getInstance();
- $cmsAppMgr->dbmgr=$dbmgr;
+ $modelMgr=ModelMgr::getInstance();
+ $modelMgr->dbmgr=$dbmgr;
 
 
 

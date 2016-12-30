@@ -28,6 +28,13 @@ $CONFIG['database']['user']		= 'root';
 $CONFIG['database']['psw']		= 'root'; 
 
 
+#[Database]
+$CONFIG['userdatabase']['provider']	= 'mysql';//mssql,sqlsrv
+$CONFIG['userdatabase']['host']		= "127.0.0.1";
+$CONFIG['userdatabase']['user']		= 'root'; 
+$CONFIG['userdatabase']['psw']		= 'root';
+
+
 
 #[File upload]
 $CONFIG['fileupload']['upload_path']	= "upload";

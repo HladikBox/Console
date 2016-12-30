@@ -10,6 +10,7 @@
  {
  	private static $instance = null;
 	public static $dbmgr = null;
+  public static $userdbmgr=null;
 	public static function getInstance() {
 		return self :: $instance != null ? self :: $instance : new AppMgr();
 	}
@@ -23,6 +24,15 @@
 		
 	}
 
+    function getUserDbMgr(){
+      Global $CONFIG;
+      if($this->userdbmgr==null){
+        $this->userdbmgr = new DbMysql($CONFIG['userdatabase']['host'], $CONFIG['userdatabase']['user'], $CONFIG['userdatabase']['psw']);
+      }
+      return $this->userdbmgr;
+    }
+
+    
     public function getAppTypeList(){
         $sql="select id,name from tb_app_type where status='A' order by order_no";
         $query = $this->dbmgr->query($sql);
@@ -203,14 +213,15 @@
       $alias=$info["alias"];
       //{{$User.login}}_{{$appinfo.alias}}
       $dbname=$User["login"]."_".$alias;
-      if($this->dbmgr->checkHave("information_schema.SCHEMATA","SCHEMA_NAME='$dbname'")){
+      if($this->getUserDbMgr()->checkHave("information_schema.SCHEMATA","SCHEMA_NAME='$dbname'")){
         return outResult(1,"数据库".$dbname."已经存在","");
       }else{
         $sql="create database $dbname";
-        $this->dbmgr->query($sql);
+        $this->getUserDbMgr()->query($sql);
       }
       return outResult(0,"保存成功","");
     }
+
 
     
     function createAdminTable($app_id){
@@ -220,9 +231,9 @@
       $alias=$info["alias"];
       //{{$User.login}}_{{$appinfo.alias}}
       $dbname=$User["login"]."_".$alias;
-      if($this->dbmgr->checkHave("information_schema.SCHEMATA","SCHEMA_NAME='$dbname'")){
+      if($this->getUserDbMgr()->checkHave("information_schema.SCHEMATA","SCHEMA_NAME='$dbname'")){
         
-        if(!$this->dbmgr->checkHave("information_schema.TABLES","TABLE_SCHEMA='$dbname' and TABLE_NAME='tb_user'")){
+        if(!$this->getUserDbMgr()->checkHave("information_schema.TABLES","TABLE_SCHEMA='$dbname' and TABLE_NAME='tb_user'")){
             $sql="CREATE TABLE `$dbname`.`tb_user` (
   `id` int(11) NOT NULL,
   `login_id` varchar(50) NOT NULL,
@@ -238,12 +249,12 @@
   `updated_user` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";   
-            $this->dbmgr->query($sql);
+            $this->getUserDbMgr()->query($sql);
             
             $sql="INSERT INTO `$dbname`.`tb_user` VALUES 
 (1,'admin','21232f297a57a5a743894a0e4a801fc3','系统管理员','邮箱','Y','遇到问题，请联系QQ359304951','A',now(),1,now(),1),
 (2,'editor','21232f297a57a5a743894a0e4a801fc3','数据编辑员','邮箱','N','遇到问题，请联系QQ359304951','A',now(),1,now(),1);";
-            $this->dbmgr->query($sql);
+            $this->getUserDbMgr()->query($sql);
 
             return outResult(0,"保存成功","");
 
@@ -267,16 +278,16 @@
       //{{$User.login}}_{{$appinfo.alias}}
       $password=md5($login."_49339");
       $dbname=$login."_".$alias;
-      if($this->dbmgr->checkHave("information_schema.SCHEMATA","SCHEMA_NAME='$dbname'")){
+      if($this->getUserDbMgr()->checkHave("information_schema.SCHEMATA","SCHEMA_NAME='$dbname'")){
         //CREATE USER 'alucard263096'@'mysql.app-link.org' IDENTIFIED BY 'a6c3bc0575df7d9d676890e861130a9a';
         //mysql.user
-        if(!$this->dbmgr->checkHave("mysql.user","User='$login' and Host='%'")){
+        if(!$this->getUserDbMgr()->checkHave("mysql.user","User='$login' and Host='%'")){
             $sql="CREATE USER '$login'@'%' IDENTIFIED BY '$password'; ";
-            $this->dbmgr->query($sql);
+            $this->getUserDbMgr()->query($sql);
         }
 
         $sql="GRANT ALL ON $dbname.* TO '$login'@'%' ";
-        $this->dbmgr->query($sql);
+        $this->getUserDbMgr()->query($sql);
 
         return outResult(0,"保存成功","");
 

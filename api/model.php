@@ -8,14 +8,21 @@
   require '../include/common.inc.php';
   include ROOT.'/include/init.inc.php';
 
-  include ROOT.'/classes/datamgr/cmsapp.cls.php';
+  include ROOT.'/classes/datamgr/model.cls.php';
   include ROOT.'/classes/datamgr/app.cls.php';
 
   $action=$_REQUEST["action"];
   if($action=="savemodel"){
     $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
-    outputJSON($cmsAppMgr->saveModel($User["login"],$appinfo["alias"],$_REQUEST["modelname"],$_REQUEST["model"]));
+    outputJSON($modelMgr->saveModel($User["login"],$appinfo["alias"],$_REQUEST["modelname"],$_REQUEST["model"]));
+  }elseif($action=="getexecutesql"){
+    $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"],$_REQUEST["modelname"]);
+    outputJSON($modelMgr->getExecuteSql($User["login"],$appinfo["alias"],$_REQUEST["modelname"]));
+  }elseif($action=="executesql"){
+    $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"],$_REQUEST["modelname"]);
+    outputJSON($modelMgr->executeSql($User["login"],$appinfo["alias"],$_REQUEST["modelname"],$appMgr->getUserDbMgr()));
   }
+
 
 outputJSON(outResult("-1","找不到你要调用的请求","找不到你要调用的请求"));
 
