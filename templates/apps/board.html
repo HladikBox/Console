@@ -305,7 +305,7 @@
                 var subs = Array();
                 for (var i = 0; i < submenuTD.length - 1; i++) {
                     var submenu=$(submenuTD[i]);
-                    var sub = { model: submenu.attr("model"), onlyadmin: submenu.attr("onlyadmin") };
+                    var sub = { model: submenu.attr("model"), name: submenu.children("a").children("span").text(), onlyadmin: submenu.attr("onlyadmin") };
                     subs.push(sub);
                 }
                 main.submenus = { submenu: subs };
