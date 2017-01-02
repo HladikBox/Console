@@ -148,22 +148,10 @@
       $model["javascripts"]["javascript"][$i]["json"]=json_encode($model["javascripts"]["javascript"][$i]);
     }
     $model["modelname"]=$modelname;
-    $model=$this->setArrayNoNull($model);
+    $model=setArrayNoNull($model);
     return $model;
   }
 
-  public function setArrayNoNull($arr){
-    foreach($arr as $key=>$value){
-        if(is_array($value)){
-            if(count($value)==0){
-                $arr[$key]="";
-            }else{
-                $arr[$key]=$this->setArrayNoNull($value);
-            }
-        }
-    }
-    return $arr;
-  }
 
 
   public function checkModelFormat($model){

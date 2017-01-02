@@ -9,6 +9,7 @@
   include ROOT.'/include/init.inc.php';
 
   include_once ROOT.'/classes/datamgr/app.cls.php';
+  include_once ROOT.'/classes/datamgr/cms.cls.php';
 
   $action=$_REQUEST["action"];
   if($action=="createapp"){
@@ -49,6 +50,10 @@
     outputJSON($appMgr->startApp($_REQUEST["app_id"]));
   }elseif($action=="stop"){
     outputJSON($appMgr->stopApp($_REQUEST["app_id"]));
+  }elseif($action=="submitmenu"){
+    
+    $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
+    outputJSON($cmsMgr->submitMenu($User["login"],$appinfo["alias"],$_REQUEST["menu"]));
   }
 
 outputJSON(outResult("-1","找不到你要调用的请求","找不到你要调用的请求"));

@@ -24,13 +24,13 @@
 
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs ">
-                <li class="active"><a href="#tab_1" id="btn_tab_1" data-toggle="tab" >数据对象</a></li>
-                <li><a href="#tab_2" id="btn_tab_2" data-toggle="tab" >应用菜单</a></li>
+                <li><a href="#tab_1" id="btn_tab_1" data-toggle="tab" >数据对象</a></li>
+                <li class="active"><a href="#tab_2" id="btn_tab_2" data-toggle="tab" >应用菜单</a></li>
                 <li><a href="#tab_3" id="btn_tab_3" data-toggle="tab" >版本管理</a></li>
                 <li><a href="#tab_4" id="btn_tab_4" data-toggle="tab" >里程碑</a></li>
             </ul>
             <div class="tab-content">
-                <div class="tab-pane active" id="tab_1">
+                <div class="tab-pane " id="tab_1">
 
                     <div class="row">
                         <div class="col-md-12">
@@ -42,16 +42,16 @@
                           <th style="width: 10px">#</th>
                           <th>模型名称</th>
                           <th>名称</th>
-                          <th >数据来源</th>
-                          <th  >描述</th>
+                          <th>数据来源</th>
+                          <th>描述</th>
                           <th class="db_op_th hide">SQL执行</th>
                           <th class="ut_op hide">单元测试</th>
                         </tr>
                         {{foreach from=$modellist item=rs key=key}}
-                        <tr>
+                        <tr id="model_{{$rs.modelname}}">
                             <td>{{$key+1}}</td>
                             <td><a href="/apps/model?app_id={{$appinfo.id}}&model={{$rs.modelname}}">{{$rs.modelname}}</a></td>
-                            <td><a href="/apps/model?app_id={{$appinfo.id}}&model={{$rs.modelname}}">{{$rs.name}}</a></td>
+                            <td><a class="modelname" href="/apps/model?app_id={{$appinfo.id}}&model={{$rs.modelname}}">{{$rs.name}}</a></td>
                             <td><a href="/apps/model?app_id={{$appinfo.id}}&model={{$rs.modelname}}">{{$rs.tablename}}</a></td>
                             <td>{{$rs.description}}</td>
                             <td class="db_op hide" modelname="{{$rs.modelname}}"></td>
@@ -60,7 +60,127 @@
                         {{/foreach}}
                     </table>
                 </div>
-                <div class="tab-pane" id="tab_2">tab_2</div>
+                <div class="tab-pane active" id="tab_2">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <a href="#" class="btn btn-warning margin-bottom" id="btnSubmitMenu">提交并更新应用菜单</a>
+                        </div>
+                        <div class="col-md-9">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th style="width:100px;"><span class="text-muted">菜单分类</span></th>
+                                    <th ><a ><span >系统管理</span></a></th>
+                                    {{foreach from=$menu.mainmenus.mainmenu item=rs}}
+                                    <th  class="can-select mainmenu" main="1" module="{{$rs.module}}" onlyadmin="{{$rs.onlyadmin}}"><a href="#"><span class="text-success">{{$rs.name}}</span></a></th>
+                                    {{/foreach}}
+                                    <th  style="width:100px;" id="lastMainMenu" >
+                                        <button class="btn btn-success btn-block" id="btnAddMainMenu"><i class="fa fa-plus"></i> 分类</button>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td><span class="text-muted">菜单项</span></td>
+                                    <td class="nav-tabs-custom">
+                                        <ul class="nav nav-tabs nav-stacked">
+                                            <li ><a ><span >主控台</span></a></li>
+                                            <li><a ><span >关于我们</span></a></li>
+                                            <li><a ><span >用户管理</span></a></li>
+                                        </ul>
+                                    </td>
+                                    {{foreach from=$menu.mainmenus.mainmenu item=rs}}
+                                    <td class="nav-tabs-custom submenu">
+                                        <ul class="nav nav-tabs nav-stacked">
+                                            {{foreach from=$rs.submenus.submenu item=rss}}
+                                            <li class="can-select" model="{{$rss.model}}"  onlyadmin="{{$rss.onlyadmin}}"><a href="#"><span class="text-primary menu_modelname">{{$rss.model}}</span></a></li>
+                                            {{/foreach}}
+                                            <li ><button class="btn btn-primary btnAddSubMenu"><i class="fa fa-plus"></i> 菜单</button></li>
+                                        </ul> 
+                                    </td>
+                                    {{/foreach}}
+                                    <td id="lastMainMenuTD"></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <!-- /.col -->
+
+
+                        <div class="col-md-3 hide" id="divMainMenu">
+                            <div class="box box-success">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">编辑</h3>
+                                </div>
+                                <div class="box-body ">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <form class="form-horizontal">
+                                                <div class="form-group">
+                                                    <label  class="col-sm-2 control-label">标识</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="mainmenu_module" placeholder="唯一标识，用于URL的其中一个参数，请输入纯英文"  data-toggle="tooltip" title="唯一标识，用于URL的其中一个参数，请输入纯英文">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label  class="col-sm-2 control-label">名称</label>
+                                                        <div class="col-sm-10"><input type="text" class="form-control" id="mainmenu_name" placeholder="菜单分类名称，用于应用菜单界面显示" data-toggle="tooltip" title="菜单分类名称，用于应用菜单界面显示">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-sm-offset-2 col-sm-10">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" id="mainmenu_onlyadmin"> 仅管理员可见
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-3 hide" id="divSubMenu">
+                            <div class="box box-primary">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">编辑</h3>
+                                    <!-- tools box -->
+                                    <!-- /.box-tools -->
+                                </div>
+                                <div class="box-body ">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <form class="form-horizontal">
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label">数据对象</label>
+                                                    <div class="col-sm-9">
+                                                        <select class="form-control" id="submenu_model">
+                                                            <option value="">请选择字段类型</option>
+                                                            {{foreach from=$modellist item=rs key=key}}
+                                                            <option value="{{$rs.modelname}}">{{$rs.name}}</option>
+                                                            {{/foreach}}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-sm-offset-3 col-sm-9">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" id="submenu_onlyadmin"> 仅管理员可见
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
                 <div class="tab-pane" id="tab_3">tab_3</div>
                 <div class="tab-pane" id="tab_4">tab_4</div>
             </div>
@@ -119,4 +239,114 @@
                 });
         
     }
+    function getModelName(modelname) {
+        return $("#model_" + modelname + " .modelname").text();
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+        function functionBind() {
+            $('.can-select').unbind('mouseenter').unbind('mouseleave');
+            $(".can-select").hover(function () {
+                $(this).addClass("bg-gray");
+            }, function () {
+                $(this).removeClass("bg-gray");
+            });
+            $('.btnAddSubMenu').unbind('click');
+            $(".btnAddSubMenu").click(function () {
+                var parent = $(this).parent();
+                $(".can-select").removeClass("bg-gray-active");
+                var newobj = $('<li class="can-select bg-gray-active"><a href="#"><span class="text-primary">##</span></a></li>');
+                newobj.insertBefore(parent);
+                functionBind();
+                loadMenuItem(newobj);
+            });
+            $(".can-select").unbind("click");
+            $(".can-select").click(function () {
+                $(".can-select").removeClass("bg-gray-active");
+                $(this).addClass("bg-gray-active");
+                loadMenuItem($(this));
+            });
+        }
+        functionBind();
+        $("#btnAddMainMenu").click(function () {
+            $(".can-select").removeClass("bg-gray-active");
+            var td = $('<th  class="can-select bg-gray-active mainmenu" main="1"><a href="#"><span class="text-success">###</span></a></th>');
+            td.insertBefore("#lastMainMenu");
+            loadMenuItem(td);
+            $('<td class="nav-tabs-custom submenu"><ul class="nav nav-tabs nav-stacked"><li ><button class="btn btn-primary btnAddSubMenu"><i class="fa fa-plus"></i> 菜单</button></li></ul></td>').insertBefore("#lastMainMenuTD");
+
+            functionBind();
+        });
+        $("#mainmenu_module").change(function () {
+            $(".can-select.bg-gray-active").attr("module", $(this).val());
+        });
+        $("#mainmenu_name").change(function () {
+            $(".can-select.bg-gray-active").children("a").children("span").text($(this).val());
+        });
+        $("#mainmenu_onlyadmin").change(function () {
+            $(".can-select.bg-gray-active").attr("onlyadmin", $(this).prop("checked") ? "1" : "0");
+        });
+        $("#submenu_model").change(function () {
+            $(".can-select.bg-gray-active").attr("model", $(this).val());
+            $(".can-select.bg-gray-active").children("a").children("span").text($(this).children("option:checked").text());
+        });
+        $("#submenu_onlyadmin").change(function () {
+            $(".can-select.bg-gray-active").attr("onlyadmin", $(this).prop("checked") ? "1" : "0");
+        });
+        $("#btnSubmitMenu").click(function () {
+            
+
+            var mainmenu = Array();
+            $("th.mainmenu").each(function (index) {
+                var submenuTD = $($("td.submenu")[index]).children("ul").children("li");
+                var main = { module: $(this).attr("module"), name: $(this).children("a").children("span").text(), onlyadmin: $(this).attr("onlyadmin") };
+                var subs = Array();
+                for (var i = 0; i < submenuTD.length - 1; i++) {
+                    var submenu=$(submenuTD[i]);
+                    var sub = { model: submenu.attr("model"), onlyadmin: submenu.attr("onlyadmin") };
+                    subs.push(sub);
+                }
+                main.submenus = { submenu: subs };
+                mainmenu.push(main);
+            });
+            
+            var menu = { "mainmenus": { "mainmenu": mainmenu } };
+
+            
+            var json = {"action":"submitmenu", app_id: "{{$appinfo.id}}","menu":menu};
+            $("#btnSubmitMenu").attr("disabled", true);
+            getJSON("{{$rootpath}}api/apps", json, function (data) {
+                if (data.code == 0) {
+                    info("提交成功，请登陆数据中心进行测试");
+                } else {
+                    error(data.result);
+                }
+            }, function () {
+                $("#btnSubmitMenu").attr("disabled", false);
+            });
+        });
+        function loadMenuItem(obj) {
+            var is_main = obj.attr("main") ? "1" : "0";
+            if (is_main == "1") {
+                $("#divMainMenu").removeClass("hide");
+                $("#divSubMenu").addClass("hide");
+                $("#mainmenu_module").val(obj.attr("module"));
+                $("#mainmenu_name").val(obj.text());
+                $("#mainmenu_onlyadmin").prop("checked", obj.attr("onlyadmin") == "1");
+            } else {
+
+                $("#divSubMenu").removeClass("hide");
+                $("#divMainMenu").addClass("hide");
+                $("#submenu_model").val(obj.attr("model"));
+                $("#submenu_onlyadmin").prop("checked", obj.attr("onlyadmin") == "1");
+
+            }
+        }
+        $(".can-select:first").click();
+        $(".menu_modelname").each(function () {
+            $(this).text(getModelName($(this).text()));
+        });
+    });
 </script>

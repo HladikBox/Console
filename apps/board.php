@@ -10,12 +10,17 @@
   include ROOT.'/include/init.inc.php';
   include_once ROOT.'/classes/datamgr/app.cls.php';
   include ROOT.'/classes/datamgr/model.cls.php';
+  include ROOT.'/classes/datamgr/cms.cls.php';
 
   $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["id"]);
   $smarty->assign("appinfo",$appinfo);
 
   $modellist=$modelMgr->getModelList($User["login"],$appinfo["alias"]);
   $smarty->assign("modellist",$modellist);
+
+  
+  $menu=$cmsMgr->getMenu($User["login"],$appinfo["alias"]);
+  $smarty->assign("menu",$menu);
 
   $smarty->display(ROOT.'/templates/apps/board.html');
 ?>

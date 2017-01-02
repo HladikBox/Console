@@ -1,35 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <root>
   <mainmenus>
-    <mainmenu>
-      <module>admin</module>
-      <name>系统管理</name>
-      <name_zh-cn>系统管理SysAdmin</name_zh-cn>
-      <submenus>
-        <submenu>
-          <id>about</id>
-          <name>关于</name>
-          <name_zh-cn>关于Aboutus</name_zh-cn>
-          <url>Admin/about</url>
-        </submenu>
-        <submenu>
-          <id>dashboard</id>
-          <name>Dashboard</name>
-          <url>Admin/dashboard</url>
-        </submenu>
-        <submenu>
-          <id>user_list</id>
-          <name>用户列表</name>
-          <url>Admin/user</url>
-          <onlyadmin>1</onlyadmin>
-        </submenu>
-        <submenu>
-          <id>user_add</id>
-          <name>用户新增</name>
-          <url>Admin/user?action=add</url>
-          <onlyadmin>1</onlyadmin>
-        </submenu>
-      </submenus>
-    </mainmenu>
   </mainmenus>
 </root>
