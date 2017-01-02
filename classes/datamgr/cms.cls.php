@@ -41,14 +41,13 @@
     }
 
     for ($i=0; $i < count($menu["mainmenus"]["mainmenu"]); $i++) { 
-        if($menu["mainmenus"]["mainmenu"][$i]["submenus"]["submenus"][0]==""&&$menu["mainmenus"]["mainmenu"][$i]["submenus"]["submenus"]["name"]!=""){
-          $temp=$menu["mainmenus"]["mainmenu"][$i]["submenus"]["submenus"];
-          $menu["mainmenus"]["mainmenu"][$i]["submenus"]["submenus"]=array();
-          $menu["mainmenus"]["mainmenu"][$i]["submenus"]["submenus"][]=$temp;
+        if($menu["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][0]==""&&$menu["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"]["model"]!=""){
+          $temp=$menu["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"];
+          $menu["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"]=array();
+          $menu["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][]=$temp;
         }
     }
-
-    $model=setArrayNoNull($menu);
+    $menu=setArrayNoNull($menu);
     return $menu;
   }
   
