@@ -371,7 +371,7 @@
 
       $result=$this->getAppInfo($UID,$app_id);
 
-      echo $status=$result["run_status"];
+      //echo $status=$result["run_status"];
       if($status!="C"){
         return outResult(1,"你早已经完成配置，谢谢你的使用","");
       }else{

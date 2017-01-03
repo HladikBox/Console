@@ -20,24 +20,23 @@
 
     <!-- Main content -->
     <section class="content">
-
-
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs ">
-                <li><a href="#tab_1" id="btn_tab_1" data-toggle="tab" >数据对象</a></li>
-                <li class="active"><a href="#tab_2" id="btn_tab_2" data-toggle="tab" >应用菜单</a></li>
+                <li class="active"><a href="#tab_1" id="btn_tab_1" data-toggle="tab" >数据对象</a></li>
+                <li><a href="#tab_2" id="btn_tab_2" data-toggle="tab" >应用菜单</a></li>
                 <li><a href="#tab_3" id="btn_tab_3" data-toggle="tab" >版本管理</a></li>
                 <li><a href="#tab_4" id="btn_tab_4" data-toggle="tab" >里程碑</a></li>
             </ul>
             <div class="tab-content">
-                <div class="tab-pane " id="tab_1">
+                <div class="tab-pane active" id="tab_1">
 
                     <div class="row">
                         <div class="col-md-12">
+                            <a href="#" class="btn btn-primary margin-bottom" id="btnCreateModel" >创建数据对象模型</a>
                             <a href="#" class="btn btn-warning margin-bottom" id="btnExecuteMysql" >批量更新数据库</a>
                         </div>
                     </div>
-                    <table class="table table-condensed">
+                    <table class="table table-condensed" id="table_modellist">
                         <tr>
                           <th style="width: 10px">#</th>
                           <th>模型名称</th>
@@ -60,7 +59,7 @@
                         {{/foreach}}
                     </table>
                 </div>
-                <div class="tab-pane active" id="tab_2">
+                <div class="tab-pane " id="tab_2">
 
                     <div class="row">
                         <div class="col-md-12">
@@ -197,6 +196,63 @@
     <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
+
+
+
+<div class="modal fade" id="dlgRecommModelList">
+    <div class="modal-dialog" style="width:1000px;">
+        <div class="modal-content">
+            <div class="modal-header bg-light-blue-active">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">推荐数据对象模型</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table">
+                            <tr>
+                                <th><input type="checkbox" id="recomm_modellist_select_all" /></th>
+                                <th>模型名称</th>
+                                <th>模型描述</th>
+                            </tr>
+                            {{foreach from=$recomm_modellist item=rs}}
+                            <tr>
+                                <td><input type="checkbox" name="recomm_modellist" value="{{$rs.modelname}}" /></td>
+                                <td>{{$rs.name}}</td>
+                                <td>{{$rs.description}}</td>
+                            </tr>
+                            {{/foreach}}
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">取消</button>
+                <span class="text-red" id="txtConfirmRecommModelList"></span>
+                <button type="button" class="btn btn-primary" id="btnConfirmRecommModelList">应用</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 {{include  file="$smarty_root/footer.html" }}
 
 <script type="text/javascript">
@@ -213,6 +269,34 @@
             $(".db_op").html('<i class="fa fa-spinner fa-spin"></i>');
             $("#btnExecuteMysql").attr("disabled",true);
             batchExecute();
+        });
+        if($("#table_modellist tr").length<=2){
+            $("#dlgRecommModelList").modal("show");
+        }
+        $("#recomm_modellist_select_all").change(function(){
+            var checked=$("#recomm_modellist_select_all").prop("checked");
+            $("input[name='recomm_modellist']").prop("checked",checked);
+        });
+        $("#btnConfirmRecommModelList").click(function(){
+            var models=Array();
+            $("input[name='recomm_modellist']:checked").each(function(){
+                models.push($(this).val());
+            });
+            if(models.length==0){
+                $("#txtConfirmRecommModelList").text("请至少选择一个模型");
+            }
+
+            var json = {"action":"applycommmodel", app_id: "{{$appinfo.id}}","models":models};
+            $("#btnConfirmRecommModelList").attr("disabled", true);
+            getJSON("{{$rootpath}}api/model", json, function (data) {
+                if (data.code == 0) {
+                    location.reload();
+                } else {
+                    $("#txtConfirmRecommModelList").text(data.result);
+                }
+            }, function () {
+                $("#btnConfirmRecommModelList").attr("disabled", false);
+            });
         });
     });
     function batchExecute(){

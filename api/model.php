@@ -21,6 +21,9 @@
   }elseif($action=="executesql"){
     $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"],$_REQUEST["modelname"]);
     outputJSON($modelMgr->executeSql($User["login"],$appinfo["alias"],$_REQUEST["modelname"],$appMgr->getUserDbMgr()));
+  }elseif($action=="applycommmodel"){
+    $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"],$_REQUEST["modelname"]);
+    outputJSON($modelMgr->applyCommModel($User["login"],$appinfo["alias"],$_REQUEST["models"]));
   }
 
 

@@ -57,6 +57,20 @@
      return json_decode(json_encode((array) simplexml_load_string($xml)), true);
   }
 
+  public function applyCommModel($login,$alias,$models){
+    Global $CONFIG;
+    $login=parameter_filter($login);
+    $alias=parameter_filter($alias);
+    $folder=$CONFIG['workspace']['path']."\\$login\\$alias\\model\\";
+    foreach ($models as  $value) {
+      $filename=$value.".xml";
+      $path=ROOT."/workspace_recommend/model/$filename";
+      
+      copy($path,$folder.$filename);
+    }
+    return outResult(0,"","");
+  }
+
 
   private function loadXmlFile($name){
     
@@ -71,20 +85,20 @@
     return $str;
   }
 
-  public function getModelList($login,$alias){
-    Global $CONFIG;
-    $login=parameter_filter($login);
-    $alias=parameter_filter($alias);
-    $folder=$CONFIG['workspace']['path']."\\$login\\$alias\\model\\";
+  public function getRecommandModelList(){
+    $folder=ROOT."/workspace_recommend/model/";
+    $modellist= $this->getModelListByPath($folder);
+    return $modellist;
+  }
+
+  public function getModelListByPath($folder){
     $filesnames = scandir($folder);
     $ret=array();
     for($i=2;$i<count($filesnames);$i++){
 
         $filenamearr=explode(".", $filesnames[$i]);
         $path=$folder.$filenamearr[0].".xml";
-        $fp = fopen($path,"r");
-        $str = fread($fp,filesize($path));
-        $model=$this->getModel($login,$alias,$filenamearr[0]);//json_decode(json_encode((array) simplexml_load_string($str)), true);
+        $model=$this->getModelByPath($path);//json_decode(json_encode((array) simplexml_load_string($str)), true);
         //print_r($model);
         //exit();
         $filectime=filectime($login,$alias,$path);
@@ -98,14 +112,15 @@
     return $ret;
   }
 
-  public function getModel($login,$alias,$model){
+  public function getModelList($login,$alias){
     Global $CONFIG;
     $login=parameter_filter($login);
     $alias=parameter_filter($alias);
-    $model=parameter_filter($model);
-    $modelname=$model;
     $folder=$CONFIG['workspace']['path']."\\$login\\$alias\\model\\";
-    $path=$folder.$model.".xml";
+    return $this->getModelListByPath($folder);
+  }
+
+  public function getModelByPath($path){
     $fp = fopen($path,"r");
     $str = fread($fp,filesize($path));
 
@@ -150,6 +165,17 @@
     $model["modelname"]=$modelname;
     $model=setArrayNoNull($model);
     return $model;
+  }
+
+  public function getModel($login,$alias,$model){
+    Global $CONFIG;
+    $login=parameter_filter($login);
+    $alias=parameter_filter($alias);
+    $model=parameter_filter($model);
+    $modelname=$model;
+    $folder=$CONFIG['workspace']['path']."\\$login\\$alias\\model\\";
+    $path=$folder.$model.".xml";
+    return $this->getModelByPath($path);
   }
 
 
