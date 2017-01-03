@@ -11,6 +11,7 @@
   include_once ROOT.'/classes/datamgr/app.cls.php';
   include ROOT.'/classes/datamgr/model.cls.php';
   include ROOT.'/classes/datamgr/cms.cls.php';
+  include ROOT.'/classes/datamgr/version.cls.php';
 
   $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["id"]);
   $smarty->assign("appinfo",$appinfo);
@@ -19,6 +20,10 @@
   $smarty->assign("modellist",$modellist);
   $recomm_modellist=$modelMgr->getRecommandModelList();
   $smarty->assign("recomm_modellist",$recomm_modellist);
+
+  
+  $versionlist=$versionMgr->getVersionList($_REQUEST["id"]);
+  $smarty->assign("versionlist",$versionlist);
 
   
   $menu=$cmsMgr->getMenu($User["login"],$appinfo["alias"]);

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <root>
-  <name>默认基楚数据模型</name>
+  <name>默认基础数据模型</name>
   <tablename>tb_notable</tablename>
   <nolist>0</nolist>
   <searchcondition>r_main.status&lt;&gt;'D' </searchcondition>

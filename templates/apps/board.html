@@ -22,10 +22,9 @@
     <section class="content">
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs ">
-                <li class="active"><a href="#tab_1" id="btn_tab_1" data-toggle="tab" >数据对象</a></li>
+                <li  class="active"><a href="#tab_1" id="btn_tab_1" data-toggle="tab" >数据对象</a></li>
                 <li><a href="#tab_2" id="btn_tab_2" data-toggle="tab" >应用菜单</a></li>
                 <li><a href="#tab_3" id="btn_tab_3" data-toggle="tab" >版本管理</a></li>
-                <li><a href="#tab_4" id="btn_tab_4" data-toggle="tab" >里程碑</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="tab_1">
@@ -187,8 +186,64 @@
                     </div>
 
                 </div>
-                <div class="tab-pane" id="tab_3">tab_3</div>
-                <div class="tab-pane" id="tab_4">tab_4</div>
+                <div class="tab-pane " id="tab_3">
+
+                    <div class="row">
+                        <div class="col-md-9">
+                            <table class="table table-condensed" id="table_modellist">
+                                <tr id="versionTH">
+                                    <th>版本</th>
+                                    <th>签入日期</th>
+                                    <th >描述</th>
+                                    <th >操作</th>
+                                </tr>
+                                {{foreach from=$versionlist item=rs key=key}}
+                                <tr >
+                                    <td>{{if $rs.is_tag=="Y"}}<i class="fa fa-star text-warning"></i>{{/if}} {{$rs.version}}</td>
+                                    <td>{{$rs.committed_date}}</td>
+                                    <td>{{$rs.comment}}</td>
+                                    <td><a href="javascript:rollback({{$rs.version}})" >回滚</a></td>
+                                </tr>
+                                {{/foreach}}
+                            </table>
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="box box-success">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">提交版本</h3>
+                                </div>
+                                <div class="box-body ">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <textarea class="form-control" rows="5" placeholder="请输入版本提交的描述" id="version_comment"></textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <div>
+                                                    <div class="checkbox">
+                                                        <label>
+                                                            <input type="checkbox" id="version_is_tag"> 里程碑点
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="box-footer">
+                                    <button  class="btn btn-success btn-block" id="btnSubmitVersion">提交</button>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
             <!-- /.tab-content -->
         </div>
@@ -291,13 +346,13 @@
                                 <div class="form-group ">
                                   <div class="radio">
                                     <label>
-                                      <input type="radio" name="optCreateModel" value="N" checked="">
+                                      <input type="radio" name="optCreateModel" value="N" >
                                       重新开始创建
                                     </label>
                                   </div>
                                   <div class="radio">
                                     <label>
-                                      <input type="radio" name="optCreateModel" value="C" >
+                                      <input type="radio" name="optCreateModel" value="C" checked="checked">
                                       从推荐列表中复制&nbsp;&nbsp;&nbsp;&nbsp;
                                       <select id="ddlRecommModelList">
                                           {{foreach from=$recomm_modellist item=rs}}
@@ -601,4 +656,60 @@
             $(this).text(getModelName($(this).text()));
         });
     });
+</script>
+
+<script>
+    $(document).ready(function () {
+        var cc = 0;
+        $("#btnSubmitVersion").click(function () {
+            
+
+            var comment = $("#version_comment").val();
+            if ($.trim(comment) == "") {
+                warning("请填写版本描述");
+                return;
+            }
+            var is_tag = $("#version_is_tag").prop("checked") ? "Y" : "N";
+            var json = { action: "submit", app_id: "{{$appinfo.id}}", comment: comment, is_tag: is_tag };
+
+            $("#btnSubmitVersion").attr("disabled", true);
+            getJSON("{{$rootpath}}api/version", json, function (data) {
+                if (data.code == 0) {
+                    
+                    var newtr = $('<tr >'
+                            + '<td>' + (data.return.is_tag == "Y" ? '<i class="fa fa-star  text-warning"></i>' : "") + ' ' + data.return.version + '</td>'
+                            + '<td>' + data.return.committed_date + '</td>'
+                            + '<td>' + data.return.comment + '</td>'
+                            + '<td><a href="javascript:rollback('+data.return.version+')">回滚</a></td>'
+                            + '</tr>');
+
+                    newtr.insertAfter("#versionTH");
+                    info("提交成功");
+
+                    $("#version_comment").val("");
+                    $("#version_is_tag").prop("checked",false);
+                } else {
+                    warning(data.result);
+                }
+            }, function () {
+                $("#btnSubmitVersion").attr("disabled", false);
+            });
+        });
+    });
+    function rollback(version) {
+        warning("回滚将会<b>覆盖</b>当前的工作区文件，请问是否继续操作？<br /><br />同时回滚前会将当前版本先进行提交版本。", function () {
+            var json = { action: "rollback", app_id: "{{$appinfo.id}}", version: version };
+            getJSON("{{$rootpath}}api/version", json, function (data) {
+                if (data.code == 0) {
+
+                    location.reload();
+
+                } else {
+                    alert(data.result);
+                }
+            }, function () {
+                $("#btnSubmitVersion").attr("disabled", false);
+            });
+        });
+    }
 </script>
