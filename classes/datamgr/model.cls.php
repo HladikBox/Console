@@ -162,7 +162,6 @@
     for ($i=0; $i < count($model["javascripts"]["javascript"]); $i++) { 
       $model["javascripts"]["javascript"][$i]["json"]=json_encode($model["javascripts"]["javascript"][$i]);
     }
-    $model["modelname"]=$modelname;
     $model=setArrayNoNull($model);
     return $model;
   }
@@ -175,13 +174,39 @@
     $modelname=$model;
     $folder=$CONFIG['workspace']['path']."\\$login\\$alias\\model\\";
     $path=$folder.$model.".xml";
-    return $this->getModelByPath($path);
+    $model= $this->getModelByPath($path);
+
+    $model["modelname"]=$modelname;
+    return $model;
   }
 
 
 
   public function checkModelFormat($model){
     return !empty($model["name"])&&!empty($model["tablename"])&&!empty($model["fields"]);
+  }
+
+  public function createModel($login,$alias,$modelname,$tablename,$name,$method,$srcmodel){
+
+    $login=parameter_filter($login);
+    $alias=parameter_filter($alias);
+    $modelname=parameter_filter($modelname);
+    $name=parameter_filter($name);
+    $method=parameter_filter($method);
+    $srcmodel=parameter_filter($srcmodel);
+
+    if($method=="C"){
+      $path=ROOT."/workspace_recommend/model/$srcmodel.xml";
+      $model=$this->getModelByPath($path);
+    }elseif($method=="E"){
+      $path=$CONFIG['workspace']['path']."\\$login\\$alias\\model\\$srcmodel.xml";
+      $model=$this->getModelByPath($path);
+    }else{
+      $model=array();
+    }
+    $model["name"]=$name;
+    $model["tablename"]=$tablename;
+    return $this->saveModel($login,$alias,$modelname,$model);
   }
 
   public function saveModel($login,$alias,$modelname,$model){

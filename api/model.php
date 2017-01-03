@@ -24,6 +24,9 @@
   }elseif($action=="applycommmodel"){
     $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"],$_REQUEST["modelname"]);
     outputJSON($modelMgr->applyCommModel($User["login"],$appinfo["alias"],$_REQUEST["models"]));
+  }elseif($action=="createmodel"){
+    $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
+    outputJSON($modelMgr->createModel($User["login"],$appinfo["alias"],$_REQUEST["modelname"],$_REQUEST["tablename"],$_REQUEST["name"],$_REQUEST["method"],$_REQUEST["srcmodel"]));
   }
 
 

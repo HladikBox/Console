@@ -218,11 +218,13 @@
                                 <th>模型描述</th>
                             </tr>
                             {{foreach from=$recomm_modellist item=rs}}
+                            {{if $rs.modelname!="alias"}}
                             <tr>
                                 <td><input type="checkbox" name="recomm_modellist" value="{{$rs.modelname}}" /></td>
                                 <td>{{$rs.name}}</td>
                                 <td>{{$rs.description}}</td>
                             </tr>
+                            {{/if}}
                             {{/foreach}}
                         </table>
                     </div>
@@ -242,6 +244,97 @@
 
 
 
+
+
+<div class="modal fade" id="dlgCreateModel">
+    <div class="modal-dialog" style="width:1000px;">
+        <div class="modal-content">
+            <div class="modal-header bg-light-blue-active">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">创建数据对象模型</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group" >
+                            <label class="col-sm-4 control-label"><span style="color:red;">*</span> 模型标识</label>
+                            <div class="col-sm-8">
+                                <input type="text" maxlength="15" class="form-control" id="cm_modelname" placeholder="唯一标识，仅支持全英文" data-toggle="tooltip" title="唯一标识，仅支持全英文">
+                            </div>
+                            <span class="help-block col-sm-offset-4"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group" >
+                            <label class="col-sm-4 control-label"><span style="color:red;">*</span> 模型名称</label>
+                            <div class="col-sm-8">
+                                <input type="text" maxlength="15" class="form-control" id="cm_name" placeholder="模型名称" >
+                            </div>
+                            <span class="help-block col-sm-offset-4"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group" >
+                            <label class="col-sm-2 control-label"><span style="color:red;">*</span> 数据表名</label>
+                            <div class="col-sm-10">
+                                <input type="text" maxlength="15" class="form-control" id="cm_tablename" placeholder="数据表名" >
+                            </div>
+                            <span class="help-block col-sm-offset-4"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group" >
+                            <label class="col-sm-2 control-label"><span style="color:red;">*</span> 创建方式</label>
+                            <div class="col-sm-8">
+                                <div class="form-group ">
+                                  <div class="radio">
+                                    <label>
+                                      <input type="radio" name="optCreateModel" value="N" checked="">
+                                      重新开始创建
+                                    </label>
+                                  </div>
+                                  <div class="radio">
+                                    <label>
+                                      <input type="radio" name="optCreateModel" value="C" >
+                                      从推荐列表中复制&nbsp;&nbsp;&nbsp;&nbsp;
+                                      <select id="ddlRecommModelList">
+                                          {{foreach from=$recomm_modellist item=rs}}
+                                          <option value="{{$rs.modelname}}">{{$rs.name}}</option>
+                                          {{/foreach}}
+                                      </select>
+                                    </label>
+                                  </div>
+                                  <div class="radio">
+                                    <label>
+                                      <input type="radio" name="optCreateModel" value="E">
+                                      从现有模型中复制&nbsp;&nbsp;&nbsp;&nbsp;
+                                      <select id="ddlExistModelList">
+                                          {{foreach from=$modellist item=rs}}
+                                          <option value="{{$rs.modelname}}">{{$rs.name}}</option>
+                                          {{/foreach}}
+                                      </select>
+                                    </label>
+                                  </div>
+                                </div>
+                            </div>
+                            <span class="help-block col-sm-offset-4"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">取消</button>
+                <span class="text-red" id="txtConfirmCreateModel"></span>
+                <button type="button" class="btn btn-primary" id="btnConfirmCreateModel">保存</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 
 
 
@@ -298,6 +391,57 @@
                 $("#btnConfirmRecommModelList").attr("disabled", false);
             });
         });
+        $("#btnCreateModel").click(function(){
+
+            $("#dlgCreateModel").modal("show");
+
+        });
+        $("#btnConfirmCreateModel").click(function(){
+            var modelname=$("#cm_modelname").val().toLowerCase();
+            var name=$("#cm_name").val();
+            var tablename=$("#cm_tablename").val();
+            //"^[A-Za-z0-9]+$"
+            if($.trim(modelname)==""){
+                $("#txtConfirmCreateModel").text("唯一标示不能为空");
+                return;
+            }
+            var pattern =  /^[A-Za-z0-9]+$/;
+            if(!pattern.test(modelname)){
+                $("#txtConfirmCreateModel").text("唯一标示仅能使用数字加英文");
+                return;
+            }
+            if(getModelIn(modelname)){
+                $("#txtConfirmCreateModel").text("唯一标示名已经存在");
+                return;
+            }
+            if($.trim(name)==""){
+                $("#txtConfirmCreateModel").text("模型名称不能为空");
+                return;
+            }
+            if($.trim(tablename)==""){
+                $("#txtConfirmCreateModel").text("数据表名不能为空");
+                return;
+            }
+            var method=$("input[name='optCreateModel']:checked").val();
+            var srcmodel="";
+            if(method=="C"){
+                srcmodel=$("#ddlRecommModelList").val();
+            }else if(method=="E"){
+                srcmodel=$("#ddlExistModelList").val();
+            }
+
+            var json = {"action":"createmodel", app_id: "{{$appinfo.id}}","modelname":modelname,"name":name,"method":method,"srcmodel":srcmodel,"tablename":tablename};
+            $("#btnConfirmCreateModel").attr("disabled", true);
+            getJSON("{{$rootpath}}api/model", json, function (data) {
+                if (data.code == 0) {
+                    window.location.href="/apps/model?app_id={{$appinfo.id}}&model="+modelname;
+                } else {
+                    $("#txtConfirmCreateModel").text(data.result);
+                }
+            }, function () {
+                $("#btnConfirmCreateModel").attr("disabled", false);
+            });
+        });
     });
     function batchExecute(){
         if($(".db_op.ready").length==0){
@@ -332,6 +476,9 @@
     }
     function getModelName(modelname) {
         return $("#model_" + modelname + " .modelname").text();
+    }
+    function getModelIn(modelname) {
+        return $("#model_" + modelname + " .modelname").length>0;
     }
 </script>
 
