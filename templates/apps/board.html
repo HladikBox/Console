@@ -72,13 +72,15 @@
                                     <th style="width:100px;"><span class="text-muted">菜单分类</span></th>
                                     <th ><a ><span >系统管理</span></a></th>
                                     {{foreach from=$menu.mainmenus.mainmenu item=rs}}
-                                    <th  class="can-select mainmenu" main="1" module="{{$rs.module}}" onlyadmin="{{$rs.onlyadmin}}"><a href="#"><span class="text-success">{{$rs.name}}</span></a></th>
+                                    <th  class="can-select mainmenu" main="1" module="{{$rs.module}}" onlyadmin="{{$rs.onlyadmin}}"><a href="#"><span class="text-success">{{$rs.name}}</span></a>
+                                    <a href="#" class="pull-right deletemenu"><i class="fa fa-times "></i></a>
+                                    </th>
                                     {{/foreach}}
                                     <th  style="width:100px;" id="lastMainMenu" >
                                         <button class="btn btn-success btn-block" id="btnAddMainMenu"><i class="fa fa-plus"></i> 分类</button>
                                     </th>
                                 </tr>
-                                <tr>
+                                <tr id="submenu_tr">
                                     <td><span class="text-muted">菜单项</span></td>
                                     <td class="nav-tabs-custom">
                                         <ul class="nav nav-tabs nav-stacked">
@@ -91,7 +93,12 @@
                                     <td class="nav-tabs-custom submenu">
                                         <ul class="nav nav-tabs nav-stacked">
                                             {{foreach from=$rs.submenus.submenu item=rss}}
-                                            <li class="can-select" model="{{$rss.model}}"  onlyadmin="{{$rss.onlyadmin}}"><a href="#"><span class="text-primary menu_modelname">{{$rss.model}}</span></a></li>
+                                            <li class="can-select" model="{{$rss.model}}"  onlyadmin="{{$rss.onlyadmin}}">
+                                            <a href="#">
+                                                <span class="text-primary menu_modelname">{{$rss.model}}</span>
+                                                <i class="fa fa-times pull-right deletemenu"></i>
+                                            </a>
+                                            </li>
                                             {{/foreach}}
                                             <li ><button class="btn btn-primary btnAddSubMenu"><i class="fa fa-plus"></i> 菜单</button></li>
                                         </ul> 
@@ -257,7 +264,7 @@
             $(".btnAddSubMenu").click(function () {
                 var parent = $(this).parent();
                 $(".can-select").removeClass("bg-gray-active");
-                var newobj = $('<li class="can-select bg-gray-active"><a href="#"><span class="text-primary">##</span></a></li>');
+                var newobj = $('<li class="can-select bg-gray-active"><a href="#"><span class="text-primary">##</span><i class="fa fa-times pull-right deletemenu"></a></li>');
                 newobj.insertBefore(parent);
                 functionBind();
                 loadMenuItem(newobj);
@@ -268,11 +275,25 @@
                 $(this).addClass("bg-gray-active");
                 loadMenuItem($(this));
             });
+            $(".deletemenu").unbind("click");
+            $(".deletemenu").click(function(){
+                if($(this).parent().attr("main")=="1"){
+                    
+                    var index=$(this).parent().index();
+                    $(this).parent().remove();
+                    var td=$($("#submenu_tr td")[index]);
+                    td.remove();
+
+
+                }else{
+                    $(this).parent().parent().remove();
+                }
+            });
         }
         functionBind();
         $("#btnAddMainMenu").click(function () {
             $(".can-select").removeClass("bg-gray-active");
-            var td = $('<th  class="can-select bg-gray-active mainmenu" main="1"><a href="#"><span class="text-success">###</span></a></th>');
+            var td = $('<th  class="can-select bg-gray-active mainmenu" main="1"><a href="#"><span class="text-success">###</span></a><a href="#" class="pull-right deletemenu"><i class="fa fa-times "></i></a></th>');
             td.insertBefore("#lastMainMenu");
             loadMenuItem(td);
             $('<td class="nav-tabs-custom submenu"><ul class="nav nav-tabs nav-stacked"><li ><button class="btn btn-primary btnAddSubMenu"><i class="fa fa-plus"></i> 菜单</button></li></ul></td>').insertBefore("#lastMainMenuTD");
