@@ -293,6 +293,14 @@
                                             </label>
                                         </div>
                                     </div>
+                                    <div class="col-md-2  col-md-offset-1" data-toggle="tooltip" title="在保存操作中，会跳过该字段的保存动作">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" id="f_nosave">
+                                                <b>不保存</b>
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                             </section>
                             <br />
@@ -319,7 +327,7 @@
                                         <div class="form-group" >
                                             <label class="col-sm-4 control-label">格式化</label>
                                             <div class="col-sm-8">
-                                                <input type="text" maxlength="15" class="form-control" id="f_text_format" placeholder="输入正则表达式，当用户的提交的数据不符合正则要求，则报错提示。" data-toggle="tooltip" title="输入正则表达式">
+                                                <input type="text" maxlength="10" class="form-control" id="f_text_format" placeholder="输入正则表达式，当用户的提交的数据不符合正则要求，则报错提示。" data-toggle="tooltip" title="输入正则表达式">
                                             </div>
                                             <span class="help-block col-sm-offset-4"></span>
                                         </div>
@@ -438,7 +446,7 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group" >
-                                            <label class="col-sm-4 control-label"> 文件夹</label>
+                                            <label class="col-sm-4 control-label"><span style="color:red;">*</span> 文件夹</label>
                                             <div class="col-sm-8">
                                                 <input type="text" maxlength="15" class="form-control" id="f_upload_uploadmodule" placeholder="上传的文件将会在upload目录下面" data-toggle="tooltip" title="上传的文件将会在upload目录下面">
                                             </div>
@@ -752,6 +760,7 @@
             $("#f_search").prop("disabled",false);
             $("#f_notnull").prop("disabled",false);
             $("#f_disableindetail").prop("disabled",false);
+            $("#f_nosave").prop("disabled",false);
 
             if(field_type=="password"){
                 $("#f_displayinlist").prop("disabled",true);
@@ -772,6 +781,7 @@
                 $("#f_search").prop("disabled",true);
                 $("#f_notnull").prop("disabled",true);
                 $("#f_disableindetail").prop("disabled",true);
+                $("#f_nosave").prop("disabled",true);
             }
         });
         $("#btn_f_select_addoption").click(function(){
@@ -963,8 +973,8 @@
             $("#o_function").val("");
             $("#o_description").val("");
 
-            $("#f_detail").prop("checked", false);
-            $("#f_search").prop("checked", false);
+            $("#o_detail").prop("checked", false);
+            $("#o_search").prop("checked", false);
 
         }
 
@@ -1056,6 +1066,7 @@
             $("#f_notnull").prop("checked", json.notnull == "1");
             $("#f_search").prop("checked", json.search == "1");
             $("#f_disableindetail").prop("checked", json.disableindetail == "1");
+            $("#f_nosave").prop("checked", json.nosave == "1");
 
             $("#f_type").change();
             var field_type = $("#f_type").val();
@@ -1110,6 +1121,7 @@
             $("#f_gotodetail").prop("checked", false);
             $("#f_notnull").prop("checked", false);
             $("#f_search").prop("checked", false);
+            $("#f_nosave").prop("checked", false);
             $("#f_disableindetail").prop("checked", false);
 
             var field_type = "text";
@@ -1136,7 +1148,7 @@
             $("#f_" + field_type + "_minvalue").val("");
 
             field_type = "upload";
-            $("#f_" + field_type + "_uploadmodule").val("");
+            $("#f_" + field_type + "_uploadmodule").val("{{$model.modelname}}");
             $("#f_" + field_type + "_filetype").val("image");
 
             field_type = "grid";
@@ -1201,6 +1213,7 @@
 
                 newjson.notnull = $("#f_notnull").prop("checked") ? "1" : "0";
                 newjson.disableindetail = $("#f_disableindetail").prop("checked") ? "1" : "0";
+                newjson.nosave = $("#f_nosave").prop("checked") ? "1" : "0";
 
             } else if (field_type == "check") {
 
@@ -1208,15 +1221,17 @@
                 newjson.gotodetail = $("#f_gotodetail").prop("checked") ? "1" : "0";
                 newjson.search = $("#f_search").prop("checked") ? "1" : "0";
                 newjson.disableindetail = $("#f_disableindetail").prop("checked") ? "1" : "0";
+                newjson.nosave = $("#f_nosave").prop("checked") ? "1" : "0";
 
             } else if (field_type == "html") {
-
+                newjson.nosave = $("#f_nosave").prop("checked") ? "1" : "0";
             } else if (field_type == "upload") {
 
                 newjson.displayinlist = $("#f_displayinlist").prop("checked") ? "1" : "0";
                 newjson.gotodetail = $("#f_gotodetail").prop("checked") ? "1" : "0";
                 newjson.notnull = $("#f_notnull").prop("checked") ? "1" : "0";
                 newjson.disableindetail = $("#f_disableindetail").prop("checked") ? "1" : "0";
+                newjson.nosave = $("#f_nosave").prop("checked") ? "1" : "0";
 
             } else if (field_type == "grid") {
 
@@ -1227,6 +1242,7 @@
                 newjson.search = $("#f_search").prop("checked") ? "1" : "0";
                 newjson.notnull = $("#f_notnull").prop("checked") ? "1" : "0";
                 newjson.disableindetail = $("#f_disableindetail").prop("checked") ? "1" : "0";
+                newjson.nosave = $("#f_nosave").prop("checked") ? "1" : "0";
 
             }
 
@@ -1246,7 +1262,7 @@
 
             } else if (field_type == "longtext") {
 
-                newjson.default = $("#f_" + field_type + "_default").prop("checked") ? "1" : "0";
+                newjson.default = $("#f_" + field_type + "_default").val();
 
             } else if (field_type == "select") {
 
@@ -1275,6 +1291,11 @@
             } else if (field_type == "upload") {
 
                 newjson.uploadmodule = $("#f_" + field_type + "_uploadmodule").val();
+                if ($.trim(newjson.uploadmodule) == "") {
+                  alert("上传类型文件夹名称不能空");
+                  return;
+                }
+
                 newjson.filetype = $("#f_" + field_type + "_filetype").val();
 
             } else if (field_type == "grid") {

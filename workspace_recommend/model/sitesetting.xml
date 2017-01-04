@@ -15,6 +15,7 @@
       <key>favfile</key>
       <type>upload</type>
       <uploadmodule>fav</uploadmodule>
+	  <filetype>image</filetype>
     </field>
     <field>
       <name>联系人姓名</name>

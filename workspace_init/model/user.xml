@@ -13,6 +13,7 @@
       <gotodetail>1</gotodetail>
       <notnull>1</notnull>
       <search>1</search>
+      <unique>1</unique>
       <disableindetail>1</disableindetail>
       <description>数据中心登录用户名，数据中心用户登录数据中心使用</description>
     </field>
