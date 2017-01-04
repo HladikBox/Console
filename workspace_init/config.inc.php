@@ -20,5 +20,5 @@ $CONFIG['database']['psw']		= '{{db_password}}';
 
 
 #[File upload]
-$CONFIG['fileupload']['upload_path']	= "/upload";
+$CONFIG['fileupload']['upload_path']	= "upload";
 
