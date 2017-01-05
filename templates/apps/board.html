@@ -22,12 +22,13 @@
     <section class="content">
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs ">
-                <li  class="active"><a href="#tab_1" id="btn_tab_1" data-toggle="tab" >数据对象</a></li>
+                <li><a href="#tab_1" id="btn_tab_1" data-toggle="tab" >数据对象</a></li>
                 <li><a href="#tab_2" id="btn_tab_2" data-toggle="tab" >应用菜单</a></li>
-                <li><a href="#tab_3" id="btn_tab_3" data-toggle="tab" >版本管理</a></li>
+                <li  class="active"><a href="#tab_3" id="btn_tab_3" data-toggle="tab" >数据接口</a></li>
+                <li><a href="#tab_4" id="btn_tab_4" data-toggle="tab" >版本管理</a></li>
             </ul>
             <div class="tab-content">
-                <div class="tab-pane active" id="tab_1">
+                <div class="tab-pane " id="tab_1">
 
                     <div class="row">
                         <div class="col-md-12">
@@ -186,11 +187,63 @@
                     </div>
 
                 </div>
-                <div class="tab-pane " id="tab_3">
+
+
+
+                <div class="tab-pane active" id="tab_3">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <a href="#" class="btn btn-primary margin-bottom" id="btnCreateModel" >保存</a>
+                            <a href="#" class="btn btn-warning margin-bottom" id="btnExecuteMysql" >启动批量测试</a>
+                        </div>
+                        <div class="col-md-12">
+                            <table class="table table-condensed" id="table_apilist">
+                                <tr>
+                                        <th><input type="checkbox" name="api_checkbox" id="api_checkbox_all" /></th>
+                                        <th>链接</th>
+                                        <th>类型</th>
+                                        <th>模块</th>
+                                        <th>方法</th>
+                                        <th>描述</th>
+                                        <th>操作</th>
+                                        <th class="api_test hide">测试</th>
+                                </tr>
+                                {{foreach from=$apilist item=rs key=key}}
+                                <tr id="api_{{$rs.model}}_{{$rs.func}}">
+                                    <td><input {{if $rs.active=="1"}}checked="checked"{{/if}} type="checkbox" class="api_active" ></td>
+                                    <td><a target="_blank" href="{{$Config.workspace.domain}}/{{$User.login}}/{{$appinfo.alias}}/api/{{$rs.model}}/{{$rs.func}}">/api/{{$rs.model}}/{{$rs.func}}</a></td>
+                                    <td>{{if $rs.type=="model"}}数据模型{{else}}自定义{{/if}}</td>
+                                    <td>{{$rs.model}}</td>
+                                    <td>{{$rs.func}}</td>
+                                    <td>{{$rs.description}}</td>
+                                    <td>
+                                        <a href="javascript:openApiEditor('{{$rs.model}}','{{$rs.func}}');" ><i class="fa fa-pencil-square-o"></i></a>
+                                        <input type="hidden" value="{{$rs.input}}" class="api_input" />
+                                        <input type="hidden" value="{{$rs.output}}" class="api_output" />
+                                        <input type="hidden" value="{{$rs.type}}" class="api_type" />
+                                    </td>
+                                    <td class="api_test hide">测试结果</td>
+                                </tr>
+                                {{/foreach}}
+                            </table>
+                        </div>
+                        <div class="col-md-12">
+                            <a href="javascript:openApiEditor('','');" class="btn btn-primary margin-bottom" id="btnCreateModel" >添加自定义接口</a>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+                <div class="tab-pane " id="tab_4">
 
                     <div class="row">
                         <div class="col-md-9">
-                            <table class="table table-condensed" id="table_modellist">
+                            <table class="table table-condensed" >
                                 <tr id="versionTH">
                                     <th>版本</th>
                                     <th>签入日期</th>
@@ -255,7 +308,7 @@
 
 
 <div class="modal fade" id="dlgRecommModelList">
-    <div class="modal-dialog" style="width:1000px;">
+    <div class="modal-dialog" style="width:800px;">
         <div class="modal-content">
             <div class="modal-header bg-light-blue-active">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -302,7 +355,7 @@
 
 
 <div class="modal fade" id="dlgCreateModel">
-    <div class="modal-dialog" style="width:1000px;">
+    <div class="modal-dialog" style="width:800px;">
         <div class="modal-content">
             <div class="modal-header bg-light-blue-active">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -393,6 +446,70 @@
 
 
 
+
+
+<div class="modal fade" id="dlgApiEditor">
+    <div class="modal-dialog" style="width:1000px;">
+        <div class="modal-content">
+            <div class="modal-header bg-light-blue-active">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">推荐数据对象模型</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group" >
+                            <label class="col-sm-4 control-label"><span style="color:red;">*</span> 模块</label>
+                            <div class="col-sm-8">
+                                <input type="text" maxlength="15" class="form-control" id="dlg_api_model" placeholder="接口URL的模块，仅支持全英文" data-toggle="tooltip" title="接口URL的模块，仅支持全英文"/>
+                            </div>
+                            <span class="help-block col-sm-offset-4"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group" >
+                            <label class="col-sm-4 control-label"><span style="color:red;">*</span> 方法</label>
+                            <div class="col-sm-8">
+                                <input type="text" maxlength="15" class="form-control" id="dlg_api_func" placeholder="接口URL的方法，仅支持全英文" data-toggle="tooltip" title="接口URL的方法，仅支持全英文" />
+                            </div>
+                            <span class="help-block col-sm-offset-4"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group" >
+                            <label class="col-sm-2 control-label"> 测试传入参数</label>
+                            <div class="col-sm-10">
+                                <textarea type="text" maxlength="15" class="form-control" id="dlg_api_input" placeholder="传入的测试数据，仅支持json格式" data-toggle="tooltip" title="传入的测试数据，仅支持json格式" ></textarea>
+                            </div>
+                            <span class="help-block col-sm-offset-4"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group" >
+                            <label class="col-sm-2 control-label"> 测试匹配结果</label>
+                            <div class="col-sm-10">
+                                <textarea type="text" maxlength="15" class="form-control" id="dlg_api_input" placeholder="匹配的输出结果，仅支持json格式，可用*号变化返回，如{id:*,name:'*'}" data-toggle="tooltip" title="匹配的输出结果，仅支持json格式，可用*号变化返回，如{id:*,name:'*'}" ></textarea>
+                            </div>
+                            <span class="help-block col-sm-offset-4"></span>
+                        </div>
+                    </div>
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">取消</button>
+                <span class="text-red" id="txtApiConfirm"></span>
+                <button type="button" class="btn btn-primary" id="btnApiConfirm">应用</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 
 
 
@@ -657,6 +774,90 @@
         });
     });
 </script>
+
+
+<script type="text/javascript">
+    function openApiEditor(model,func){
+        var apiID="#api_"+model+"_"+func;
+        var api=$(apiID);
+        var isnew=(model==""||func=="");
+        $("#txtApiConfirm").text("");
+        if(isnew){
+
+            $("#dlg_api_model").prop("disabled",false);
+            $("#dlg_api_func").prop("disabled",false);
+            $("#dlg_api_model").val("");
+            $("#dlg_api_func").val("");
+            $("#dlg_api_input").val("");
+            $("#dlg_api_output").val("");
+        }else{
+            $("#dlg_api_model").prop("disabled",true);
+            $("#dlg_api_func").prop("disabled",true);
+
+            $("#dlg_api_model").val(model);
+            $("#dlg_api_func").val(func);
+            $("#dlg_api_input").val(api.find(".api_input").val());
+            $("#dlg_api_output").val(api.find(".api_output").val());
+        }
+
+        $("#btnApiConfirm").unbind("click");
+        $("#btnApiConfirm").click(function(){
+            if(isnew){
+                model=$.trim($("#dlg_api_model").val().toLowerCase());
+                func=$.trim($("#dlg_api_func").val().toLowerCase());
+
+
+                var pattern =  /^[A-Za-z]+$/;
+                if($.trim(model)==""||!pattern.test(model)){
+                    $("#txtApiConfirm").text("模块仅能使用英文且不能为空");
+                    return;
+                }
+                if($.trim(func)==""||!pattern.test(func)){
+                    $("#txtApiConfirm").text("方法仅能使用英文且不能为空");
+                    return;
+                }
+                if(func=="list"||func=="get"||func=="update"||func=="delete"){
+                    $("#txtApiConfirm").text("方法不能使用list,get,update,delete，已经被数据模型预先使用");
+                    return;
+                }
+            }
+            var input=$.trim($("#dlg_api_input").val());
+            var output=$.trim($("#dlg_api_output").val());
+            if(input!=""){
+                try{
+                    JSON.parse(input);
+                }catch(e){
+                    $("#txtApiConfirm").text("测试传入参数可以为空，否则必须为JSON格式字符串");
+                    return;
+                }
+            }
+            if(output!=""){
+                try{
+                    JSON.parse(output);
+                }catch(e){
+                    $("#txtApiConfirm").text("测试测试结果可以为空，否则必须为JSON格式字符串");
+                    return;
+                }
+            }
+        });
+
+        $("#dlgApiEditor").modal("show");
+
+    }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <script>
     $(document).ready(function () {
