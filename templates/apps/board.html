@@ -193,8 +193,8 @@
                 <div class="tab-pane active" id="tab_3">
                     <div class="row">
                         <div class="col-md-12">
-                            <a href="#" class="btn btn-primary margin-bottom" id="btnCreateModel" >保存</a>
-                            <a href="#" class="btn btn-warning margin-bottom" id="btnExecuteMysql" >启动批量测试</a>
+                            <a href="#" class="btn btn-primary margin-bottom" id="btnSaveApiList" >保存</a>
+                            <a href="#" class="btn btn-warning margin-bottom" id="btnBatchApiTest" >启动批量测试</a>
                         </div>
                         <div class="col-md-12">
                             <table class="table table-condensed" id="table_apilist">
@@ -209,17 +209,17 @@
                                         <th class="api_test hide">测试</th>
                                 </tr>
                                 {{foreach from=$apilist item=rs key=key}}
-                                <tr id="api_{{$rs.model}}_{{$rs.func}}">
+                                <tr id="api_{{$rs.model}}_{{$rs.func}}" class="api_item">
                                     <td><input {{if $rs.active=="1"}}checked="checked"{{/if}} type="checkbox" class="api_active" ></td>
                                     <td><a target="_blank" href="{{$Config.workspace.domain}}/{{$User.login}}/{{$appinfo.alias}}/api/{{$rs.model}}/{{$rs.func}}">/api/{{$rs.model}}/{{$rs.func}}</a></td>
                                     <td>{{if $rs.type=="model"}}数据模型{{else}}自定义{{/if}}</td>
-                                    <td>{{$rs.model}}</td>
-                                    <td>{{$rs.func}}</td>
-                                    <td>{{$rs.description}}</td>
+                                    <td  class="api_model">{{$rs.model}}</td>
+                                    <td class="api_func">{{$rs.func}}</td>
+                                    <td class="api_description">{{$rs.description}}</td>
                                     <td>
                                         <a href="javascript:openApiEditor('{{$rs.model}}','{{$rs.func}}');" ><i class="fa fa-pencil-square-o"></i></a>
-                                        <input type="hidden" value="{{$rs.input}}" class="api_input" />
-                                        <input type="hidden" value="{{$rs.output}}" class="api_output" />
+                                        <textarea  class="api_input hide">{{$rs.input}}</textarea>
+                                        <textarea  class="api_output hide" >{{$rs.output}}</textarea>
                                         <input type="hidden" value="{{$rs.type}}" class="api_type" />
                                     </td>
                                     <td class="api_test hide">测试结果</td>
@@ -482,7 +482,7 @@
                         <div class="form-group" >
                             <label class="col-sm-2 control-label"> 测试传入参数</label>
                             <div class="col-sm-10">
-                                <textarea type="text" maxlength="15" class="form-control" id="dlg_api_input" placeholder="传入的测试数据，仅支持json格式" data-toggle="tooltip" title="传入的测试数据，仅支持json格式" ></textarea>
+                                <textarea type="text"  class="form-control" id="dlg_api_input" placeholder="传入的测试数据，仅支持json格式" data-toggle="tooltip" title="传入的测试数据，仅支持json格式" ></textarea>
                             </div>
                             <span class="help-block col-sm-offset-4"></span>
                         </div>
@@ -491,7 +491,16 @@
                         <div class="form-group" >
                             <label class="col-sm-2 control-label"> 测试匹配结果</label>
                             <div class="col-sm-10">
-                                <textarea type="text" maxlength="15" class="form-control" id="dlg_api_input" placeholder="匹配的输出结果，仅支持json格式，可用*号变化返回，如{id:*,name:'*'}" data-toggle="tooltip" title="匹配的输出结果，仅支持json格式，可用*号变化返回，如{id:*,name:'*'}" ></textarea>
+                                <textarea type="text"  class="form-control" id="dlg_api_output" placeholder="匹配的输出结果，仅支持json格式，可用*号变化返回，如{id:*,name:'*'}" data-toggle="tooltip" title="匹配的输出结果，仅支持json格式，可用*号变化返回，如{id:*,name:'*'}" ></textarea>
+                            </div>
+                            <span class="help-block col-sm-offset-4"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"> 接口描述</label>
+                            <div class="col-sm-10">
+                                <textarea type="text"  class="form-control" id="dlg_api_description" placeholder="描述，防止忘记这个API做什么" ></textarea>
                             </div>
                             <span class="help-block col-sm-offset-4"></span>
                         </div>
@@ -535,7 +544,8 @@
             $("#btnExecuteMysql").attr("disabled",true);
             batchExecute();
         });
-        if($("#table_modellist tr").length<=2){
+        if ($("#table_modellist tr").length <= 2) {
+            $("#txtConfirmRecommModelList").text("");
             $("#dlgRecommModelList").modal("show");
         }
         $("#recomm_modellist_select_all").change(function(){
@@ -564,7 +574,7 @@
             });
         });
         $("#btnCreateModel").click(function(){
-
+            $("#txtConfirmCreateModel").text("");
             $("#dlgCreateModel").modal("show");
 
         });
@@ -777,11 +787,48 @@
 
 
 <script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnSaveApiList").click(function () {
+            var apis = Array();
+            $(".api_item").each(function () {
+                var active = $(this).find(".api_active").prop("checked")?"1":"0";
+                var api = {
+                    active: active,
+                    "type": $(this).find(".api_type").val(),
+                    "model": $(this).find(".api_model").text(),
+                    "func": $(this).find(".api_func").text(),
+                    "input": $(this).find(".api_input").val(),
+                    "output": $(this).find(".api_output").val()
+                };
+                if (api.type == "self") {
+                    api.description = $(this).find(".api_description").text();
+                }
+                apis.push(api);
+            });
+            var json = { "action": "save", app_id: "{{$appinfo.id}}", apis: apis };
+            $("#btnSaveApiList").attr("disabled", true);
+            getJSON("{{$rootpath}}api/api", json, function (data) {
+                if (data.code == 0) {
+
+                    info("保存成功");
+                    
+                } else {
+                    warning(data.result);
+                }
+            }, function () {
+                $("#btnSaveApiList").attr("disabled", false);
+            });
+        });
+        $("#api_checkbox_all").change(function () {
+            $(".api_active").prop("checked", $("#api_checkbox_all").prop("checked"));
+        });
+    });
     function openApiEditor(model,func){
         var apiID="#api_"+model+"_"+func;
         var api=$(apiID);
         var isnew=(model==""||func=="");
         $("#txtApiConfirm").text("");
+        $("#dlg_api_description").prop("disabled", false);
         if(isnew){
 
             $("#dlg_api_model").prop("disabled",false);
@@ -790,14 +837,19 @@
             $("#dlg_api_func").val("");
             $("#dlg_api_input").val("");
             $("#dlg_api_output").val("");
+            $("#dlg_api_description").val("");
         }else{
             $("#dlg_api_model").prop("disabled",true);
-            $("#dlg_api_func").prop("disabled",true);
+            $("#dlg_api_func").prop("disabled", true);
+            if(api.find(".api_type").val()=="model"){
+                $("#dlg_api_description").prop("disabled",true);
+            }
 
             $("#dlg_api_model").val(model);
             $("#dlg_api_func").val(func);
             $("#dlg_api_input").val(api.find(".api_input").val());
             $("#dlg_api_output").val(api.find(".api_output").val());
+            $("#dlg_api_description").val(api.find(".api_description").text());
         }
 
         $("#btnApiConfirm").unbind("click");
@@ -839,6 +891,34 @@
                     return;
                 }
             }
+            var description=$.trim($("#dlg_api_description").val());
+            if (isnew) {
+
+                var newrow = $('<tr id="api_' + model + '_' + func + '"  class="api_item">' +
+                '<td><input type="checkbox" class="api_active" ></td>' +
+                '<td><a target="_blank" href="{{$Config.workspace.domain}}/{{$User.login}}/{{$appinfo.alias}}/api/' + model + '/' + func + '">/api/' + model + '/' + func + '</a></td>' +
+                '<td>自定义</td>' +
+                '<td class="api_model">' + model + '</td>' +
+                '<td class="api_func">' + func + '</td>' +
+                '<td class="api_description">' + description + '</td>' +
+                '<td>' +
+                '<a href="javascript:openApiEditor(\'' + model + '\',\'' + func + '\');" ><i class="fa fa-pencil-square-o"></i></a>' +
+                '<input type="hidden" value="" class="api_input" />' +
+                '<input type="hidden" value="" class="api_output" />' +
+                '<input type="hidden" value="self" class="api_type" />' +
+                '</td>' +
+                '<td class="api_test hide">测试结果</td>' +
+                '</tr>');
+                newrow.find(".api_input").val(input);
+                newrow.find(".api_output").val(output);
+
+                $("#table_apilist").append(newrow);
+            } else {
+                api.find(".api_input").val(input);
+                api.find(".api_output").val(output);
+                api.find(".api_description").text(description);
+            }
+            $("#dlgApiEditor").modal("hide");
         });
 
         $("#dlgApiEditor").modal("show");

@@ -24,6 +24,8 @@
 
 	public function getApiList($login,$alias,$modellist){
 		Global $CONFIG;
+      $login=parameter_filter($login);
+      $alias=parameter_filter($alias);
 		$ret=array();
 		foreach ($modellist as $key => $model) {
 			if($model["nolist"]){
@@ -92,7 +94,7 @@
 	    		$ret["$type"."_"."$model"."_"."$func"]["input"]=$input;
 	    	}
 	    }
-
+        $ret=setArrayNoNull($ret);
 		return $ret;
 	}
 	public function setApi($type,$model,$func,$desc=""){
@@ -102,6 +104,60 @@
 		$ret["description"]=$desc;
 		return $ret;
 	}
+    public function save($login,$alias,$apis){
+     Global $CONFIG;
+      $login=parameter_filter($login);
+      $alias=parameter_filter($alias);
+
+      $path=$CONFIG['workspace']['path']."\\$login\\$alias\\api.xml";
+
+      $data = array('total_stud' => 500);
+
+      // creating object of SimpleXMLElement
+      $xml_data = new SimpleXMLElement('<?xml version="1.0"?><root></root>');
+
+      
+      $optionsnode = $xml_data->addChild("apis");
+      foreach ($apis as $option) {
+      $optionnode = $optionsnode ->addChild("api");
+            $type=$option["type"];
+            $model=$option["model"];
+            $func=$option["func"];
+            $description=$option["description"];
+            if($type=="self"){
+                $apipath=$CONFIG['workspace']['path']."\\$login\\$alias\\api\\$model\\";
+                $apifile=$apipath.$func.".php";
+                $md=$apipath.$func.".md";
+                if(is_dir($apipath)){
+                    mkdir($apipath,0777,true);
+                }
+                if(!file_exists($apifile)){
+                    copy(ROOT."\\workspace_copy\\api.php",$apifile);
+                }
+
+                $mdf = fopen($md, "w+");
+                fwrite($mdf, $description);
+                fclose($mdf);
+            }
+
+          foreach ($option as $fkey => $fvalue) {
+            $optionnode->addChild($fkey,htmlspecialchars($fvalue));
+          }
+      }
+
+      //saving generated xml file; 
+      //echo $path;
+      $result = $xml_data->asXML($path);
+      return outResult(0,"保存成功","");
+  }
+
+  function addChild(&$node,$key,$value){
+            if(trim($value)==""){
+                $node->addChild($key);
+            }else{
+                $node->addChild($key,htmlspecialchars($value));
+            }
+    }
  }
  
  $apiMgr=ApiMgr::getInstance();
