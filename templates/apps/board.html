@@ -794,9 +794,9 @@
                 var active = $(this).find(".api_active").prop("checked")?"1":"0";
                 var api = {
                     active: active,
-                    "type": $(this).find(".api_type").val(),
-                    "model": $(this).find(".api_model").text(),
-                    "func": $(this).find(".api_func").text(),
+                    "type": $.trim($(this).find(".api_type").val().toLowerCase()),
+                    "model": $.trim($(this).find(".api_model").text().toLowerCase()),
+                    "func": $.trim($(this).find(".api_func").text().toLowerCase()),
                     "input": $(this).find(".api_input").val(),
                     "output": $(this).find(".api_output").val()
                 };
