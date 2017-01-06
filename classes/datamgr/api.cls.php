@@ -36,12 +36,15 @@
 				$ret["model_".$model["modelname"]."_"."list"]=$api;
 
 				$api=$this->setApi("model",$model["modelname"],"get","获取<b style='color:blue'>".$model["name"]."详情</b>, 传入对应的id");
+				$var["id"]="1";
+				$api["modelinput"]=json_encode($var);
 				$ret["model_".$model["modelname"]."_"."get"]=$api;
+
 
 				$api=$this->setApi("model",$model["modelname"],"update","<b style='color:blue'>更新".$model["name"]."</b>，传入对应的表字段");
 				$ret["model_".$model["modelname"]."_"."update"]=$api;
 
-				$api=$this->setApi("model",$model["modelname"],"delete","<b style='color:blue'>删除".$model["name"]."</b>的条目，传入id=1,2,3,4,5");
+				$api=$this->setApi("model",$model["modelname"],"delete","<b style='color:blue'>删除".$model["name"]."</b>的条目，传入idlist=1,2,3,4,5");
 				$ret["model_".$model["modelname"]."_"."delete"]=$api;
 			}
 		}

@@ -206,18 +206,19 @@
                                         <th>方法</th>
                                         <th>描述</th>
                                         <th>操作</th>
-                                        <th class="api_test hide">测试</th>
+                                        <th class="api_test_th hide">测试</th>
                                 </tr>
                                 {{foreach from=$apilist item=rs key=key}}
                                 <tr id="api_{{$rs.model}}_{{$rs.func}}" class="api_item">
                                     <td><input {{if $rs.active=="1"}}checked="checked"{{/if}} type="checkbox" class="api_active" ></td>
-                                    <td><a target="_blank" href="{{$Config.workspace.domain}}/{{$User.login}}/{{$appinfo.alias}}/api/{{$rs.model}}/{{$rs.func}}">/api/{{$rs.model}}/{{$rs.func}}</a></td>
+                                    <td><a target="_blank"  class="api_testurl"  href="{{$Config.workspace.domain}}/{{$User.login}}/{{$appinfo.alias}}/api/{{$rs.model}}/{{$rs.func}}">/api/{{$rs.model}}/{{$rs.func}}</a></td>
                                     <td>{{if $rs.type=="model"}}数据模型{{else}}自定义{{/if}}</td>
                                     <td  class="api_model">{{$rs.model}}</td>
                                     <td class="api_func">{{$rs.func}}</td>
                                     <td class="api_description">{{$rs.description}}</td>
                                     <td>
                                         <a href="javascript:openApiEditor('{{$rs.model}}','{{$rs.func}}');" ><i class="fa fa-pencil-square-o"></i></a>
+                                        <textarea  class="api_modelinput hide">{{$rs.modelinput}}</textarea>
                                         <textarea  class="api_input hide">{{$rs.input}}</textarea>
                                         <textarea  class="api_output hide" >{{$rs.output}}</textarea>
                                         <input type="hidden" value="{{$rs.type}}" class="api_type" />
@@ -822,6 +823,19 @@
         $("#api_checkbox_all").change(function () {
             $(".api_active").prop("checked", $("#api_checkbox_all").prop("checked"));
         });
+        $("#btnBatchApiTest").click(function(){
+            if($(".api_item .api_active:checked").length==0){
+                info("请先勾选你需要测试的API");
+                return;
+            }
+            $(".api_test").removeClass("hide");
+            $(".api_test_th").removeClass("hide");
+            $(".api_test").removeClass("ready");
+            $(".api_item .api_active:checked").parent().parent().find(".api_test").addClass("ready");
+            $(".api_item .api_active:checked").parent().parent().find(".api_test").html('<i class="fa fa-spinner fa-spin"></i>');
+            $("#btnBatchApiTest").attr("disabled",true);
+            batchApiTest();
+        });
     });
     function openApiEditor(model,func){
         var apiID="#api_"+model+"_"+func;
@@ -896,7 +910,7 @@
 
                 var newrow = $('<tr id="api_' + model + '_' + func + '"  class="api_item">' +
                 '<td><input type="checkbox" class="api_active" ></td>' +
-                '<td><a target="_blank" href="{{$Config.workspace.domain}}/{{$User.login}}/{{$appinfo.alias}}/api/' + model + '/' + func + '">/api/' + model + '/' + func + '</a></td>' +
+                '<td><a target="_blank" class="api_testurl" href="{{$Config.workspace.domain}}/{{$User.login}}/{{$appinfo.alias}}/api/' + model + '/' + func + '">/api/' + model + '/' + func + '</a></td>' +
                 '<td>自定义</td>' +
                 '<td class="api_model">' + model + '</td>' +
                 '<td class="api_func">' + func + '</td>' +
@@ -923,6 +937,82 @@
 
         $("#dlgApiEditor").modal("show");
 
+    }
+    function batchApiTest(){
+        if($(".api_test.ready").length==0){
+            $("#btnBatchApiTest").attr("disabled",false);
+            return;
+        }
+        var dp=$(".api_test.ready:first");
+        var testurl=dp.parent().find(".api_testurl").attr("href");
+        var type=dp.parent().find(".api_type").val();
+        var func=dp.parent().find(".api_func").text();
+        var input=null;
+        try{
+            input=JSON.parse(dp.parent().find(".api_input").val());
+        }catch(e){
+
+        }
+        var output=null;
+        try{
+            output=JSON.parse(dp.parent().find(".api_output").val());
+        }catch(e){
+
+        }
+        var json=null;
+        if(input!=null&&input!=""){
+            json=input;
+        }else{
+            if(type=="model"){
+                try{
+                    json=JSON.parse(dp.parent().find(".api_modelinput").val());
+                }catch(e){
+
+                }
+            }
+        }
+        
+        //var modelname=dp.attr("modelname");
+            getJSON(testurl, json, function (data) {
+                //alert(1);
+                if(data.code!=null&&data.code!="0"){
+                     dp.html('<span class="text-red">'+data.result+data.return+'</span>');
+                }else{
+                    if(func=="list"){
+                        if(data.length>0){
+                            dp.html('<span class="text-green">获取列表数据成功</span>');
+                        }else{
+                            dp.html('<span class="text-yellow">列表没有数据，请尝试添加</span>');
+                        }
+                    }else if(func=="get"){
+                        if(data.id!=null){
+                            dp.html('<span class="text-green">获取id为1的数据成功</span>');
+                        }else{
+                            dp.html('<span class="text-yellow">没有找到id为1的数据，请尝试添加</span>');
+                        }
+                    }else if(func=="update"){
+                        if(data.code==0){
+                            dp.html('<span class="text-green">更新成功</span>');
+                        }else{
+                            dp.html('<span class="text-yellow">更新失败，原因:'+data.return+'</span>');
+                        }
+                    }else if(func=="delete"){
+                        if(data.code==0){
+                            dp.html('<span class="text-green">删除成功</span>');
+                        }else{
+                            dp.html('<span class="text-yellow">删除失败:'+data.result+'</span>');
+                        }
+                    }else{
+                        dp.html('<span class="text-green">执行成功</span>');
+                    }
+                }
+
+                dp.removeClass("ready");
+                setTimeout("batchApiTest()", 1000 );
+                },null,function(data){
+                    dp.html('<span class="text-red">返回的数据非json格式，'+data+'</span>');
+                });
+        
     }
 </script>
 
