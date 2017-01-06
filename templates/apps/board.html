@@ -975,37 +975,114 @@
         //var modelname=dp.attr("modelname");
             getJSON(testurl, json, function (data) {
                 //alert(1);
-                if(data.code!=null&&data.code!="0"){
+                
+                    if(data.code!=null&&data.code!="0"){
                      dp.html('<span class="text-red">'+data.result+data.return+'</span>');
-                }else{
-                    if(func=="list"){
-                        if(data.length>0){
-                            dp.html('<span class="text-green">获取列表数据成功</span>');
-                        }else{
-                            dp.html('<span class="text-yellow">列表没有数据，请尝试添加</span>');
-                        }
-                    }else if(func=="get"){
-                        if(data.id!=null){
-                            dp.html('<span class="text-green">获取id为1的数据成功</span>');
-                        }else{
-                            dp.html('<span class="text-yellow">没有找到id为1的数据，请尝试添加</span>');
-                        }
-                    }else if(func=="update"){
-                        if(data.code==0){
-                            dp.html('<span class="text-green">更新成功</span>');
-                        }else{
-                            dp.html('<span class="text-yellow">更新失败，原因:'+data.return+'</span>');
-                        }
-                    }else if(func=="delete"){
-                        if(data.code==0){
-                            dp.html('<span class="text-green">删除成功</span>');
-                        }else{
-                            dp.html('<span class="text-yellow">删除失败:'+data.result+'</span>');
-                        }
                     }else{
-                        dp.html('<span class="text-green">执行成功</span>');
+
+                        if(output!=null){
+                            if($.isArray(output)){
+                                if($.isArray(data)==false){
+                                    dp.html('<span class="text-red">测试输出结果为数组，返回结果不是</span>');
+                                }else{
+                                    if(output.length!=data.length){
+                                        dp.html('<span class="text-red">测试输出结果的行数与返回结果的行数不匹配</span>');
+                                    }else{
+
+                                        var keynotfind=Array();
+                                        var valuediff=Array();
+                                        for(var row=0;row<output.length;row++){
+                                            $.each(output[row], function(i) {
+                                                //alert(output[i]);
+                                                //alert(i);
+                                                //keynotfind.
+                                                 if(data[row][i]==undefined){
+                                                    keynotfind.push(i);
+                                                    return;
+                                                 }else{
+                                                    if(output[row][i]!="*"){
+                                                        if(output[row][i]!=data[row][i]){
+                                                            valuediff.push(i);
+                                                        }
+                                                    }
+                                                 }
+
+                                            });
+                                        }
+                                        if(keynotfind.length>0||valuediff.length>0){
+                                            dp.html('<span class="text-yellow">测试输出结果不一致，请检查</span>');
+                                        }else{
+                                            dp.html('<span class="text-green">执行成功</span>');    
+                                        }
+                                    }
+                                }
+                            }else{
+                                if($.isArray(data)){
+                                    dp.html('<span class="text-red">测试输出结果不是数组，返回结果是数组</span>');
+                                }else{
+                                    var keynotfind=Array();
+                                    var valuediff=Array();
+                                    $.each(output, function(i) {
+                                        //alert(output[i]);
+                                        //alert(i);
+                                        //keynotfind.
+                                         if(data[i]==undefined){
+                                            keynotfind.push(i);
+                                            return;
+                                         }else{
+                                            if(output[i]!="*"){
+                                                if(output[i]!=data[i]){
+                                                    valuediff.push(i);
+                                                }
+                                            }
+                                         }
+                                    });
+                                    var str="";
+                                    if(keynotfind.length>0){
+                                        str+="<p class='text-red'>找不到以下key:"+keynotfind.join(",")+"</p>";        
+                                    }
+                                    if(valuediff.length>0){
+                                        str+="<p class='text-red'>值不对:"+valuediff.join(",")+"</p>";        
+                                    }
+                                    if(str!=""){
+                                        dp.html(str);
+                                    }else{
+                                        dp.html('<span class="text-green">执行成功</span>');
+                                    }
+                                }
+                            }
+                        }else{
+
+                        if(func=="list"){
+                            if(data.length>0){
+                                dp.html('<span class="text-green">获取列表数据成功</span>');
+                            }else{
+                                dp.html('<span class="text-yellow">列表没有数据，请尝试添加</span>');
+                            }
+                        }else if(func=="get"){
+                            if(data.id!=null){
+                                dp.html('<span class="text-green">获取id为1的数据成功</span>');
+                            }else{
+                                dp.html('<span class="text-yellow">没有找到id为1的数据，请尝试添加</span>');
+                            }
+                        }else if(func=="update"){
+                            if(data.code==0){
+                                dp.html('<span class="text-green">更新成功</span>');
+                            }else{
+                                dp.html('<span class="text-yellow">更新失败，原因:'+data.return+'</span>');
+                            }
+                        }else if(func=="delete"){
+                            if(data.code==0){
+                                dp.html('<span class="text-green">删除成功</span>');
+                            }else{
+                                dp.html('<span class="text-yellow">删除失败:'+data.result+'</span>');
+                            }
+                        }else{
+                            dp.html('<span class="text-green">执行成功</span>');
+                        }
                     }
                 }
+                
 
                 dp.removeClass("ready");
                 setTimeout("batchApiTest()", 1000 );
