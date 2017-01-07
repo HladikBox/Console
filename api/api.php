@@ -15,6 +15,12 @@
   if($action=="save"){
     $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
     outputJSON($apiMgr->save($User["login"],$appinfo["alias"],$_REQUEST["apis"]));
+  }elseif($action=="downloadsourcecode"){
+    $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
+    if($_REQUEST["type"]=="web"){
+        $folder=$apiMgr->generateWeb($User["login"],$appinfo["alias"]);
+    }
+    
   }
 
 

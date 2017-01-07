@@ -23,9 +23,10 @@
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs ">
                 <li><a href="#tab_1" id="btn_tab_1" data-toggle="tab" >数据对象</a></li>
-                <li><a href="#tab_2" id="btn_tab_2" data-toggle="tab" >应用菜单</a></li>
-                <li  class="active"><a href="#tab_3" id="btn_tab_3" data-toggle="tab" >数据接口</a></li>
-                <li><a href="#tab_4" id="btn_tab_4" data-toggle="tab" >版本管理</a></li>
+                <li><a href="#tab_2" id="btn_tab_2" data-toggle="tab" >数据中心菜单</a></li>
+                <li ><a href="#tab_3" id="btn_tab_3" data-toggle="tab" >数据接口</a></li>
+                <li  class="active"><a href="#tab_4" id="btn_tab_4" data-toggle="tab" >应用开发</a></li>
+                <li><a href="#tab_5" id="btn_tab_5" data-toggle="tab" >版本管理</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane " id="tab_1">
@@ -190,7 +191,7 @@
 
 
 
-                <div class="tab-pane active" id="tab_3">
+                <div class="tab-pane" id="tab_3">
                     <div class="row">
                         <div class="col-md-12">
                             <a href="#" class="btn btn-primary margin-bottom" id="btnSaveApiList" >保存</a>
@@ -236,11 +237,175 @@
 
 
 
+                <div class="tab-pane active" id="tab_4">
+                    <div class="row">
+                        <div class="pad margin no-print">
+                            <div class="callout callout-info" style="margin-bottom: 0!important;">
+                                <h4><i class="fa fa-info"></i> Read Me:</h4>
+                                在此页面中，下载的源代码是对数据模型或自定义接口的数据进行请求。<br />
+                                请在下载开发源码前先进行数据模型和数据接口的配置的保存。<br />
+                                下载后，请不要在下载的代码的自带的任何文件夹中进行修改，请继承相关的类重写你的代码。<br />
+                                每一种下载方式都会找到ApiTester，你可以用ApiTester进行调试。<br />
+                                如果下载失败或者网速太慢，你可以直接取FTP目录下找到相应的源代码，在development文件夹中。<br />
+                                上传最终完成的源代码是为了能够将你的项目分享，让别的开发者直接使用你的代码。<br />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="box box-widget widget-user">
+                                <!-- Add the bg color to the header using any of the bg-* classes -->
+                                <div class="widget-user-header bg-green-active">
+                                    <h3 class="widget-user-username">Web网站开发</h3>
+                                    <h5 class="widget-user-desc">下载开发网站使用的接口代码，开发者可以直接在这个接口进行自己的业务流程开发。</h5>
+                                </div>
+                                <div class="widget-user-image">
+                                    <img class="img-circle" src="/img/web.jpg" alt="User Avatar">
+                                </div>
+                                <div class="box-footer">
+                                    <div class="row">
+                                        <div class="col-sm-6 border-right ">
+                                            <a class="btn btn-primary btn-block" href="/api/api?action=downloadsourcecode&app_id={{$appinfo.id}}&&type=web" target="_blank">下载开发所需的接口代码</a>
+                                            <!-- /.description-block -->
+                                        </div>
+                                        <div class="col-sm-6 border-right ">
+                                            <button class="btn btn-success btn-block" >上传开发完成的源代码</button>
+                                            <!-- /.description-block -->
+                                        </div>
+                                        <!-- /.col -->
+                                    </div>
+                                    <!-- /.row -->
+                                </div>
+                            </div>
+                            <!-- /.widget-user -->
+                        </div>
+                        <div class="col-md-6">
+                            <div class="box box-widget widget-user">
+                                <!-- Add the bg color to the header using any of the bg-* classes -->
+                                <div class="widget-user-header bg-green-active">
+                                    <h3 class="widget-user-username">手机网站开发</h3>
+                                    <h5 class="widget-user-desc">下载手机开发网站或微信网站使用的接口代码，开发者可以直接在这个接口进行自己的业务流程开发。</h5>
+                                </div>
+                                <div class="widget-user-image">
+                                    <img class="img-circle" src="/img/wechat.jpg" alt="User Avatar">
+                                </div>
+                                <div class="box-footer">
+                                    <div class="row">
+                                        <div class="col-sm-6 border-right ">
+                                            <a class="btn btn-primary btn-block" href="/api/api?action=downloadsourcecode&app_id={{$appinfo.id}}&&type=mobile" target="_blank">下载开发所需的接口代码</a>
+                                            <!-- /.description-block -->
+                                        </div>
+                                        <div class="col-sm-6 border-right ">
+                                            <button class="btn btn-success btn-block">上传开发完成的源代码</button>
+                                            <!-- /.description-block -->
+                                        </div>
+                                        <!-- /.col -->
+                                    </div>
+                                    <!-- /.row -->
+                                </div>
+                            </div>
+                            <!-- /.widget-user -->
+                        </div>
+                        <div class="col-md-6">
+                            <div class="box box-widget widget-user">
+                                <!-- Add the bg color to the header using any of the bg-* classes -->
+                                <div class="widget-user-header bg-aqua-active">
+                                    <h3 class="widget-user-username">Cordova APP 开发</h3>
+                                    <h5 class="widget-user-desc">下载Cordova方式的APP开发使用的接口代码，开发者可以直接在这个接口进行自己的业务流程开发。</h5>
+                                </div>
+                                <div class="widget-user-image">
+                                    <img class="img-circle" src="/img/cordova.jpg" alt="User Avatar">
+                                </div>
+                                <div class="box-footer">
+                                    <div class="row">
+                                        <div class="col-sm-6 border-right ">
+                                            <a class="btn btn-primary btn-block" href="/api/api?action=downloadsourcecode&app_id={{$appinfo.id}}&&type=cordova" target="_blank">下载开发所需的接口代码</a>
+                                            <!-- /.description-block -->
+                                        </div>
+                                        <div class="col-sm-6 border-right ">
+                                            <button class="btn btn-success btn-block">上传开发完成的源代码</button>
+                                            <!-- /.description-block -->
+                                        </div>
+                                        <!-- /.col -->
+                                    </div>
+                                    <!-- /.row -->
+                                </div>
+                            </div>
+                        </div>
+                            <!-- /.widget-user -->
+                        <div class="col-md-6">
+                            <div class="box box-widget widget-user">
+                                <!-- Add the bg color to the header using any of the bg-* classes -->
+                                <div class="widget-user-header bg-aqua-active">
+                                    <h3 class="widget-user-username">Ionic2(TypeScript) APP 开发</h3>
+                                    <h5 class="widget-user-desc">下载Ionic2的TypeScript方式的APP开发使用的TS接口代码，开发者可以直接在这个接口进行自己的业务流程开发。</h5>
+                                </div>
+                                <div class="widget-user-image">
+                                    <img class="img-circle" src="/img/ionic.jpg" alt="User Avatar">
+                                </div>
+                                <div class="box-footer">
+                                    <div class="row">
+                                        <div class="col-sm-6 border-right ">
+                                            <a class="btn btn-primary btn-block" href="/api/api?action=downloadsourcecode&app_id={{$appinfo.id}}&&type=ionic" target="_blank">下载开发所需的接口代码</a>
+                                            <!-- /.description-block -->
+                                        </div>
+                                        <div class="col-sm-6 border-right ">
+                                            <button class="btn btn-success btn-block">上传开发完成的源代码</button>
+                                            <!-- /.description-block -->
+                                        </div>
+                                        <!-- /.col -->
+                                    </div>
+                                    <!-- /.row -->
+                                </div>
+                            </div>
+                            <!-- /.widget-user -->
+                        </div>
+                        <div class="col-md-6">
+                            <div class="box box-widget widget-user">
+                                <!-- Add the bg color to the header using any of the bg-* classes -->
+                                <div class="widget-user-header bg-yellow-active">
+                                    <h3 class="widget-user-username">Android原生APP开发</h3>
+                                    <h5 class="widget-user-desc">下载Android原生方式的APP开发使用的Java接口代码，开发者可以直接在这个接口进行自己的业务流程开发。</h5>
+                                </div>
+                                <div class="widget-user-image">
+                                    <img class="img-circle" src="/img/android.jpg" alt="User Avatar">
+                                </div>
+                                <div class="box-footer">
+                                    <div class="row">
+                                        <div class="col-sm-6 border-right ">
+                                            <a class="btn btn-primary btn-block" href="/api/api?action=downloadsourcecode&app_id={{$appinfo.id}}&&type=android" target="_blank">下载开发所需的接口代码</a>
+                                            <!-- /.description-block -->
+                                        </div>
+                                        <div class="col-sm-6 border-right ">
+                                            <button class="btn btn-success btn-block">上传开发完成的源代码</button>
+                                            <!-- /.description-block -->
+                                        </div>
+                                        <!-- /.col -->
+                                    </div>
+                                    <!-- /.row -->
+                                </div>
+                            </div>
+                            <!-- /.widget-user -->
+                        </div>
+                        <div class="col-md-6">
+                            <div class="box box-widget widget-user">
+                                <!-- Add the bg color to the header using any of the bg-* classes -->
+                                <div class="widget-user-header bg-yellow-active">
+                                    <h3 class="widget-user-username">iPhone原生APP开发</h3>
+                                    <h5 class="widget-user-desc">下载iPhone的原生APP开发使用的接口代码，开发者可以直接在这个接口进行自己的业务流程开发。</h5>
+                                </div>
+                                <div class="widget-user-image">
+                                    <img class="img-circle" src="/img/apple.jpg" alt="User Avatar">
+                                </div>
+                                <div class="box-footer">
+                                    暂不开放
+                                </div>
+                            </div>
+                            <!-- /.widget-user -->
+                        </div>
+                    </div>
+                </div>
 
 
-
-
-                <div class="tab-pane " id="tab_4">
+                <div class="tab-pane " id="tab_5">
 
                     <div class="row">
                         <div class="col-md-9">
@@ -290,9 +455,6 @@
                                     <button  class="btn btn-success btn-block" id="btnSubmitVersion">提交</button>
                                 </div>
                             </div>
-
-
-
                         </div>
                     </div>
 
@@ -801,9 +963,7 @@
                     "input": $(this).find(".api_input").val(),
                     "output": $(this).find(".api_output").val()
                 };
-                if (api.type == "self") {
-                    api.description = $(this).find(".api_description").text();
-                }
+                api.description = $(this).find(".api_description").text();
                 apis.push(api);
             });
             var json = { "action": "save", app_id: "{{$appinfo.id}}", apis: apis };

@@ -88,7 +88,7 @@
                  if($filename=="logs"||$filename=="upload"||$filename=="version"){
                     continue;
                  }
-                $this->delDir($path."/".$filename);
+                delDir($path."/".$filename);
                 rmdir($path."/".$filename);
             }else{
                 unlink($path."/".$filename);
@@ -109,19 +109,6 @@
         return outResult("0","成功",$result);
     }
 
-    public function delDir($path){
-        $filesnames = scandir($path);
-        for($i=2;$i<count($filesnames);$i++){
-            $filename=$filesnames[$i];
-            if(is_dir($path."/".$filename)){
-                $this->delDir($path."/".$filename);
-                rmdir($path."/".$filename);
-            }else{
-                //echo $path."/".$filename."\r\n";
-                unlink($path."/".$filename);
-            }
-        }
-    }
 
 
     public function getLatestVersion($app_id){

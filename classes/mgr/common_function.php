@@ -186,6 +186,31 @@ function outResult($code,$message,$return=""){
     }
     return $arr;
   }
-
+function bubbleSort($arr,$key) {
+  $len = count($arr);
+  for($i = 1; $i < $len; $i++) {
+    for($j = 0; $j < $len-$i; $j++) {
+      if($arr[$j][$key] > $arr[$j+1][$key]) {
+        $tmp = $arr[$j+1];
+        $arr[$j+1] = $arr[$j];
+        $arr[$j] = $tmp;
+      }
+    }
+  }
+  return $arr;
+}
+     function delDir($path){
+        $filesnames = scandir($path);
+        for($i=2;$i<count($filesnames);$i++){
+            $filename=$filesnames[$i];
+            if(is_dir($path."/".$filename)){
+                delDir($path."/".$filename);
+                rmdir($path."/".$filename);
+            }else{
+                //echo $path."/".$filename."\r\n";
+                unlink($path."/".$filename);
+            }
+        }
+    }
   
       ?>
