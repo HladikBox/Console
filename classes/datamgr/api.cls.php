@@ -72,7 +72,164 @@ function $fmodel()
 
         $trreplace.="
 		<tr id=\"tr_".$model."_$func\">
-			<td>$model/$func=</td>
+			<td>$model/$func</td>
+			<td><textarea class=\"input\"></textarea></td>
+			<td><button onclick=\"try_".$model."_$func();\">测试</button></td>
+			<td><textarea class=\"output\"></textarea></td>
+		</tr>";
+
+
+
+        $url=$urlhead."$model/$func";
+        $repinput=true;
+
+            if($api["type"]=="self"){
+                $jsstr.="
+    this.$func = function(request_json,callback){
+        $.post('$url',request_json,callback);
+    };
+
+";
+            }else{
+
+                if($func=="list"){
+                
+                $jsstr.="
+    this.$func = function(search_json,callback){
+        $.post('$url',search_json,callback);
+    };
+
+";
+                }elseif($func=="get"){
+                $repinput=false;
+                $jsstr.="
+    this.$func = function(id,callback){
+        var json={id:id};
+        $.post('$url',json,callback);
+    };
+
+";
+                }elseif($func=="update"){
+                
+                $jsstr.="
+    this.$func = function(field_json,callback){
+        field_json.primary_id=field_json.id;
+        $.post('$url',field_json,callback);
+    };
+
+";
+                }elseif($func=="delete"){
+                
+                $repinput=false;
+                $jsstr.="
+    this.$func = function(id_array,callback){
+        var json={idlist:id_array};
+        $.post('$url',json,callback);
+    };
+
+";
+                }
+            }
+            $functionreplace.="function try_".$model."_$func(){
+		var input=$(\"#tr_".$model."_$func .input\").val();
+		var $model=new $fmodel();";
+		
+        if($repinput){
+        $functionreplace.="try{
+			if(input!=\"\")
+			input=JSON.parse(input);
+		}catch(e){
+			$(\"#tr_".$model."_$func .output\").val(\"输入json错误\"+e.message );
+			return;
+		}";
+        }
+		
+		$functionreplace.="
+        try{
+			$model.$func(input,function(data){
+				$(\"#tr_".$model."_$func .output\").val(data);
+			});
+		}catch(e){
+			$(\"#tr_".$model."_$func .output\").val(e.message );
+			return;
+		}
+	}";
+
+
+        }
+        $jsstr.="
+}";
+
+
+        fwrite($modelfile, $jsstr);
+    
+        fclose($modelfile);
+      }
+      recurse_copy(ROOT."\\workspace_copy\\development\\web\\",$path);
+
+      
+      $apitester=$path."\\apitester.html";
+      file_put_contents($apitester,str_replace('{{jsreplace}}',$jsreplace,file_get_contents($apitester))); 
+      file_put_contents($apitester,str_replace('{{trreplace}}',$trreplace,file_get_contents($apitester))); 
+      file_put_contents($apitester,str_replace('{{functionreplace}}',$functionreplace,file_get_contents($apitester))); 
+
+
+      exit;
+      return $path;
+    }
+
+    
+    public function generateMobile($login,$alias){
+		Global $CONFIG;
+      $login=parameter_filter($login);
+      $alias=parameter_filter($alias);
+      $apilist=$this->getOutApiList($login,$alias);
+
+      $urlhead=$CONFIG['workspace']['domain']."/$login/$alias/api/";
+
+      $path=$CONFIG['workspace']['path']."\\$login\\$alias\\development\\";
+      if(!file_exists($path)){
+        mkdir($path,true);
+      }
+      $path=$CONFIG['workspace']['path']."\\$login\\$alias\\development\\mobile";
+      if(!file_exists($path)){
+        mkdir($path,true);
+      }else{
+        delDir($path);
+      }
+
+      $apipath=$path."\\api";
+      if(!file_exists($apipath)){
+        mkdir($apipath,true);
+      }
+
+      
+      $jsreplace="";
+      $trreplace="";
+      $functionreplace="";
+
+
+      foreach($apilist as $model=> $funclist){
+        
+        $modelfile=$apipath."\\$model.js";
+        $modelfile = fopen($modelfile, "w");
+
+
+        $jsreplace.="<script src=\"api/$model.js\"></script>";
+
+        $fmodel=ucfirst($model);
+        $jsstr="
+function $fmodel()
+{
+";
+        foreach($funclist as $api){
+        $description=$api["description"];
+        $jsstr.="   //$description";
+        $func=$api["func"];
+
+        $trreplace.="
+		<tr id=\"tr_".$model."_$func\">
+			<td>$model/$func</td>
 			<td><textarea class=\"input\"></textarea></td>
 			<td><button onclick=\"try_".$model."_$func();\">测试</button></td>
 			<td><textarea class=\"output\"></textarea></td>
@@ -165,18 +322,13 @@ function $fmodel()
     
         fclose($modelfile);
       }
-      recurse_copy(ROOT."\\workspace_copy\\development\\web\\",$path);
+      recurse_copy(ROOT."\\workspace_copy\\development\\mobile\\",$path);
 
       
       $apitester=$path."\\apitester.html";
       file_put_contents($apitester,str_replace('{{jsreplace}}',$jsreplace,file_get_contents($apitester))); 
       file_put_contents($apitester,str_replace('{{trreplace}}',$trreplace,file_get_contents($apitester))); 
       file_put_contents($apitester,str_replace('{{functionreplace}}',$functionreplace,file_get_contents($apitester))); 
-
-
-
-
-
 
 
       exit;
