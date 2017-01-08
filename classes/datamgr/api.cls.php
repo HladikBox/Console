@@ -174,7 +174,6 @@ function $fmodel()
       file_put_contents($apitester,str_replace('{{functionreplace}}',$functionreplace,file_get_contents($apitester))); 
 
 
-      exit;
       return $path;
     }
 
@@ -331,6 +330,171 @@ function $fmodel()
       file_put_contents($apitester,str_replace('{{functionreplace}}',$functionreplace,file_get_contents($apitester))); 
 
 
+      return $path;
+    }
+
+    
+    
+    public function generateIonic($login,$alias){
+		Global $CONFIG;
+      $login=parameter_filter($login);
+      $alias=parameter_filter($alias);
+      $apilist=$this->getOutApiList($login,$alias);
+
+      $urlhead=$CONFIG['workspace']['domain']."/$login/$alias/api/";
+
+      $path=$CONFIG['workspace']['path']."\\$login\\$alias\\development\\";
+      if(!file_exists($path)){
+        mkdir($path,true);
+      }
+      $path=$CONFIG['workspace']['path']."\\$login\\$alias\\development\\ionic";
+      if(!file_exists($path)){
+        mkdir($path,true);
+      }else{
+        delDir($path);
+      }
+
+      $apipath=$path."\\providers";
+      if(!file_exists($apipath)){
+        mkdir($apipath,true);
+      }
+
+      
+      $functionreplace="";
+
+
+      foreach($apilist as $model=> $funclist){
+        
+        $modelfile=$apipath."\\$model.ts";
+        $fmodel=ucfirst($model);
+        $funcstr="";
+        
+        foreach($funclist as $api){
+        $description=$api["description"];
+        $func=$api["func"];
+        $url=$urlhead."$model/$func";
+        
+            if($api["type"]=="self"){
+               $funcstr.="
+
+//$description
+public $func(data) {
+        var url = '$url';
+        var headers = new Headers({
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        });;
+        let options = new RequestOptions({ headers: headers });
+        return this.http.post(url, data, { headers: headers }).toPromise()
+            .then(res => res.json())
+            .catch(err => {
+                this.handleError(err);
+            });
+
+        
+    }
+";
+                
+
+            }else{
+
+                if($func=="list"){
+                
+               $funcstr.="
+
+//$description
+public $func(search_condition_json) {
+        var url = '$url';
+        var headers = new Headers({
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        });;
+        let options = new RequestOptions({ headers: headers });
+        return this.http.post(url, search_condition_json, { headers: headers }).toPromise()
+            .then(res => res.json())
+            .catch(err => {
+                this.handleError(err);
+            });
+
+        
+    }
+";
+                
+                }elseif($func=="get"){
+                
+               $funcstr.="
+
+//$description
+public $func(id) {
+        var url = '$url';
+        var headers = new Headers({
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        });;
+        let options = new RequestOptions({ headers: headers });
+        let json={ 'id' : id };
+        return this.http.post(url, json, { headers: headers }).toPromise()
+            .then(res => res.json())
+            .catch(err => {
+                this.handleError(err);
+            });
+
+        
+    }
+";
+                }elseif($func=="update"){
+              
+               $funcstr.="
+
+//$description
+public $func(update_json) {
+        var url = '$url';
+        var headers = new Headers({
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        });;
+        let options = new RequestOptions({ headers: headers });
+        return this.http.post(url, update_json, { headers: headers }).toPromise()
+            .then(res => res.json())
+            .catch(err => {
+                this.handleError(err);
+            });
+
+        
+    }
+";
+                }elseif($func=="delete"){
+                
+               $funcstr.="
+
+//$description
+public $func(idlist) {
+        var url = '$url';
+        var headers = new Headers({
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        });;
+        let options = new RequestOptions({ headers: headers });
+        let json={ 'idlist' : idlist };
+        return this.http.post(url, json, { headers: headers }).toPromise()
+            .then(res => res.json())
+            .catch(err => {
+                this.handleError(err);
+            });
+
+        
+    }
+";
+                
+                }
+            }
+            copy(ROOT."\\workspace_copy\\development\\ionic\\providers\\test.ts",$modelfile);
+            file_put_contents($modelfile,str_replace('{{$modelname}}',$fmodel,file_get_contents($modelfile))); 
+            file_put_contents($modelfile,str_replace('{{funclist}}',$funcstr,file_get_contents($modelfile))); 
+
+        }
+      }
+      
       exit;
       return $path;
     }
@@ -380,6 +544,11 @@ function $fmodel()
 			if($model["nolist"]){
 				$api=$this->setApi("model",$model["modelname"],"update","<b style='color:blue'>更新".$model["name"]."</b>");
 				$ret["model_".$model["modelname"]."_"."update"]=$api;
+
+                
+				$api=$this->setApi("model",$model["modelname"],"get","获取<b style='color:blue'>".$model["name"]."详情</b>");
+				$ret["model_".$model["modelname"]."_"."get"]=$api;
+
 			}else{
 				$api=$this->setApi("model",$model["modelname"],"list","获取<b style='color:blue'>".$model["name"]."列表</b>，传入对应的搜索条件");
 				$ret["model_".$model["modelname"]."_"."list"]=$api;

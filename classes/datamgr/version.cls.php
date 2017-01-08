@@ -40,7 +40,7 @@
     public function submit($app_id,$login,$alias,$comment,$is_tag){
         Global $CONFIG;
 
-        $is_tag=empty($is_tag)?"N":"Y";
+        $is_tag=empty($is_tag)?"N":$is_tag;
         $comment=parameter_filter($comment);
         if(empty($comment)){
             return outResult("-1","请填写版本描述");
@@ -57,7 +57,7 @@
 
         $zip=new ZipArchive();
         if($zip->open($folder."version\\".$version.".zip", ZipArchive::OVERWRITE)=== TRUE){
-            $this->addFileToZip($folder,"", $zip); //调用方法，对要打包的根目录进行操作，并将ZipArchive的对象传递给方法
+            addFileToZip($folder,"", $zip,array("logs", "upload", "version")); //调用方法，对要打包的根目录进行操作，并将ZipArchive的对象传递给方法
             $zip->close(); //关闭处理的zip文件
         }else{
             return outResult("-1","写入版本失败，请重试!");
@@ -121,44 +121,7 @@
     }
 
     
-  function addFileToZip($path,$root,$zip){
-
-        $filesnames = scandir($path);
-        //print_r($filesnames);
-        $ret=array();
-        for($i=2;$i<count($filesnames);$i++){
-            $filename=$filesnames[$i];
-            if(is_dir($path."/".$filename)){
-                 if($filename=="logs"||$filename=="upload"||$filename=="version"){
-                    continue;
-                 }
-                $this->addFileToZip($path."/".$filename,$root.$filename."/", $zip);
-            }else{
-                //echo $root."/".$filename."\r\n";
-                $zip->addFile($path."/".$filename,$root.$filename);
-            }
-
-        }
-
-
-
-        //while(($filename=readdir($handler))!==false){
-        //    if($filename != "." && $filename != ".."){//文件夹文件名字为'.'和‘..’，不要对他们进行操作
-        //        if(is_dir($path."/".$filename)){// 如果读取的某个对象是文件夹，则递归
-        //            if($filename=="logs"||$filename=="upload"||$filename=="version"){
-        //                return;
-        //            }
-        //            $this->addFileToZip($path."/".$filename, $zip);
-       //         }else{ //将文件加入zip对象
-       //         
-       //             $zip->addFile($path."/".$filename);
-       //         }
-       //     }
-       // }
-       // @closedir($path);
-    }
-
- }
+  }
  
  $versionMgr=VersionMgr::getInstance();
  $versionMgr->dbmgr=$dbmgr;

@@ -213,5 +213,25 @@ function bubbleSort($arr,$key) {
             }
         }
     }
-  
+
+  function addFileToZip($path,$root,$zip,$ignore_folder=array()){
+
+        $filesnames = scandir($path);
+        //print_r($filesnames);
+        $ret=array();
+        for($i=2;$i<count($filesnames);$i++){
+            $filename=$filesnames[$i];
+            if(is_dir($path."/".$filename)){
+                 if(in_array($filename,$ignore_folder)){
+                    continue;
+                 }
+                addFileToZip($path."/".$filename,$root.$filename."/", $zip);
+            }else{
+                //echo $root."/".$filename."\r\n";
+                $zip->addFile($path."/".$filename,$root.$filename);
+            }
+
+        }
+    }
+
       ?>
