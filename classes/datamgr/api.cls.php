@@ -618,6 +618,7 @@ public $func(idlist) {
         $ret=setArrayNoNull($ret);
 		return $ret;
 	}
+	
 	public function setApi($type,$model,$func,$desc=""){
 		$ret["type"]=$type;
 		$ret["model"]=$model;
@@ -625,6 +626,7 @@ public $func(idlist) {
 		$ret["description"]=$desc;
 		return $ret;
 	}
+
     public function save($login,$alias,$apis){
      Global $CONFIG;
       $login=parameter_filter($login);
@@ -649,7 +651,7 @@ public $func(idlist) {
                 $apipath=$CONFIG['workspace']['path']."\\$login\\$alias\\api\\$model\\";
                 $apifile=$apipath.$func.".php";
                 $md=$apipath.$func.".md";
-                if(is_dir($apipath)){
+                if(!file_exists($apipath)){
                     mkdir($apipath,0777,true);
                 }
                 if(!file_exists($apifile)){

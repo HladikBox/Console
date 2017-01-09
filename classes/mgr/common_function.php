@@ -108,6 +108,8 @@ function recurse_copy($src,$dst) {  // 原目录，复制到的目录
        
 
         $dir=scandir($src);
+        //print_r($dir);
+        mkdir($dst);
         for($i=2;$i<count($dir);$i++){
             $file=$dir[$i];
             if ( is_dir($src . '/' . $file) ) {
