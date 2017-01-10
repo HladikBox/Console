@@ -53,9 +53,13 @@
           $ret["其它"]+=filesize($path.$filename);
         }
       }
-      
+      $login=parameter_filter($login);
+      $alias=parameter_filter($alias);
+      $sql="select sum(data_length) data from information_schema.TABLES where table_schema='".$login."_".$alias."'";
+      $query = $this->dbmgr->query($sql);
+      $result = $this->dbmgr->fetch_array($query);
 
-
+      $ret["数据库"]=$result["data"];
 
       return $ret;
   }

@@ -18,9 +18,12 @@
 
 
   $spaces=$statisticsMgr->getSpace($User["login"],$appinfo["alias"]);
+  $total_space=0;
+  foreach($spaces as $value){
+    $total_space+=$value;
+  }
   $smarty->assign("spaces",$spaces);
-  print_r($spaces);
-  exit;
+  $smarty->assign("total_space",$total_space);
 
   $smarty->assign("id",$_REQUEST["id"]);
 
