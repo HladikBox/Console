@@ -63,10 +63,13 @@
     $alias=parameter_filter($alias);
     $folder=$CONFIG['workspace']['path']."\\$login\\$alias\\model\\";
     foreach ($models as  $value) {
-      $filename=$value.".xml";
-      $path=ROOT."/workspace_recommend/model/$filename";
-      
-      copy($path,$folder.$filename);
+      $filename=$value;
+      $path=ROOT."/workspace_recommend/model/$filename.xml";
+      copy($path,$folder.$filename.".xml");
+      $path=ROOT."/workspace_recommend/modelmgr/$filename.model.php";
+      copy($path,$folder.$filename.".model.php");
+      $path=ROOT."/workspace_recommend/js/$filename.js";
+      copy($path,$folder.$filename.".js");
     }
     return outResult(0,"","");
   }
@@ -262,6 +265,27 @@
       //saving generated xml file; 
       //echo $path;
       $result = $xml_data->asXML($path);
+
+      $modelmrgpath=$CONFIG['workspace']['path']."\\$login\\$alias\\modelmgr\\$modelname.model.php";
+      if(!file_exists($modelmrgpath)){
+        $src=ROOT."/workspace_copy/modelmgr/my.model.php";
+        copy($src,$modelmrgpath);
+        $content = @file_get_contents($modelmrgpath);
+            $content = str_replace("{{modelname}}", $modelname, $content);
+            $content="<?php
+            $content
+?>";
+           file_put_contents($modelmrgpath, $content);
+      }
+
+      $jspath=$CONFIG['workspace']['path']."\\$login\\$alias\\js\\$modelname.js";
+      if(!file_exists($jspath)){
+        $src=ROOT."/workspace_copy/js/my.js";
+        copy($src,$jspath);
+      }
+
+
+
       return outResult(0,"保存成功","");
   }
 

@@ -26,7 +26,6 @@
             <div class="col-md-4">
               <a href="#" class="btn btn-primary btn-block margin-bottom" id="btnSave" >保存</a>
               <a href="#" class="btn btn-warning btn-block margin-bottom" id="btnExecuteMysql" >生成数据库表</a>
-              <a href="#" class="btn btn-success btn-block margin-bottom" id="btnUnitTest" >进行单元测试</a>
               <textarea class="hide" id="txtConsole"></textarea>
                 <div class="box box-primary">
                     <div class="box-header with-border">
@@ -65,6 +64,11 @@
                           <div class="checkbox" data-toggle="tooltip" title="允许导入数据">
                               <label>
                                   <input type="checkbox" id="m_import" {{if $model.import=="1"}}checked{{/if}}>允许导入数据
+                              </label>
+                          </div>
+                          <div class="checkbox" data-toggle="tooltip" title="仅查看不保存，供视图使用">
+                              <label>
+                                  <input type="checkbox" id="m_nosave" {{if $model.nosave=="1"}}checked{{/if}}>仅查看不保存，供视图使用
                               </label>
                           </div>
                       </div>
@@ -805,7 +809,7 @@
         });
         
         $("#btnSave").click(function(){
-            var json={name:$("#m_name").val(),tablename:$("#m_tablename").val(),searchcondition:$("#m_searchcondition").val(),description:$("#m_description").val(),nolist:$("#m_nolist").prop("checked")?"1":"0",import:$("#m_import").prop("checked")?"1":"0"};
+            var json={name:$("#m_name").val(),tablename:$("#m_tablename").val(),searchcondition:$("#m_searchcondition").val(),description:$("#m_description").val(),nolist:$("#m_nolist").prop("checked")?"1":"0",import:$("#m_import").prop("checked")?"1":"0",nosave:$("#m_nosave").prop("checked")?"1":"0"};
             if($.trim(json.name)==""){
               warning("模型名称不能为空");
               return;

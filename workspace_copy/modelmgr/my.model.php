@@ -1,36 +1,37 @@
-
-class {{$modelname}}XmlModel extends
+          
+class {{modelname}}XmlModel extends XmlModel
 {
+  
   //模型数据
   //public $XmlData;
   
   //构造函数完成
-  public fixModelData($xmldata){
-	parent::resetModelData($xmldata);
+  public function fixModelData($xmldata){
+	parent::fixModelData($xmldata);
   }
   
   //每次调用显示列表界面
-  public fixShowList($data){
+  public function fixShowList($data){
 	  return $data;
   }
   
   //列表界面点击搜索之后，重置sql语句
-  public fixListSearchSql($sql){
+  public function fixListSearchSql($sql){
 	  return $sql;
   }
   
   //运行搜索的sql语句之后，再手动加工显示的结果
-  public fixListSearchResult($result){
+  public function fixListSearchResult($result){
 	  return $result;
   }
   
   //模型显示为子集数据时使用的搜索结果
-  public fixGridSearchSql($sql){
+  public function fixGridSearchSql($sql){
 	  return $sql;
   }
   
   //模型显示为子集数据时，再手动加工显示的结果
-  public fixGridSearchResult($result){
+  public function fixGridSearchResult($result){
 	  return $result;
   }
   
@@ -94,10 +95,6 @@ class {{$modelname}}XmlModel extends
   	return $id_array;
   }
   
-  //将要进行删除的id
-  public function deleteId($id_array){
-  	return $id_array;
-  }
   //删除之前的校验
   public function deleteVaild($id_array,$dbmgr){
   	return "";
