@@ -16,6 +16,12 @@
   $tables=$statisticsMgr->getTables($User["login"],$appinfo["alias"]);
   $smarty->assign("tables",$tables);
 
+
+  $spaces=$statisticsMgr->getSpace($User["login"],$appinfo["alias"]);
+  $smarty->assign("spaces",$spaces);
+  print_r($spaces);
+  exit;
+
   $smarty->assign("id",$_REQUEST["id"]);
 
 
