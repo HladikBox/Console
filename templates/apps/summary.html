@@ -1,0 +1,39 @@
+﻿<div class="row">
+    <div class="col-md-6">
+        <div id='{{$id}}_table_chart' style=' height: 400px; margin: 0 auto'></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+
+
+
+        $('#{{$id}}_table_chart').highcharts({
+                chart: {type: 'column'},
+                title: { text: '数据库分析'},
+                subtitle: {text: ''},
+                xAxis: {type: 'category'},
+                yAxis: {title: {text: ''}},
+                legend: {
+                    enabled: false
+                },
+
+                series: [{
+                    name: '数据行数',
+                    colorByPoint: true,
+                    data: [
+                    {{foreach from=$tables item=rs key=key}}
+                    {{if $key>0}},{{/if}}{   name:'{{$rs.TABLE_NAME}}',y:{{$rs.TABLE_ROWS}}   }
+                    {{/foreach}}
+                                                            
+                                        ]
+                }]
+            });
+        $("text").each(function(){
+            if($(this).text()=="Highcharts.com"){
+                $(this).text("");
+            }
+        });
+    });
+</script>

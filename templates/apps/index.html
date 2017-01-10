@@ -69,7 +69,7 @@
                     </div>
                 </div>
                 <div class="box-tools pull-right">
-                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <button type="button" class="btn btn-box-tool btnCollapseApp" data-widget="collapse" aid="{{$rs.id}}">
                         <i class="fa fa-plus"></i>
                     </button>
                 </div>
@@ -79,8 +79,10 @@
             <div class="box-body">
               暂无数据
             </div>
-            <!-- /.box-body -->              
-
+            <!-- /.box-body -->       
+            <div class="overlay hide">
+              <i class="fa fa-refresh fa-spin"></i>
+            </div>
           </div>
           <!-- /.box -->
         {{/foreach}}
@@ -139,6 +141,7 @@
             </div>
         </div>
         <!-- /.modal-content -->
+
     </div>
     <!-- /.modal-dialog -->
 </div>
@@ -146,6 +149,7 @@
 
 
 {{include  file="$smarty_root/footer.html" }}
+<script src="{{$rootpath}}plugins/highcharts/highcharts.js"></script>
 
 <script>
     $(document).ready(function () {
@@ -233,9 +237,18 @@
                     $("#app_"+id+" .run_status").removeClass("bg-gray-active").addClass("bg-green-active").text("运行中");
                     $("#app_"+id+" .btnStartApp").addClass("hide");
                     $("#app_"+id+" .btnStopApp").removeClass("hide");
-                }        
+                }    
+            });
+        });
+        $(".btnCollapseApp").click(function(){
+            var id=$(this).attr("aid");
+            $("#app_"+id+" .overlay").removeClass("hide");
+            $("#app_"+id+" .box-body").load("/apps/summary?id="+id,function(data){
+
+                $("#app_"+id+" .overlay").addClass("hide");
             });
         });
     });
     
 </script>
+
