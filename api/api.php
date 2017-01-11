@@ -10,17 +10,21 @@
 
   include ROOT.'/classes/datamgr/api.cls.php';
   include_once ROOT.'/classes/datamgr/app.cls.php';
-
+  include_once ROOT.'/classes/datamgr/model.cls.php';
+  
   $action=$_REQUEST["action"];
   if($action=="save"){
     $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
     outputJSON($apiMgr->save($User["login"],$appinfo["alias"],$_REQUEST["apis"]));
   }elseif($action=="downloadsourcecode"){
     $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
-    if($_REQUEST["type"]=="web"){
-        $folder=$apiMgr->generateWeb($User["login"],$appinfo["alias"]);
-    }elseif($_REQUEST["type"]=="ionic"){
-        $folder=$apiMgr->generateIonic($User["login"],$appinfo["alias"]);
+    if($_REQUEST["type"]=="ajax"){
+        $folder=$apiMgr->generateAjax($User["login"],$appinfo["alias"]);
+    }elseif($_REQUEST["type"]=="typescript"){
+        $folder=$apiMgr->generateTypeScript($User["login"],$appinfo["alias"]);
+    }elseif($_REQUEST["type"]=="php"){
+        $modellist=$modelMgr->getModelList($User["login"],$appinfo["alias"]);
+        $folder=$apiMgr->generatePHP($User["login"],$appinfo["alias"],$modellist);
     }
     $zip=new ZipArchive();
     $zipfile=$CONFIG['workspace']['path']."\\".$User["login"]."\\".$appinfo["alias"]."\\logs\\sourcecode_".$_REQUEST["type"].".zip";

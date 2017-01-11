@@ -108,7 +108,7 @@
         $model["modelname"]=$filenamearr[0];
         $model["createdtime"]=$filectime;
         if($this->checkModelFormat($model)){
-          $ret[]=$model;
+          $ret[$filenamearr[0]]=$model;
         }
     }
     //asort($ret,"createdtime");

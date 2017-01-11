@@ -7,7 +7,8 @@
  */
 function encode($str)
 {
-	return mb_convert_encoding($str,'UTF-8');
+    return $str;
+	//return mb_convert_encoding($str,'UTF-8');
 }
 function parameter_filter($param,$htmlchange=true)
 {

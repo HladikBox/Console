@@ -22,7 +22,7 @@
 		
 	}
 
-    public function generateWeb($login,$alias){
+    public function generateAjax($login,$alias){
 		Global $CONFIG;
       $login=parameter_filter($login);
       $alias=parameter_filter($alias);
@@ -34,7 +34,7 @@
       if(!file_exists($path)){
         mkdir($path,true);
       }
-      $path=$CONFIG['workspace']['path']."\\$login\\$alias\\development\\web";
+      $path=$CONFIG['workspace']['path']."\\$login\\$alias\\development\\ajax";
       if(!file_exists($path)){
         mkdir($path,true);
       }else{
@@ -165,7 +165,7 @@ function $fmodel()
     
         fclose($modelfile);
       }
-      recurse_copy(ROOT."\\workspace_copy\\development\\web\\",$path);
+      recurse_copy(ROOT."\\workspace_copy\\development\\ajax\\",$path);
 
       
       $apitester=$path."\\apitester.html";
@@ -177,8 +177,10 @@ function $fmodel()
       return $path;
     }
 
+
     
-    public function generateMobile($login,$alias){
+    
+    public function generateTypeScript($login,$alias){
 		Global $CONFIG;
       $login=parameter_filter($login);
       $alias=parameter_filter($alias);
@@ -190,164 +192,7 @@ function $fmodel()
       if(!file_exists($path)){
         mkdir($path,true);
       }
-      $path=$CONFIG['workspace']['path']."\\$login\\$alias\\development\\mobile";
-      if(!file_exists($path)){
-        mkdir($path,true);
-      }else{
-        delDir($path);
-      }
-
-      $apipath=$path."\\api";
-      if(!file_exists($apipath)){
-        mkdir($apipath,true);
-      }
-
-      
-      $jsreplace="";
-      $trreplace="";
-      $functionreplace="";
-
-
-      foreach($apilist as $model=> $funclist){
-        
-        $modelfile=$apipath."\\$model.js";
-        $modelfile = fopen($modelfile, "w");
-
-
-        $jsreplace.="<script src=\"api/$model.js\"></script>";
-
-        $fmodel=ucfirst($model);
-        $jsstr="
-function $fmodel()
-{
-";
-        foreach($funclist as $api){
-        $description=$api["description"];
-        $jsstr.="   //$description";
-        $func=$api["func"];
-
-        $trreplace.="
-		<tr id=\"tr_".$model."_$func\">
-			<td>$model/$func</td>
-			<td><textarea class=\"input\"></textarea></td>
-			<td><button onclick=\"try_".$model."_$func();\">测试</button></td>
-			<td><textarea class=\"output\"></textarea></td>
-		</tr>";
-
-
-
-        $url=$urlhead."$model/$func";
-        $repinput=true;
-
-            if($api["type"]=="self"){
-                $jsstr.="
-    this.$func = function(request_json,callback){
-        $.post('$url',request_json,callback);
-    };
-
-";
-            }else{
-
-                if($func=="list"){
-                
-                $jsstr.="
-    this.$func = function(search_json,callback){
-        $.post('$url',search_json,callback);
-    };
-
-";
-                }elseif($func=="get"){
-                $repinput=false;
-                $jsstr.="
-    this.$func = function(id,callback){
-        var json={id:id};
-        $.post('$url',json,callback);
-    };
-
-";
-                }elseif($func=="update"){
-                
-                $jsstr.="
-    this.$func = function(field_json,callback){
-        field_json.primary_id=field_json.id;
-        $.post('$url',field_json,callback);
-    };
-
-";
-                }elseif($func=="delete"){
-                
-                $repinput=false;
-                $jsstr.="
-    this.$func = function(id_array,callback){
-        var json={idlist:id_array.join(',')};
-        $.post('$url',json,callback);
-    };
-
-";
-                }
-            }
-            $functionreplace.="function try_".$model."_$func(){
-		var input=$(\"#tr_".$model."_$func .input\").val();
-		var $model=new $fmodel();";
-		
-        if($repinput){
-        $functionreplace.="try{
-			if(input!=\"\")
-			input=JSON.parse(input);
-		}catch(e){
-			$(\"#tr_".$model."_$func .output\").val(\"输入json错误\"+e.message );
-			return;
-		}";
-        }
-		
-		$functionreplace.="
-        try{
-			$model.$func(input,function(data){
-				$(\"#tr_".$model."_$func .output\").val(data);
-			});
-		}catch(e){
-			$(\"#tr_".$model."_$func .output\").val(e.message );
-			return;
-		}
-	}";
-
-
-        }
-        $jsstr.="
-}";
-
-
-        fwrite($modelfile, $jsstr);
-    
-        fclose($modelfile);
-      }
-      recurse_copy(ROOT."\\workspace_copy\\development\\mobile\\",$path);
-
-      
-      $apitester=$path."\\apitester.html";
-      file_put_contents($apitester,str_replace('{{jsreplace}}',$jsreplace,file_get_contents($apitester))); 
-      file_put_contents($apitester,str_replace('{{trreplace}}',$trreplace,file_get_contents($apitester))); 
-      file_put_contents($apitester,str_replace('{{functionreplace}}',$functionreplace,file_get_contents($apitester))); 
-
-
-      return $path;
-    }
-
-    
-    
-    public function generateIonic($login,$alias){
-		Global $CONFIG;
-      $login=parameter_filter($login);
-      $alias=parameter_filter($alias);
-      $apilist=$this->getOutApiList($login,$alias);
-
-      $urlhead=$CONFIG['workspace']['domain']."/$login/$alias/api/";
-
-      $path=$CONFIG['workspace']['path']."\\$login\\$alias\\development\\";
-      if(!file_exists($path)){
-        mkdir($path,true);
-      }
-      $path=$CONFIG['workspace']['path']."\\$login\\$alias\\development\\ionic";
+      $path=$CONFIG['workspace']['path']."\\$login\\$alias\\development\\typescript";
       if(!file_exists($path)){
         mkdir($path,true);
       }else{
@@ -488,13 +333,154 @@ public $func(idlist) {
                 
                 }
             }
-            copy(ROOT."\\workspace_copy\\development\\ionic\\providers\\test.ts",$modelfile);
+            copy(ROOT."\\workspace_copy\\development\\typescript\\providers\\test.ts",$modelfile);
             file_put_contents($modelfile,str_replace('{{$modelname}}',$fmodel,file_get_contents($modelfile))); 
             file_put_contents($modelfile,str_replace('{{funclist}}',$funcstr,file_get_contents($modelfile))); 
 
         }
       }
       
+      return $path;
+    }
+
+    
+    
+    public function generatePHP($login,$alias,$modellist){
+		Global $CONFIG;
+      $login=parameter_filter($login);
+      $alias=parameter_filter($alias);
+      $apilist=$this->getOutApiList($login,$alias);
+
+      $urlhead=$CONFIG['workspace']['domain']."/$login/$alias/api/";
+
+      $path=$CONFIG['workspace']['path']."\\$login\\$alias\\development\\";
+      if(!file_exists($path)){
+        mkdir($path,true);
+      }
+      $path=$CONFIG['workspace']['path']."\\$login\\$alias\\development\\php";
+      if(!file_exists($path)){
+        mkdir($path,true);
+      }else{
+        delDir($path);
+      }
+
+      $apipath=$path."\\model";
+      if(!file_exists($apipath)){
+        mkdir($apipath,true);
+      }
+
+      
+      $functionreplace="";
+
+
+      foreach($apilist as $model=> $funclist){
+        
+        $modelfile=$apipath."\\$model.php";
+        $fmodel=ucfirst($model);
+        $modelobj=$modellist[$model];
+        $content="class $fmodel".'Mgr 
+{
+    public $dbmgr = null;
+    public function __construct($dbmgr) {
+	    $this->dbmgr=$dbmgr;	
+    }
+';
+        
+        foreach($funclist as $api){
+        $description=$api["description"];
+        $func=$api["func"];
+        $url=$urlhead."$model/$func";
+        $content.="//$description";
+            if($api["type"]=="self"){
+               
+                $content.='
+public function '.$func.'($param){';
+
+                $apifuncfile=$CONFIG['workspace']['path']."\\$login\\$alias\\api\\$model\\$func.php";
+                $lines = @file($apifuncfile);
+                $start=false;
+                foreach($lines as $l){
+                    if($start){
+                        $l=str_replace("<?php","",$l);
+                        $l=str_replace("?>","",$l);
+                        $l=str_replace('$dbmgr','$this->dbmgr',$l);
+                        if(strstr($l,"outputJson(")){
+                            $l=str_replace("outputJson(","return ",$l);
+                            $lastkh=strrpos($l, ')', -1);
+                            $l=substr($l,0,$lastkh-1).substr($l,$lastkh);
+                        }
+                        $content.=" ".$l;
+                    }
+                    if(substr(trim($l),0,13)=="////starthere"){
+                        $start=true;
+                    }
+                }
+
+
+                $content.='
+}
+';
+
+            }else{
+
+                if($func=="list"){
+                    
+                    $content.='
+public function '.$func.'($search_param){
+
+
+    $sql_where="";
+
+';
+                $search_cond="";
+                if(trim($modelobj["searchcondition"])!=""){
+                    $search_cond=" and ".$modelobj["searchcondition"];
+                }
+                foreach($modelobj["fields"]["field"] as $field){
+                    $content.='
+    if(isset($search_param["'.$field["key"].'"]))
+    {
+        $sql_where.=" and r_main.'.$field["key"].'=\'".$search_param['.$field["key"].']."\'";
+    }
+';
+                }
+
+                $content.='
+    $sql="select * from '.$modelobj["tablename"].' r_main where 1=1 $sql_where '.$search_cond.';
+';
+
+                }elseif($func=="get"){
+
+
+                
+                }elseif($func=="update"){
+
+
+              
+                }elseif($func=="delete"){
+
+                
+                }
+                
+                $content.='
+}
+';
+            }
+            //copy(ROOT."\\workspace_copy\\development\\typescript\\providers\\test.ts",$modelfile);
+           // file_put_contents($modelfile,str_replace('{{$modelname}}',$fmodel,file_get_contents($modelfile))); 
+            //file_put_contents($modelfile,str_replace('{{funclist}}',$funcstr,file_get_contents($modelfile))); 
+
+        }
+
+        $content.="
+}
+"; 
+        echo $content;
+        $content="<?php
+$content
+?>";
+           file_put_contents($modelfile, $content);
+      }
       exit;
       return $path;
     }
