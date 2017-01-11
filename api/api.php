@@ -19,8 +19,6 @@
     $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
     if($_REQUEST["type"]=="web"){
         $folder=$apiMgr->generateWeb($User["login"],$appinfo["alias"]);
-    }elseif($_REQUEST["type"]=="mobile"){
-        $folder=$apiMgr->generateMobile($User["login"],$appinfo["alias"]);
     }elseif($_REQUEST["type"]=="ionic"){
         $folder=$apiMgr->generateIonic($User["login"],$appinfo["alias"]);
     }
