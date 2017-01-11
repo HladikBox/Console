@@ -1,9 +1,12 @@
-<div class="row">
+﻿<div class="row">
     <div class="col-md-12">
         <div id='{{$id}}_table_chart' style=' height: 200px; margin: 0 auto'></div>
     </div>
     <div class="col-md-6">
         <div id='{{$id}}_space_chart' style=' height: 300px; margin: 0 auto'></div>
+    </div>
+    <div class="col-md-6">
+        <div id='{{$id}}_apioutput_chart' style=' height: 300px; margin: 0 auto'></div>
     </div>
 </div>
 
@@ -68,10 +71,49 @@
             }]
         });
 
+        var cats=new Array();
+        var catdata=new Array();
+        {{foreach from=$apioutput item=rs key=key}}
+        cats.push("{{$key}}");
+        catdata.push({{$rs}});
+        {{/foreach}}
 
 
 
-
+        $('#{{$id}}_apioutput_chart').highcharts({
+        chart: {
+            type: 'line'
+        },
+        title: {
+            text: '接口调用输出'
+        },
+        xAxis: {
+            type:"datetime",
+            categories: cats
+        },
+        yAxis: {
+            title: {
+                text: '单位：字节'
+            }
+        },
+        tooltip: {
+            valueSuffix: '字节'
+        },
+        plotOptions: {
+            line: {
+                dataLabels: {
+                    enabled: false
+                }
+            }
+        },
+        legend:{
+            enabled:false
+        },
+        series: [{
+            name:"统计",
+            data: catdata
+        }]
+    });
 
 
 

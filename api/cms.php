@@ -20,6 +20,8 @@
   }elseif($action=="apilist"){
     $apilist=$apiMgr->getOutApiList($_REQUEST["login"],$_REQUEST["alias"]);
     outputJSON($apilist);
+  }elseif($action=="apicalllog"){
+    $apilist=$apiMgr->apiCallLog($_REQUEST["login"],$_REQUEST["alias"],$_REQUEST["model"],$_REQUEST["func"],$_REQUEST["output_data_length"]);
   }
 
 outputJSON(outResult("-1","找不到你要调用的请求","找不到你要调用的请求"));

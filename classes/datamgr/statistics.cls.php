@@ -35,6 +35,7 @@
       $result = $this->dbmgr->fetch_array_all($query);
       return $result;
   }
+
   public function getSpace($login,$alias){
 
       Global $CONFIG;
@@ -79,6 +80,39 @@
 
     return $size; 
   } 
+
+  function getApiOutputDate($login,$alias){
+    $login=parameter_filter($login);
+    $alias=parameter_filter($alias);
+
+    $days=7;
+
+    $date=date('Y-m-d', strtotime("-$days days"));
+    $sql="select call_date, sum(output_data_length) total_data_length from tb_app_calllog
+where call_date>='$date' and login='$login' and alias='$alias'
+group by call_date
+order by call_date";
+      $query = $this->dbmgr->query($sql);
+      $result = $this->dbmgr->fetch_array_all($query);
+
+      $ret=array();
+    for($i=$days;$i>=0;$i--){
+      $date=date('Y-m-d', strtotime("-$i days"));
+      $ret[$date]=0;
+      foreach ($result as $value) {
+        //echo "<p>".$date."</p>";
+        //echo "<p>".$value["call_date"]."</p>";
+        if($date==$value["call_date"]){
+          $ret[$date]=$value["total_data_length"];
+          break;
+        }
+      }
+    }
+
+    return $ret;
+
+
+  }
 
  }
  

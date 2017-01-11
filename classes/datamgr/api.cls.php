@@ -681,6 +681,18 @@ public $func(idlist) {
                 $node->addChild($key,htmlspecialchars($value));
             }
     }
+    function apiCallLog($login,$alias,$model,$func,$output_data_length){
+      $login=parameter_filter($login);
+      $alias=parameter_filter($alias);
+      $model=parameter_filter($model);
+      $func=parameter_filter($func);
+      $output_data_length=$output_data_length+0;
+
+
+      $sql="insert into tb_app_calllog (login,alias,model,func,output_data_length,call_time,call_date) 
+      values ('$login','$alias','$model','$func',$output_data_length,now(),current_date())";
+        $query = $this->dbmgr->query($sql);
+    }
  }
  
  $apiMgr=ApiMgr::getInstance();
