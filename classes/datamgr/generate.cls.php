@@ -739,6 +739,8 @@ $content
 ?>";
            file_put_contents($modelfile, $content);
       }
+
+      recurse_copy(ROOT."\\workspace_copy\\development\\php\\",$path);
       //exit;
       return $path;
     }
