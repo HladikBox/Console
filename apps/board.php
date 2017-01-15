@@ -13,6 +13,7 @@
   include ROOT.'/classes/datamgr/cms.cls.php';
   include ROOT.'/classes/datamgr/api.cls.php';
   include ROOT.'/classes/datamgr/version.cls.php';
+  include ROOT.'/classes/datamgr/product.cls.php';
 
   $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["id"]);
   $smarty->assign("appinfo",$appinfo);
@@ -27,6 +28,11 @@
   
   $versionlist=$versionMgr->getVersionList($_REQUEST["id"]);
   $smarty->assign("versionlist",$versionlist);
+
+  $productType=$productMgr->productType();
+  $smarty->assign("producttype",$productType);
+  $productlist=$productMgr->getProductList($User["login"],$appinfo["alias"]);
+  $smarty->assign("productlist",$productlist);
 
   
   $menu=$cmsMgr->getMenu($User["login"],$appinfo["alias"]);

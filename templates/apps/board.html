@@ -401,6 +401,34 @@
                                 </ul>
                             </div>
                         </div>
+                        <div class="col-md-12">
+                            <a href="#" class="btn btn-primary margin-bottom" id="btnAddProduct"><i class="fa fa-plus"></i> 添加应用</a>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="row listproduct" >
+                                {{foreach from=$productlist.products.product item=rs}}
+                                <div class="col-lg-3 col-xs-6">
+                                    <!-- small box -->
+                                    <div class="small-box bg-aqua">
+                                        <div class="inner">
+                                            <h3>{{$rs.typename}}</h3>
+
+                                            <p>{{$rs.name}}</p>
+                                            <p><small>{{$rs.summary}}</small></p>
+                                        </div>
+                                        <a href="#" class="small-box-footer itemproduct">
+                                            编辑 <i class="fa fa-arrow-circle-right"></i>
+                                            <input class="product_type" type="hidden" value="{{$rs.type}}" />
+                                            <input class="product_name" type="hidden" value="{{$rs.name}}" />
+                                            <input class="product_summary" type="hidden" value="{{$rs.summary}}" />
+                                            <input class="product_description" type="hidden" value="{{$rs.description}}" />
+                                        </a>
+                                    </div>
+                                </div>
+                                {{/foreach}}
+                            </div>
+
+                            </div>
                     </div>
                 </div>
 
@@ -527,6 +555,7 @@
                 <h4 class="modal-title">创建数据对象模型</h4>
             </div>
             <div class="modal-body">
+                <form class="form-horizontal">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group" >
@@ -570,7 +599,7 @@
                                     <label>
                                       <input type="radio" name="optCreateModel" value="C" checked="checked">
                                       从推荐列表中复制&nbsp;&nbsp;&nbsp;&nbsp;
-                                      <select id="ddlRecommModelList">
+                                      <select id="ddlRecommModelList" >
                                           {{foreach from=$recomm_modellist item=rs}}
                                           <option value="{{$rs.modelname}}">{{$rs.name}}</option>
                                           {{/foreach}}
@@ -581,7 +610,7 @@
                                     <label>
                                       <input type="radio" name="optCreateModel" value="E">
                                       从现有模型中复制&nbsp;&nbsp;&nbsp;&nbsp;
-                                      <select id="ddlExistModelList">
+                                      <select id="ddlExistModelList" >
                                           {{foreach from=$modellist item=rs}}
                                           <option value="{{$rs.modelname}}">{{$rs.name}}</option>
                                           {{/foreach}}
@@ -594,6 +623,7 @@
                         </div>
                     </div>
                 </div>
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">取消</button>
@@ -688,10 +718,104 @@
 
 
 
+<div class="modal fade" id="dlgAddProduct">
+    <div class="modal-dialog" style="width:1000px;">
+        <div class="modal-content">
+            <div class="modal-header bg-light-blue-active">
+                <button type="button" class="close iclose" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">添加应用</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label"><span style="color:red;">*</span> 类型</label>
+                            <div class="col-sm-8">
+                                <select class="form-control " id="pd_type">
+                                    <option value="">--请选择类型--</option>
+                                    {{foreach from=$producttype item=rs key=key}}
+                                    <option value="{{$key}}">{{$rs}}</option>
+                                    {{/foreach}}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label"><span style="color:red;">*</span> 名称</label>
+                            <div class="col-sm-8">
+                                <input type="text" maxlength="15" class="form-control" id="pd_name" placeholder="名称">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"> 简介</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="pd_summary" placeholder="简介">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"> 详情与安装</label>
+                            <div class="col-sm-10 textareareset" >
+                                <textarea id="pd_description" class="textarea" placeholder="请在此处编写你的应用详情于安装方法" style="width: 100%; height: 350px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;"></textarea>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label"> 上传代码</label>
+                            <div class="col-sm-7">
+                                <input type="file" class="form-control" id="pd_code" accept="aplication/zip">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label"> 上传图片</label>
+                            <div class="col-sm-8">
+                                <input type="file" class="form-control" id="pd_imgs" accept="aplication/zip">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label"> 上传文档</label>
+                            <div class="col-sm-8">
+                                <input type="file" class="form-control" id="pd_docs" accept="aplication/zip">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <p>上传文件只支持zip包。图片仅支持png和jpg，文档只支持doc或ppt或pdf，以供用户下载。不需要使用目录格式，zip包里面第一层就是相关图片和文档。代码可以使用目录层次。</p>
+                    </div>
+                </div>
+                    </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left iclose" data-dismiss="modal">取消</button>
+                <span class="text-red" id="txtConfirmAddProduct"></span>
+                <input type="hidden" id="pd_isnew" value="Y" />
+                <button type="button" class="btn btn-primary" id="btnConfirmAddProduct">保存</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 
+
+<link rel="stylesheet" href="{{$rootpath}}plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
 
 {{include  file="$smarty_root/footer.html" }}
-
+<script src="{{$rootpath}}plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function(){
         $("#btnExecuteMysql").click(function(){
@@ -1320,4 +1444,111 @@
             });
         });
     }
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        //$("#pd_description").wysihtml5();
+        $("#btnAddProduct").click(function () {
+
+            $(".itemproduct").removeClass("onselect");
+
+            $("#pd_name").attr("disabled", false);
+            var isnew = $("#pd_isnew").val("Y");
+            var type = $("#pd_type").val("");
+            var name = $("#pd_name").val("");
+            var summary = $("#pd_summary").val("");
+            $(".textareareset").html('<textarea id="pd_description" class="textarea" placeholder="请在此处编写你的应用详情于安装方法" style="width: 100%; height: 350px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;"></textarea>');
+            $("#pd_description").val("");
+            $("#pd_description").wysihtml5();
+            $("#dlgAddProduct").modal({ backdrop: false, keyboard: false, show: true });
+        });
+        $(document).on("click", ".itemproduct", function () {
+            $(".itemproduct").removeClass("onselect");
+            $(this).addClass("onselect");
+            var type = $(this).find(".product_type").val();
+            var name = $(this).find(".product_name").val();
+            var summary = $(this).find(".product_summary").val();
+            var description = $(this).find(".product_description").val();
+
+            $("#pd_name").attr("disabled", true);
+            $("#pd_isnew").val("N");
+            $("#pd_type").val(type);
+            $("#pd_name").val(name);
+            $("#pd_summary").val(summary);
+            $(".textareareset").html('<textarea id="pd_description" class="textarea" placeholder="请在此处编写你的应用详情于安装方法" style="width: 100%; height: 350px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;"></textarea>');
+            $("#pd_description").val(description);
+            $("#pd_description").wysihtml5();
+            //a?
+            //product_editor.text(description);
+            //$("#pd_description").wysihtml5();
+            //alert(description);
+            $("#dlgAddProduct").modal({ backdrop: false, keyboard: false, show: true });
+        });
+        $("#btnConfirmAddProduct").click(function () {
+
+            var isnew = $("#pd_isnew").val() ;
+            var type = $("#pd_type").val();
+            var name = $("#pd_name").val();
+            var summary = $("#pd_summary").val();
+            var description = $("#pd_description").val();
+            var code = $("#pd_code").val();
+            var imgs = $("#pd_imgs").val();
+            var docs = $("#pd_docs").val();
+
+            if (type == "") {
+                $("#txtConfirmAddProduct").text("请选择应用类型");
+                return;
+            }
+            if ($.trim(name) == "") {
+                $("#txtConfirmAddProduct").text("请输入应用名称");
+                return;
+            }
+            var json = { action: "saveproduct",app_id:"{{$appinfo.id}}", isnew: isnew, type: type, name: name, summary: summary, description: description };
+            
+            $("#btnConfirmAddProduct").attr("disabled", true);
+            $("#btnConfirmAddProduct").text("上传中，请不要关闭页面");
+            $("#dlgAddProduct .iclose").attr("disabled", true);
+
+            getJSON("/api/product", json, function (data) {
+                if (data.code == 0) {
+                    //动态添加一个XX
+                    if (isnew == "Y") {
+                        
+                        var str = $('<div class="col-lg-3 col-xs-6">'
+                                    +'<div class="small-box bg-aqua">'
+                                    +'<div class="inner">'
+                                    +'<h3>{{$rs.typename}}</h3>'
+                                    +'<p>{{$rs.name}}</p>'
+                                    +'<p><small>{{$rs.summary}}</small></p>'
+                                    +'</div>'
+                                    +'<a href="#" class="small-box-footer itemproduct onselect">'
+                                    +'编辑 <i class="fa fa-arrow-circle-right"></i>'
+                                    +'<input class="product_type" type="hidden" value="{{$rs.type}}" />'
+                                    +'<input class="product_name" type="hidden" value="{{$rs.name}}" />'
+                                    +'<input class="product_summary" type="hidden" value="{{$rs.summary}}" />'
+                                    +'<input class="product_description" type="hidden" value="{{$rs.description}}" />'
+                                    +'</a>'
+                                    +'</div>'
+                                    + '</div>').appendTo(".listproduct");
+                    }
+
+                    $(".itemproduct.onselect").find(".product_type").val(type);
+                    $(".itemproduct.onselect").find(".product_summary").val(summary);
+                    $(".itemproduct.onselect").find(".product_description").val(description);
+
+                } else {
+                    $("#txtConfirmAddProduct").text(data.result);
+                }
+            }, function () {
+
+                $("#btnConfirmAddProduct").attr("disabled", false);
+                $("#btnConfirmAddProduct").text("保存");
+                $("#dlgAddProduct .iclose").attr("disabled", false);
+                $("#txtConfirmAddProduct").text(data.result);
+            });
+
+        });
+    });
 </script>
