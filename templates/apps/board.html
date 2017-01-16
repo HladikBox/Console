@@ -22,15 +22,15 @@
     <section class="content">
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs ">
-                <li ><a href="#tab_1" id="btn_tab_1" data-toggle="tab" >数据对象</a></li>
+                <li class="active"><a href="#tab_1" id="btn_tab_1" data-toggle="tab" >数据对象</a></li>
                 <li><a href="#tab_2" id="btn_tab_2" data-toggle="tab" >数据中心菜单</a></li>
                 <li ><a href="#tab_3" id="btn_tab_3" data-toggle="tab" >数据接口</a></li>
                 <li><a href="#tab_4" id="btn_tab_4" data-toggle="tab" >接口开发</a></li>
-                <li class="active"><a href="#tab_5" id="btn_tab_5" data-toggle="tab" >上传产品</a></li>
+                <li ><a href="#tab_5" id="btn_tab_5" data-toggle="tab" >上传产品</a></li>
                 <li><a href="#tab_6" id="btn_tab_6" data-toggle="tab" >版本管理</a></li>
             </ul>
             <div class="tab-content">
-                <div class="tab-pane " id="tab_1">
+                <div class="tab-pane active" id="tab_1">
 
                     <div class="row">
                         <div class="col-md-12">
@@ -50,7 +50,7 @@
                         </tr>
                         {{foreach from=$modellist item=rs key=key}}
                         <tr id="model_{{$rs.modelname}}">
-                            <td>{{$key+1}}</td>
+                            <td> </td>
                             <td><a href="/apps/model?app_id={{$appinfo.id}}&model={{$rs.modelname}}">{{$rs.modelname}}</a></td>
                             <td><a class="modelname" href="/apps/model?app_id={{$appinfo.id}}&model={{$rs.modelname}}">{{$rs.name}}</a></td>
                             <td><a href="/apps/model?app_id={{$appinfo.id}}&model={{$rs.modelname}}">{{$rs.tablename}}</a></td>
@@ -387,7 +387,7 @@
                     </div>
                 </div>
 
-                <div class="tab-pane active" id="tab_5">
+                <div class="tab-pane " id="tab_5">
                     <div class="row">
                         <div class="pad margin no-print">
                             <div class="callout callout-info" style="margin-bottom: 0!important;">
@@ -411,8 +411,9 @@
                                     <!-- small box -->
                                     <div class="small-box bg-aqua">
                                         <div class="inner">
-                                            <h3 class="product_typename_txt">{{$rs.typename}}</h3>
-
+                                            <h3 class="product_typename_txt">{{$rs.typename}}
+                                                <a href="#" class="pull-right btnDeleteProduct" ><small><small><small>删除</small></small></small></a>
+                                            </h3>
                                             <p class="product_name_txt">{{$rs.name}}</p>
                                             <p><small class="product_summary_txt">{{$rs.summary}}</small></p>
                                         </div>
@@ -1477,6 +1478,19 @@
             //alert(description);
             $("#txtConfirmAddProduct").text("");
             $("#dlgAddProduct").modal({ backdrop: false, keyboard: false, show: true });
+        });
+        $(".btnDeleteProduct").click(function () {
+
+            var caa = $(this);
+            var name = $(this).parent().parent().parent().parent().find(".product_name").val();
+            var json = { action: "deleteproduct", app_id: "{{$appinfo.id}}", name };
+            getJSON("/api/product", json, function (data) {
+                if (data.code == 0) {
+                    caa.parent().parent().parent().parent().remove();
+                } else {
+                    error(data.result);
+                }
+            });
         });
         $("#btnConfirmAddProduct").click(function () {
 

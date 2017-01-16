@@ -26,9 +26,9 @@
         $type=Array();
         $type["website"]="网站";
         $type["mobile"]="手机网站";
-        $type["cordova"]="Cordova(PhoneGap)";
-        $type["ionicv1"]="Ionic V1(JavaScript)";
-        $type["ionicv2"]="Ionic V2(TypeScript)";
+        $type["cordova"]="Cordova";
+        $type["ionicv1"]="Ionic V1(JS)";
+        $type["ionicv2"]="Ionic V2(TS)";
         $type["android"]="安卓原生应用";
         $type["object-c"]="iPhone(Object-C)";
         $type["swift"]="iPhone(Swift)";
@@ -107,6 +107,50 @@
       return outResult(0,"保存成功","");
     }
     
+    public function deleteProduct($login,$alias,$name){
+        Global $CONFIG;
+        $folder=$CONFIG['workspace']['path']."\\$login\\$alias\\";
+        $productfile=$folder."product.xml";
+
+        $productlist=$this->getProductList($login,$alias);
+        
+        $name=parameter_filter($name);
+
+        $ret=array();
+
+        if($productlist!=null){
+            for($i=0;$i<count($productlist["products"]["product"]);$i++){
+                if($productlist["products"]["product"][$i]["name"]!=$name){
+                       $ret[]=$productlist["products"]["product"][$i];
+                    }
+            }
+        }
+        $productlist["products"]["product"]=$ret;
+      $data = array('total_stud' => 500);
+
+      // creating object of SimpleXMLElement
+      $xml_data = new SimpleXMLElement('<?xml version="1.0"?><root></root>');
+      foreach( $productlist as $key => $value ) {
+          if ($key=="products") {
+            $products=$productlist["products"]["product"];
+            $productsnode = $xml_data->addChild("products");
+            foreach ($products as $product) {
+              $productnode = $productsnode ->addChild("product");
+              foreach ($product as $fkey => $fvalue) {
+                $productnode->addChild($fkey,htmlspecialchars($fvalue));
+              }
+            }
+          }
+      }
+      $result = $xml_data->asXML($productfile);
+      foreach( $productlist["products"]["product"] as  $value ) {
+        mkdir($folder."product\\".iconv('utf-8', 'gbk', $value["name"])."\\"."code", 0777, true);
+        mkdir($folder."product\\".iconv('utf-8', 'gbk', $value["name"])."\\"."imgs", 0777, true);
+        mkdir($folder."product\\".iconv('utf-8', 'gbk', $value["name"])."\\"."docs", 0777, true);
+      }
+
+      return outResult(0,"保存成功","");
+    }
   function addChild(&$node,$key,$value){
             if(trim($value)==""){
                 $node->addChild($key);
@@ -142,6 +186,9 @@
             }
         }
         $productlist=setArrayNoNull($productlist);
+        if($productlist["products"]==""){
+            return null;
+        }
         return $productlist;
     }
 

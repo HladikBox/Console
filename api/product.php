@@ -22,6 +22,9 @@
     $ftppath=$CONFIG['workspace']['ftp']."/".$User["login"]."/".$appinfo["alias"]."product/".iconv('utf-8', 'gbk', $product)."/".$type;
     WindowRedirect($ftppath);
     exit;
+  }elseif($action=="deleteproduct"){
+    $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
+    outputJSON($productMgr->deleteProduct($User["login"],$appinfo["alias"],$_REQUEST["name"]));
   }
 
 
