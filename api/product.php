@@ -15,6 +15,13 @@
   if($action=="saveproduct"){
     $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
     outputJSON($productMgr->saveProduct($User["login"],$appinfo["alias"],$_REQUEST["isnew"],$_REQUEST["type"],$_REQUEST["name"],$_REQUEST["summary"],$_REQUEST["description"]));
+  }elseif($action=="upload"){
+    $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
+    $type=$_REQUEST["type"];
+    $product=$_REQUEST["product"];
+    $ftppath=$CONFIG['workspace']['ftp']."/".$User["login"]."/".$appinfo["alias"]."product/".iconv('utf-8', 'gbk', $product)."/".$type;
+    WindowRedirect($ftppath);
+    exit;
   }
 
 

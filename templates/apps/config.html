@@ -191,12 +191,12 @@
                         <label for="workspace_dev_remote_server" class="col-md-2 control-label">服务器路径</label>
                         <div class="col-md-2">
                             <select class="form-control" id="workspace_dev_remote_type" disabled="disabled"  >
-                                <option value="SSH" selected="selected">SSH</option>
-                                <option value="FTP">FTP</option>
+                                <option value="FTP"  selected="selected">FTP</option>
+                                <option value="SSH">SSH</option>
                             </select>
                         </div>
                         <div class="col-md-8">
-                          <input type="text" class="form-control" value="remote.app-link.org:21/{{$User.login}}/{{$appinfo.alias}}" readonly="readonly" id="workspace_dev_remote_server" placeholder="部署代码的远程服务器地址">
+                          <input type="text" class="form-control" value="ftp://remote.app-link.org/{{$User.login}}/{{$appinfo.alias}}" readonly="readonly" id="workspace_dev_remote_server" placeholder="部署代码的远程服务器地址">
                         </div>
                       </div>
                       <div class="form-group">
