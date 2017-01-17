@@ -25,7 +25,7 @@ upload/
 packages/
 obj/
 bin/
-
+submit_apps/
 
 /attachment
 /cache
