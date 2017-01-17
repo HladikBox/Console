@@ -1,0 +1,26 @@
+<tr>
+                          <th>应用类型</th>
+                          <th>应用名称</th>
+                          <th>代码大小</th>
+                          <th>图片数量</th>
+                          <th>文档数量</th>
+                          <th>应用简介</th>
+                        </tr>
+{{foreach from=$productlist.products.product item=rs}}
+<tr>
+  <td>{{$rs.typename}}</td>
+  <td>{{$rs.name}}</td>
+  <td><a href="/api/product?app_id={{$appinfo.id}}&action=upload&type=code&product={{$rs.name}}" target="_blank" class="neecchangebyte">{{$rs.codesize}}</a></td>
+  <td><a href="/api/product?app_id={{$appinfo.id}}&action=upload&type=imgs&product={{$rs.name}}" target="_blank" >{{$rs.imgscount}}</a></td>
+  <td><a href="/api/product?app_id={{$appinfo.id}}&action=upload&type=docs&product={{$rs.name}}" target="_blank" >{{$rs.docscount}}</a></td>
+  <td>{{$rs.summary}}</td>
+</tr>
+{{/foreach}}
+<script type="text/javascript">
+  $(document).ready(function(){
+    $(".neecchangebyte").each(function(){
+      //alert(bytesToSize(Number($(this).text()))+":"+$(this).text());
+      $(this).text(bytesToSize(Number($(this).text())));
+    });
+  });
+</script>

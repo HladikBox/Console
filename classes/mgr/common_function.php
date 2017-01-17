@@ -113,6 +113,10 @@ function recurse_copy($src,$dst) {  // 原目录，复制到的目录
         mkdir($dst);
         for($i=2;$i<count($dir);$i++){
             $file=$dir[$i];
+          if($file=="."||$file==".."){
+            //echo $dir."\\".$filename;
+            continue;
+          }
             if ( is_dir($src . '/' . $file) ) {
                     recurse_copy($src . '/' . $file,$dst . '/' . $file);
                 }
@@ -237,4 +241,22 @@ function bubbleSort($arr,$key) {
         }
     }
 
+  function dirsize($dir) { 
+    $dirarr=scandir($dir);
+    $size=0;
+    for($i=2;$i<count($dirarr);$i++){
+      $filename=$dirarr[$i];
+      if($filename=="."||$filename==".."){
+        //echo $dir."\\".$filename;
+        continue;
+      }
+      if(is_dir($dir."\\".$filename)){
+        $size+=dirsize($dir."\\".$filename."\\");
+      }else{
+        $size+=filesize($dir."\\".$filename);
+      }
+    }
+
+    return $size; 
+  } 
       ?>

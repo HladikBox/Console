@@ -18,31 +18,31 @@ USE `applink`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `tb_app_info`
+-- Table structure for table `tb_market_app`
 --
 
-DROP TABLE IF EXISTS `tb_app_info`;
+DROP TABLE IF EXISTS `tb_market_app`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tb_app_info` (
-  `app_id` int(11) NOT NULL,
-  `description` varchar(255) DEFAULT NULL,
-  `contact_name` varchar(45) DEFAULT NULL,
-  `contact_online` varchar(45) DEFAULT NULL,
-  `contact_mobile` varchar(45) DEFAULT NULL,
-  `updated_date` datetime DEFAULT NULL,
-  PRIMARY KEY (`app_id`)
+CREATE TABLE `tb_market_app` (
+  `id` int(11) NOT NULL,
+  `app_id` int(11) DEFAULT NULL,
+  `status` char(1) DEFAULT NULL,
+  `created_time` datetime DEFAULT NULL,
+  `approved_time` datetime DEFAULT NULL,
+  `remarks` varchar(4000) DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `tb_app_info`
+-- Dumping data for table `tb_market_app`
 --
 
-LOCK TABLES `tb_app_info` WRITE;
-/*!40000 ALTER TABLE `tb_app_info` DISABLE KEYS */;
-INSERT INTO `tb_app_info` VALUES (4,'','','','','2017-01-09 13:59:25'),(5,'应用介绍','联系人姓名','联系人在线联系方式','联系人手机号码','2017-01-09 16:05:28'),(6,'','','','','2017-01-09 14:05:21'),(7,'','','','','2017-01-09 14:14:38'),(8,'','','','','2017-01-10 14:13:15');
-/*!40000 ALTER TABLE `tb_app_info` ENABLE KEYS */;
+LOCK TABLES `tb_market_app` WRITE;
+/*!40000 ALTER TABLE `tb_market_app` DISABLE KEYS */;
+INSERT INTO `tb_market_app` VALUES (1,5,'P','2017-01-17 17:58:03',NULL,'');
+/*!40000 ALTER TABLE `tb_market_app` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -54,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-01-17 17:59:07
+-- Dump completed on 2017-01-17 17:59:08

@@ -41,7 +41,7 @@ CREATE TABLE `tb_app_db` (
 
 LOCK TABLES `tb_app_db` WRITE;
 /*!40000 ALTER TABLE `tb_app_db` DISABLE KEYS */;
-INSERT INTO `tb_app_db` VALUES (5,'数据库连接','数据库名称','用户名','密码','2016-12-20 17:41:35');
+INSERT INTO `tb_app_db` VALUES (4,'','','','','2017-01-09 13:59:25'),(5,'数据库连接','数据库名称','用户名','密码','2017-01-09 16:05:28'),(6,'','','','','2017-01-09 14:05:21'),(7,'','','','','2017-01-09 14:14:38'),(8,'','','','','2017-01-10 14:13:15');
 /*!40000 ALTER TABLE `tb_app_db` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -54,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-12-20 17:44:30
+-- Dump completed on 2017-01-17 17:59:06

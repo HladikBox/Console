@@ -49,7 +49,7 @@
       for($i=2;$i<count($dirarr);$i++){
         $filename=$dirarr[$i];
         if(is_dir($path.$filename)){
-          $ret[$filename]=$this->dirsize($path.$filename);
+          $ret[$filename]=dirsize($path.$filename);
         }else{
           $ret["其它"]+=filesize($path.$filename);
         }

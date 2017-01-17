@@ -43,7 +43,7 @@ CREATE TABLE `tb_app` (
 
 LOCK TABLES `tb_app` WRITE;
 /*!40000 ALTER TABLE `tb_app` DISABLE KEYS */;
-INSERT INTO `tb_app` VALUES (1,621332,'aaa',1,'2016-12-12 17:50:22','D','C','aaa'),(2,621332,'aaaa',1,'2016-12-14 15:47:01','A','C','aaaa'),(3,621332,'aaaaa',1,'2016-12-14 15:48:35','A','C','aaaaa'),(4,621332,'aaaaaa',2,'2016-12-14 15:49:26','A','C','aaaaaa'),(5,621332,'aaaaaaaa',1,'2016-12-14 16:03:51','A','C','');
+INSERT INTO `tb_app` VALUES (1,621332,'aaa',1,'2016-12-12 17:50:22','D','C','aaa'),(2,621332,'aaaa',1,'2016-12-14 15:47:01','D','C','aaaa'),(3,621332,'aaaaa',1,'2016-12-14 15:48:35','D','C','aaaaa'),(4,621332,'aaaaaa',2,'2016-12-14 15:49:26','D','P','aaaaaa'),(5,621332,'dogandcat',1,'2016-12-14 16:03:51','A','P','dogandcat'),(6,621332,'测试创建',1,'2017-01-09 13:56:34','D','P','test'),(7,621332,'测试',3,'2017-01-09 14:13:39','D','P','testtest'),(8,621332,'testjs',1,'2017-01-10 14:13:12','A','P','aaa'),(9,621332,'测试',1,'2017-01-11 12:56:21','A','C','testaa');
 /*!40000 ALTER TABLE `tb_app` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -56,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-12-20 17:44:30
+-- Dump completed on 2017-01-17 17:59:06
