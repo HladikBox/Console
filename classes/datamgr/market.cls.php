@@ -28,6 +28,14 @@
 	{
 		
 	}
+    public function getSubmittedApp(){
+        
+        Global $UID;
+        $sql="select a.* from tb_market_app a inner join tb_app b on a.app_id=b.id where b.user_id=$UID and a.status in ('P','W','S','F') ";
+        $query=$this->dbmgr->query($sql);
+        $result = $this->dbmgr->fetch_array($query);
+        return $result;
+    }
 	public function submit($login,$alias,$app_id,$remarks){
 		Global $CONFIG,$UID,$productMgr;
 		$login=parameter_filter($login);
@@ -35,7 +43,7 @@
 		$app_id=parameter_filter($app_id);
 		$remarks=parameter_filter($remarks);
 
-		if($this->dbmgr->checkHave("(select a.app_id,b.user_id,a.status from tb_market_app a inner join tb_app b on a.app_id=b.id) a","user_id=$UID and status in ('P','W')")){
+		if($this->dbmgr->checkHave("(select a.app_id,b.user_id,a.status from tb_market_app a inner join tb_app b on a.app_id=b.id) a","user_id=$UID and status in ('P','W','S','F')")){
 			return outResult(-1,"你的已经有其它应用正在审核过程中，请先处理");
 		}
 		$this->dbmgr->begin_trans();
@@ -45,6 +53,7 @@
 		$this->dbmgr->query($sql);
 
 		$srcpath=$CONFIG['workspace']['path']."\\$login\\$alias\\";
+		$copypath=ROOT."\\workspace_copy\\";
 		$despath=ROOT."\\submit_apps\\$app_id\\";
 		if(!file_exists($despath)){
 	        mkdir($despath,true);
@@ -59,6 +68,8 @@
 		copy($srcpath."api.xml",$despath."api.xml");
 		copy($srcpath."menu.xml",$despath."menu.xml");
 		copy($srcpath."product.xml",$despath."product.xml");
+		copy($srcpath."product.xml",$despath."product.xml");
+		copy($copypath."config.inc.php",$despath."config.inc.php");
 
 		$productlist=$productMgr->getProductList($login,$alias);
 		foreach ($productlist["products"]["product"] as $key => $value) {
@@ -72,6 +83,53 @@
 		return outResult(0,"提交成功",$id);
 
 	}
+    public function getSubmitAppProductListDetail($app_id){
+        Global $CONFIG,$productMgr;
+        $app_id=$app_id+0;
+        $productlist=$this->getSubmitAppProductList($app_id);
+        $folder=ROOT."\\submit_apps\\$app_id\\product\\";
+        //dirsize
+        for($i=0;$i<count($productlist["products"]["product"]);$i++){
+          $value=$productlist["products"]["product"][$i];
+          $productlist["products"]["product"][$i]["codesize"]=dirsize($folder.iconv("utf-8", "gbk", $value["name"])."\\code");
+          $productlist["products"]["product"][$i]["imgscount"]=$productMgr->getFileCount($folder.iconv("utf-8", "gbk", $value["name"])."\\imgs",array("jpg","png","gif","ico"));
+          $productlist["products"]["product"][$i]["docscount"]=$productMgr->getFileCount($folder.iconv("utf-8", "gbk", $value["name"])."\\docs",array("doc","docx","ppt","pptx","pdf","xls","xlsx"));
+        }
+        return $productlist;
+      }
+
+      
+    public function getSubmitAppProductList($app_id){
+        Global $CONFIG,$productMgr;
+        $app_id=$app_id+0;
+        $folder=ROOT."\\submit_apps\\$app_id\\";
+        if (!is_dir($folder."product\\")) mkdir($folder."product\\");
+        $productfile=$folder."product.xml";
+        $productfolder=$folder."product\\";
+
+        $fp = fopen($productfile,"r");
+        $str = fread($fp,filesize($productfile));
+
+        $xmlstring = simplexml_load_string($str, 'SimpleXMLElement',  LIBXML_NOBLANKS); 
+        $productlist = json_decode(json_encode($xmlstring),true); 
+        
+        if($productlist["products"]["product"][0]==""&&$productlist["products"]["product"]["name"]!=""){
+          $temp=$productlist["products"]["product"];
+          $productlist["products"]["product"]=array();
+          $productlist["products"]["product"][]=$temp;
+        }
+        $producttype=$productMgr->productType();
+        if($productlist!=null){
+            for($i=0;$i<count($productlist["products"]["product"]);$i++){
+                $productlist["products"]["product"][$i]["typename"]=$producttype[$productlist["products"]["product"][$i]["type"]];
+            }
+        }
+        $productlist=setArrayNoNull($productlist);
+        if($productlist["products"]==""){
+            return null;
+        }
+        return $productlist;
+    }
  }
  
  $marketMgr=MarketMgr::getInstance();

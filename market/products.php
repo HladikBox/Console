@@ -9,15 +9,23 @@
   require '../include/common.inc.php';
   include ROOT.'/include/init.inc.php';
   include ROOT.'/classes/datamgr/product.cls.php';
+  include ROOT.'/classes/datamgr/market.cls.php';
 
   
   $_REQUEST["app_id"]=$_REQUEST["app_id"]+0;
   $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
   $smarty->assign("appinfo",$appinfo);
+  if($_REQUEST["is_submit"]=="Y"){
 
-  $productlist=$productMgr->getProductListDetail($User["login"],$appinfo["alias"]);
+      $productlist=$marketMgr->getSubmitAppProductListDetail($_REQUEST["app_id"]);
+
+  }else{
+    
+      $productlist=$productMgr->getProductListDetail($User["login"],$appinfo["alias"]);
+
+  }
+
   $smarty->assign("productlist",$productlist);
-
 
   $smarty->display(ROOT.'/templates/market/products.html');
   

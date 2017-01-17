@@ -20,17 +20,12 @@
         <!-- Default box -->
         <div class="box box-primary">
             <div class="box-header with-border">
-              <h3 class="box-title">请完成提交信息</h3>
+              <h3 class="box-title">{{if $sapp.status=="P"}}信息已提交，将会交由管理员进行审核{{elseif $sapp.status=="W"}}管理员正在进行审核，这个过程可能需要几天，请稍等{{/if}}</h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
               <div class="form-group">
-                    <select class="form-control" id="app_id">
-                        <option value="">--请选择你的应用--</option>
-                        {{foreach from=$apps item=rs}}
-                        <option value="{{$rs.id}}">{{$rs.type_name}}类应用: {{$rs.name}}</option>
-                        {{/foreach}}
-                    </select>
+                    {{$appinfo.type_name}}类应用: {{$appinfo.name}}
               </div>
               <div class="form-group">
                 <div class="box">
@@ -55,21 +50,13 @@
                   <!-- /.box -->
               </div>
               <div class="form-group">
-                    <textarea id="app_remarks" class="form-control" style="height: 300px" placeholder="其它一些补充说明"></textarea>
-                    <p>如果你提交的是一个数据中心框架，也请提交一个客户应用，并上传相关说明和图片</p>
+                    <p>{{$sapp.remarks}}应用简介应用简介应用简介应用简介应用简介应用简介</p>
               </div>
-                <p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">
-                    <input type="checkbox" class="iknowpolice" /> 我上传的应用代码中没有任何冗余文件，例如log或者上传的文件等。<br />
-                    <input type="checkbox" class="iknowpolice" /> 我上传的应用能够实际解决问题。<br />
-                    <input type="checkbox" class="iknowpolice" /> 我上传的应用不涉及法律问题。<br />
-                    <input type="checkbox" class="iknowpolice" /> 我上传的应用已经遵守相关的开源商业原则。<br />
-                    <input type="checkbox" class="iknowpolice" /> 成功提交的应用将会在app-link中永远成为你的开发应用。<br />
-                </p>
             </div>
             <!-- /.box-body -->
             <div class="box-footer">
               <div class="pull-right">
-                <button type="button" class="btn btn-primary" id="btnSubmit"><i class="fa fa-envelope-o"></i> 提交</button>
+                  {{if $sapp.status=="P"}}信息已提交，将会交由管理员进行审核{{/if}}
               </div>
             </div>
             <!-- /.box-footer -->
@@ -85,11 +72,9 @@
 
 <script type="text/javascript">
     $(document).ready(function(){
-        $("#app_id").change(function(){
-            var app_id=$("#app_id").val();
-            var json={app_id:app_id};
-            $("#products").load("/market/products",json);
-        });
+        var json = { app_id: "{{$appinfo.id}}",is_submit:"Y" };
+        $("#products").load("/market/products", json);
+        
         $("#btnSubmit").click(function () {
             if ($(".iknowpolice:checked").length < $(".iknowpolice").length) {
                 warning("请确认已经知道我们要上传的一些条款。");
