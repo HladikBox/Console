@@ -10,9 +10,9 @@
 <tr>
   <td>{{$rs.typename}}</td>
   <td>{{$rs.name}}</td>
-  <td><a href="/api/product?app_id={{$appinfo.id}}&action=upload&type=code&product={{$rs.name}}" target="_blank" class="neecchangebyte">{{$rs.codesize}}</a></td>
-  <td><a href="/api/product?app_id={{$appinfo.id}}&action=upload&type=imgs&product={{$rs.name}}" target="_blank" >{{$rs.imgscount}}</a></td>
-  <td><a href="/api/product?app_id={{$appinfo.id}}&action=upload&type=docs&product={{$rs.name}}" target="_blank" >{{$rs.docscount}}</a></td>
+  <td>{{if $is_submit!="Y"}}<a href="/api/product?app_id={{$appinfo.id}}&action=upload&type=code&product={{$rs.name}}" target="_blank" class="neecchangebyte">{{$rs.codesize}}</a>{{else}}<span class="neecchangebyte">{{$rs.codesize}}</span>{{/if}}</td>
+  <td>{{if $is_submit!="Y"}}<a href="/api/product?app_id={{$appinfo.id}}&action=upload&type=imgs&product={{$rs.name}}" target="_blank" >{{$rs.imgscount}}</a>{{else}}<span class="neecchangebyte">{{$rs.imgscount}}</span>{{/if}}</td>
+  <td>{{if $is_submit!="Y"}}<a href="/api/product?app_id={{$appinfo.id}}&action=upload&type=docs&product={{$rs.name}}" target="_blank" >{{$rs.docscount}}</a>{{else}}<span class="neecchangebyte">{{$rs.docscount}}</span>{{/if}}</td>
   <td>{{$rs.summary}}</td>
 </tr>
 {{/foreach}}

@@ -8,19 +8,14 @@
 
   require '../include/common.inc.php';
   include ROOT.'/include/init.inc.php';
-  include ROOT.'/classes/datamgr/market.cls.php';
+  include_once ROOT.'/classes/datamgr/market.cls.php';
 
-  $submittedapp=$marketMgr->getSubmittedApp();
-  if($submittedapp["app_id"]!=""){
-    if($submittedapp["status"]=="S"){
-    }else{
-       $appinfo= $appMgr->getAppInfo($UID,$submittedapp["app_id"]);
+  
+  	  $submittedapp=$marketMgr->getSubmittedApp();
+      $appinfo= $appMgr->getAppInfo($UID,$submittedapp["app_id"]);
       $smarty->assign("appinfo",$appinfo);
       $smarty->assign("sapp",$submittedapp);
-      $smarty->display(ROOT.'/templates/market/submit_in_progress.html');
-    }
-  }else{
-  
+
       $cansubmitapps=array();
       foreach ($apps as $key => $value) {
   	    if($value["submit_status"]==""&&$value["run_status"]!="C"){
@@ -29,9 +24,5 @@
       }
       $smarty->assign("apps",$cansubmitapps);
       $smarty->display(ROOT.'/templates/market/submit.html');
-
-
-  }
-
   
 ?>

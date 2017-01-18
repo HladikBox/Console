@@ -16,16 +16,12 @@
   $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
   $smarty->assign("appinfo",$appinfo);
   if($_REQUEST["is_submit"]=="Y"){
-
       $productlist=$marketMgr->getSubmitAppProductListDetail($_REQUEST["app_id"]);
-
   }else{
-    
       $productlist=$productMgr->getProductListDetail($User["login"],$appinfo["alias"]);
-
   }
-
   $smarty->assign("productlist",$productlist);
+  $smarty->assign("is_submit",$_REQUEST["is_submit"]);
 
   $smarty->display(ROOT.'/templates/market/products.html');
   

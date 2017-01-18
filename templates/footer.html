@@ -55,3 +55,27 @@
 <script src="{{$rootpath}}js/common.js"></script>
 </body>
 </html>
+<script type="text/javascript">
+    $(document).ready(function(){
+        getJSON("/api/market?action=submitstatus",null,function(data){
+            try{
+                var status=data.status;
+                //alert(status);
+                if(status=="P"){
+                    $("#lblSubmitApp").addClass("label-info").text("已提交");
+                }else if(status=="W"){
+                    $("#lblSubmitApp").addClass("label-info").text("审核中");
+                }else if(status=="S"){
+                    $("#lblSubmitApp").addClass("label-success").text("审核成功");
+                }else if(status=="F"){
+                    $("#lblSubmitApp").addClass("label-danger").text("退回");
+                }
+            }catch(e){
+
+            }
+        },function(){},function(){});
+    });
+</script>
+
+
+

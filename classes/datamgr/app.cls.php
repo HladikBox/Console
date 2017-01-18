@@ -112,6 +112,7 @@
       return $result;
     }
     public function getAppInfo($UID,$id){
+      $id=$id+0;
       $sql="select a.*,ai.*,ad.*,aw.*,ap.name type_name from tb_app a
       inner join tb_app_type ap on a.type=ap.id 
       left join tb_app_info ai on a.id=ai.app_id 

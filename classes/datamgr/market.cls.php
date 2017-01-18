@@ -28,6 +28,19 @@
 	{
 		
 	}
+	public function discard(){
+		$sapp=$this->getSubmittedApp();
+		if($sapp["status"]=="F"||$sapp["status"]=="P"){
+			$id=$sapp["id"]+0;
+			$sql="update tb_market_app set status='D' where id=$id";
+			$query=$this->dbmgr->query($sql);
+			return outResult(0,"撤回成功",$id);
+		}
+		else{
+			return outResult(-1,"现在的状态不能撤回");
+		}
+
+	}
     public function getSubmittedApp(){
         
         Global $UID;
@@ -43,13 +56,23 @@
 		$app_id=parameter_filter($app_id);
 		$remarks=parameter_filter($remarks);
 
-		if($this->dbmgr->checkHave("(select a.app_id,b.user_id,a.status from tb_market_app a inner join tb_app b on a.app_id=b.id) a","user_id=$UID and status in ('P','W','S','F')")){
+		$sapp=$this->getSubmittedApp();
+		if($sapp["status"]=="W"||$sapp["status"]=="P"||$sapp["status"]=="S"){
 			return outResult(-1,"你的已经有其它应用正在审核过程中，请先处理");
 		}
 		$this->dbmgr->begin_trans();
+		if($sapp["status"]=="F"){
+
+		$sql="update tb_market_app set app_id=$app_id,status='P',created_time=now(),remarks='$remarks' 
+		where id= ".$sapp["id"];
+		}else{
+
 		$id=$this->dbmgr->getNewId("tb_market_app");
 		$sql="insert into tb_market_app (id,app_id,status,created_time,remarks) 
 		values ($id,$app_id,'P',now(),'$remarks')";
+		}
+
+
 		$this->dbmgr->query($sql);
 
 		$srcpath=$CONFIG['workspace']['path']."\\$login\\$alias\\";

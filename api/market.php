@@ -15,6 +15,10 @@
   if($action=="submit"){
     $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
     outputJSON($marketMgr->submit($User["login"],$appinfo["alias"],$_REQUEST["app_id"],$_REQUEST["remarks"]));
+  }elseif($action=="discard"){
+    outputJSON($marketMgr->discard());
+  }elseif ($action=="submitstatus") {
+    outputJSON($marketMgr->getSubmittedApp());
   }
 
 
