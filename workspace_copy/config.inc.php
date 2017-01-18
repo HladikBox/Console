@@ -1,13 +1,13 @@
 <?php
 
 #[Root]
-$CONFIG['Title']             = '标题';
-$CONFIG['URL']="http://www.我的域名.com";
+$CONFIG['Title']             = '标题';//设置你的数据中心名称
+$CONFIG['URL']="http://www.我的域名.com";//设置你的域名
 $CONFIG['lang']="zh-cn";//en-us
-$CONFIG["SessionName"]="session的标识符";
+$CONFIG["SessionName"]="session的标识符";//设置你的session信息
 $CONFIG["SupportMultiLanguage"]=false;
 
-$CONFIG['solution_configuration']='release';
+$CONFIG['solution_configuration']='release';//请必须保持为release
 $CONFIG['server']		= 'windows';   //windows or linux
 
 
