@@ -117,6 +117,23 @@
 		return outResult(0,"提交成功",$id);
 
 	}
+
+    public function setPriceAndOnline($price){
+        $price=$price+0;
+        if($price<0){
+           $price=0;
+        }
+        $sapp=$this->getSubmittedApp();
+		if($sapp["status"]!="S"){
+			return outResult(-1,"没有可设置价格的应用");
+		}
+        $id=$sapp["id"];
+        $sql="update tb_market_app set price=$price,status='A' where id=$id and status='S' ";
+        $this->dbmgr->query($sql);
+        
+		return outResult(0,"提交成功",$id);
+    }
+
     public function getSubmitAppProductListDetail($app_id){
         Global $CONFIG,$productMgr;
         $app_id=$app_id+0;

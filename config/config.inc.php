@@ -54,4 +54,8 @@ $CONFIG['workspace']['path']	= "D:\\Apache2.2\\htdocs\\HladikBox\\FooterCMSDEV\\
 $CONFIG['workspace']['domain']  = "http://cmsdev.app-link.org";
 $CONFIG['workspace']['ftp']  = "ftp://remote.app-link.org";
 
+$CONFIG["appaccessapi"]="http://cmsdev.app-link.org/alucard263096/appaccess/";
+
+
+
 ?>

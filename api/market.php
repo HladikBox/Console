@@ -19,9 +19,11 @@
     outputJSON($marketMgr->discard());
   }elseif ($action=="submitstatus") {
     outputJSON($marketMgr->getSubmittedApp());
+  }elseif ($action=="setpriceonline") {
+    outputJSON($marketMgr->setPriceAndOnline($_REQUEST["price"]));
   }
 
-
+  
 outputJSON(outResult("-1","找不到你要调用的请求","找不到你要调用的请求"));
 
   

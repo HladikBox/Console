@@ -79,13 +79,30 @@
                 {{/if}}
             </div>
             <!-- /.box-body -->
-            <div class="box-footer">
+            <div class="box-footer">                
+                {{if $sapp.status=="S"}}
+                <div class="box box-solid  box-success">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">应用评价以及价格参考</h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body" id="access_price">
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+                {{/if}}
               <div class="pull-right">
               {{if $sapp.status=="P"}}
               <button type="button" class="btn btn-default" id="btnDiscard"><i class="fa fa-times"></i> 撤回</button>
               {{elseif  $sapp.status=="W"}}管理员正在审核中，一般需要2到4天。
               {{elseif  $sapp.status=="F"}}
-              <button type="button" class="btn btn-primary" id="btnSubmit"><i class="fa fa-envelope-o"></i> 重新提交</button>
+              <button type="button" class="btn btn-primary" id="btnSubmit"><i class="fa fa-envelope-o"></i> 重新提交</button>                  
+              {{elseif  $sapp.status=="S"}}
+              <div  class="form-group">
+                  <input class="form-control text-right" type="number" placeholder="应用价格" maxlength="4" style="width:140px;" id="txtPrice" />
+              </div>
+              <button type="button" class="btn btn-success" id="btnSetPrice"><i class="fa fa-money"></i> 确认价格并上架</button>
               {{else}}
               <button type="button" class="btn btn-primary" id="btnSubmit"><i class="fa fa-envelope-o"></i> 提交</button>
               {{/if}}
@@ -104,6 +121,53 @@
 
 <script type="text/javascript">
     $(document).ready(function(){
+
+        {{if $sapp.status=='S'}}
+        getJSON("{{$accesscmsapi}}api/marketappscoreoption/list?market_app_id={{$sapp.id}}",null,function(data){
+            
+            //$("#access_price")
+            
+            var str="";
+            for(i=0;i<data.length;i++){
+                if(data[i].score==0){
+                    continue;
+                }
+                var sty="";
+                switch(Number(data[i].score)){
+                    case 1:sty="danger";break;
+                    case 2:sty="warning";break;
+                    case 3:sty="info";break;
+                    case 4:sty="primary";break;
+                    case 5:sty="success";break;
+                }
+                str+='<p>'+data[i].option_id+':<span class="text-'+sty+'" style="font-size:200%">'+data[i].score+'分</span>,'+data[i].description+','+(data[i].avg_price==null?"暂无参考价格":'同一分数平均价格设置为<span class="text-'+sty+'" style="font-size:150%">'+data[i].avg_price+'元</span>')+'</p>'
+            +'<div class="progress">'
+            +'<div class="progress-bar progress-bar-'+sty+' progress-bar-striped" role="progressbar" aria-valuenow="'+data[i].score+'" aria-valuemin="0" aria-valuemax="5" style="width: '+(data[i].score*20)+'%"></div>'
+            +'</div>';
+            }
+            str=str==""?"暂无评分":str;
+            $("#access_price").html(str);
+        });
+        {{/if}}
+            $("#btnSetPrice").click(function(){
+                warning("请确认最终价格，应用将会上架到应用商城，如果您有任何更新，请重新提交请求，你确定继续操作吗？",function(){
+                    
+                    var price=$("#txtPrice").val();
+                    var json={action:"setpriceonline",price:price};
+                    $("#btnSubmit").attr("disabled",true);
+                    getJSON("/api/market",json,function(data){
+                        if(data.code=="0"){
+                            window.location.href="/market/myapps";
+                        }else{
+                            alert(data.result);
+                        }
+                        },function(){
+                            
+                            $("#btnSubmit").attr("disabled",true);
+                        });
+                });
+                
+            });
         $("#app_id").change(function(){
             var app_id=$("#app_id").val();
             var is_submit="{{if $sapp.status!=""&&$sapp.status!="F"}}Y{{else}}N{{/if}}";
