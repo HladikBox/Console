@@ -28,6 +28,17 @@
 	{
 		
 	}
+	public function getSubmitCode($id){
+		$sql="select * from tb_market_app where status='W' and id=$id";
+		$query=$this->dbmgr->query($sql);
+        $result = $this->dbmgr->fetch_array($query);
+        $app_id=$result["app_id"]+0;
+        if($app_id==0){
+        	echo "nodata";
+        	exit;
+        }
+        return $folder=ROOT."\\submit_apps\\$app_id";
+	}
 	public function discard(){
 		$sapp=$this->getSubmittedApp();
 		if($sapp["status"]=="F"||$sapp["status"]=="P"){

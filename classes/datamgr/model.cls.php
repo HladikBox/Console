@@ -190,7 +190,8 @@
   }
 
   public function createModel($login,$alias,$modelname,$tablename,$name,$method,$srcmodel){
-
+    Global $CONFIG;
+    
     $login=parameter_filter($login);
     $alias=parameter_filter($alias);
     $modelname=parameter_filter($modelname);
@@ -304,7 +305,7 @@
       $sql[]="use `$dbname` ;";
       $tablename=parameter_filter($model["tablename"]);
 
-      if($this->dbmgr->checkHave("information_schema.VIEWS","TABLE_SCHEMA='$dbname' and TABLE_NAME='$tablename'")){
+      if($this->dbmgr->checkHave("information_schema.VIEWS","TABLE_SCHEMA='$dbname' and TABLE_NAME='$tablename'")||$model["nosave"]=="1"){
         $sql[]="#您使用的表名 $tablename 为视图，不需要生成数据表 ";
         return outResult(0,$sql,"");
       }
