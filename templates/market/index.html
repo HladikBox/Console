@@ -27,7 +27,7 @@
         <div class="col-md-12 margin">
             <div class="row">
                 <div class="col-md-9 ">
-                    <h4>项目所属行业</h4>
+                    <h4>应用类型</h4>
                     {{foreach from=$app_type_list item=rs}}
                     <button class="btn btn-flat app_type" value="{{$rs.id}}" style="margin-bottom: 5px;" >&nbsp;{{$rs.name}}</button>
                     {{/foreach}}
@@ -35,15 +35,16 @@
                 <div class="col-md-3 ">
                     <h4>排序方式</h4>
                     <div class="btn-group"  >
-                      <button type="button" class="btn btn-default btn-flat">最多购买</button>
+                      <button type="button" class="btn btn-default btn-flat" id="btnOrder" value="buy">最多购买</button>
                       <button type="button" class="btn btn-default btn-flat dropdown-toggle" data-toggle="dropdown">
                         <span class="caret"></span>
                         <span class="sr-only">排序方式</span>
                       </button>
                       <ul class="dropdown-menu" role="menu">
-                        <li><a href="#">最多购买</a></li>
-                        <li><a href="#">最近更新</a></li>
-                        <li><a href="#">评价最高</a></li>
+                        <li><a href="javascript:return;" class="orderbtn" value="buy">最多购买</a></li>
+                        <li><a href="javascript:return;" class="orderbtn" value="update">最近更新</a></li>
+                        <li><a href="javascript:return;" class="orderbtn" value="score">评分最高</a></li>
+                          <li><a href="javascript:return;" class="orderbtn" value="price">价格最低</a></li>
                       </ul>
                     </div>
 
@@ -55,6 +56,28 @@
                     {{/foreach}}
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="row margin">
+        <div class="col-md-12">
+            {{foreach from=$marketapplist item=rs}}
+            <div class="row bg-gray" style="margin-bottom:20px;">
+                <div class="col-md-9" style="padding-bottom:20px;">
+                    <h3><a href="/market/detail?id={{$rs.id}}">{{$rs.app_name}}</a></h3>
+                    <span class="label label-primary spanAppType" val="{{$rs.app_type}}" >{{$rs.app_type}}</span>
+                    <h4>{{$rs.app_description}}</h4>
+                    {{foreach from=$rs.products.products.product item=product}}
+                    <span class="label label-success " val="{{$product.type}}"  data-toggle="tooltip" title="{{$product.summary}}">{{$product.typename}} {{$product.name}}</span>
+                    {{/foreach}}
+                </div>
+                <div class="col-md-3">
+                    <h3>{{if $rs.price==0}}<b class="text-success">免费</b>{{else}}<b class="text-primary">售价：{{$rs.price}}元</b>{{/if}}</h3>
+                    <h4>购买次数：<b>{{$rs.buycount}}</b>次</h4>
+                    <h4>最近更新时间：<b>{{$rs.approved_time}}</b></h4>
+                    <h4 class="scoreinapp" score="{{$rs.score}}">综合评分：</h4>
+                </div>
+            </div>
+            {{/foreach}}
         </div>
     </div>
 </div>
@@ -94,6 +117,11 @@
         $("#txtSearch").change(function(){
             fixUrl();
         });
+        $(".orderbtn").click(function () {
+            $("#btnOrder").val($(this).attr("value"));
+            $("#btnOrder").text($(this).text());
+            fixUrl();
+        });
         function fixUrl(){
             var app_type=new Array();
             $(".app_type").each(function(){
@@ -110,34 +138,65 @@
             });
             product_type=product_type.join(",");
 
-            var param="?s="+$("#txtSearch").val()+(app_type!=""?"&at="+app_type:"")+(product_type!=""?"&pt="+product_type:"");
-            var state = {title:'',url:window.location.href.split("?")[0]};
+            var param = "?s=" + $("#txtSearch").val() + (app_type != "" ? "&at=" + app_type : "") + (product_type != "" ? "&pt=" + product_type : "") + "&o="+$("#btnOrder").val();
+            var state = { title: '', url: window.location.href.split("?")[0] };
+            
 
             history.pushState(state,'',param);
         }
-        var at="{{$at}}";
-        at=at.split(",");
-        for(var i=0;i<at.length;i++){
-            if($(".app_type[value="+at[i]+"]").length>0){
-                var c=$(".app_type[value="+at[i]+"]");
-                c.addClass("btn-primary");
-                c.addClass("fa");
-                c.addClass("fa-check");
-                c.addClass("check");
+        var at = "{{$at}}";
+        if (at != "") {
+            at = at.split(",");
+            for (var i = 0; i < at.length; i++) {
+                if ($(".app_type[value=" + at[i] + "]").length > 0) {
+                    var c = $(".app_type[value=" + at[i] + "]");
+                    c.addClass("btn-primary");
+                    c.addClass("fa");
+                    c.addClass("fa-check");
+                    c.addClass("check");
+                }
             }
         }
-        var pt="{{$pt}}";
-        pt=pt.split(",");
-        for(var i=0;i<pt.length;i++){
-            if($(".product_type[value="+pt[i]+"]").length>0){
-                var c=$(".product_type[value="+pt[i]+"]");
-                c.addClass("btn-primary");
-                c.addClass("fa");
-                c.addClass("fa-check");
-                c.addClass("check");
+        var pt = "{{$pt}}";
+        if (pt != "") {
+            pt = pt.split(",");
+            for (var i = 0; i < pt.length; i++) {
+                if ($(".product_type[value=" + pt[i] + "]").length > 0) {
+                    var c = $(".product_type[value=" + pt[i] + "]");
+                    c.addClass("btn-primary");
+                    c.addClass("fa");
+                    c.addClass("fa-check");
+                    c.addClass("check");
 
+                }
             }
         }
         $("#txtSearch").val("{{$s}}");
+        if ("{{$o}}" != "") {
+            var c = $(".orderbtn[value={{$o}}]");
+            if (c != null) {
+                $("#btnOrder").val(c.attr("value"));
+                $("#btnOrder").text(c.text());
+            }
+        }
+
+        $(".spanAppType").each(function () {
+            var c = $(".app_type[value=" + $(this).text() + "]");
+            $(this).text(c.text());
+        });
+        $(".scoreinapp").each(function () {
+            var score = Number($(this).attr("score"));
+            if (score == 0) {
+                $(this).append("暂无评分");
+            } else {
+                for (i = 0; i < 5; i++) {
+                    if (i <= score) {
+                        $(this).append("<i class='fa fa-star text-warning'></i>");
+                    } else {
+                        $(this).append("<i class='fa fa-star-o'></i>");
+                    }
+                }
+            }
+        });
     });
 </script>

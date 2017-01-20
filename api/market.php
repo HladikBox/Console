@@ -20,7 +20,7 @@
   }elseif ($action=="submitstatus") {
     outputJSON($marketMgr->getSubmittedApp());
   }elseif ($action=="setpriceonline") {
-    outputJSON($marketMgr->setPriceAndOnline($_REQUEST["price"]));
+    outputJSON($marketMgr->setPriceAndOnline($_REQUEST["price"],$_REQUEST["score"]));
   }
 
   

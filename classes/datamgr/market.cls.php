@@ -28,6 +28,14 @@
 	{
 		
 	}
+
+    public function getOnlineAppList(){
+        $sql="select * from tb_market_app where status='A' order by buycount desc ";
+		$query=$this->dbmgr->query($sql);
+        $result = $this->dbmgr->fetch_array_all($query);
+        return $result;
+    }
+
 	public function getSubmitCode($id){
 		$sql="select * from tb_market_app where status='W' and id=$id";
 		$query=$this->dbmgr->query($sql);
@@ -119,18 +127,33 @@
 
 	}
 
-    public function setPriceAndOnline($price){
+    public function setPriceAndOnline($price,$score){
+        Global $appMgr,$UID;
         $price=$price+0;
         if($price<0){
            $price=0;
         }
         $price=intval($price);
+
+        $score=$score+0;
+        if($score<0){
+           $score=0;
+        }
+        $score=$score>intval($score)?intval($score)+1:intval($score);
+
         $sapp=$this->getSubmittedApp();
+
+        $appinfo=$appMgr->getAppInfo($UID,$sapp["app_id"]);
+        $app_name=parameter_filter($appinfo["name"]);
+        $app_type=parameter_filter($appinfo["type"]);
+        $app_description=parameter_filter($appinfo["description"]);
+
+
 		if($sapp["status"]!="S"){
 			return outResult(-1,"没有可设置价格的应用");
 		}
         $id=$sapp["id"];
-        $sql="update tb_market_app set price=$price,status='A' where id=$id and status='S' ";
+         $sql="update tb_market_app set price=$price,status='A',score=$score,app_name='$app_name',app_type='$app_type',app_description='$app_description' where id=$id and status='S' ";
         $this->dbmgr->query($sql);
         
 		return outResult(0,"提交成功",$id);

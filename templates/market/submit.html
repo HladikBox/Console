@@ -141,7 +141,7 @@
                     case 5:sty="success";break;
                 }
                 str+='<p>'+data[i].option_id+':<span class="text-'+sty+'" style="font-size:200%">'+data[i].score+'分</span>,'+data[i].description+','+(data[i].avg_price==null?"暂无参考价格":'同一分数平均价格设置为<span class="text-'+sty+'" style="font-size:150%">'+data[i].avg_price+'元</span>')+'</p>'
-            +'<div class="progress">'
+            +'<div class="progress"><input type="hidden" class="got_score" value="'+data[i].score+'" />'
             +'<div class="progress-bar progress-bar-'+sty+' progress-bar-striped" role="progressbar" aria-valuenow="'+data[i].score+'" aria-valuemin="0" aria-valuemax="5" style="width: '+(data[i].score*20)+'%"></div>'
             +'</div>';
             }
@@ -161,8 +161,17 @@
                   price=0;
                 }
                 warning("请确认最终价格为<b style='font-size:150%' class='text-primary'>"+price+"元</b>，应用将会上架到应用商城，如果您有任何更新，请重新提交请求，你确定继续操作吗？",function(){
-                    
-                    var json={action:"setpriceonline",price:price};
+                    var scoreoptioncount=0;
+                    var scoreoption=0;
+                    $(".got_score").each(function(){
+                        scoreoptioncount++;
+                        scoreoption=Number($(this).val());
+                    });
+                    var score=0;
+                    if(scoreoptioncount>0){
+                        score=scoreoption/scoreoptioncount;
+                    }
+                    var json={action:"setpriceonline",price:price,score:score};
                     $("#btnSubmit").attr("disabled",true);
                     getJSON("/api/market",json,function(data){
                         if(data.code=="0"){
