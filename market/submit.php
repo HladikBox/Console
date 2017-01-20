@@ -18,11 +18,11 @@
       $smarty->assign("accesscmsapi",$CONFIG["appaccessapi"]);
       $cansubmitapps=array();
       foreach ($apps as $key => $value) {
-  	    if($value["submit_status"]==""&&$value["run_status"]!="C"){
+  	    if($value["submit_status"]==""&&$value["run_status"]!="C"&&$value["market_status"]!="A"){
   		    $cansubmitapps[]=$value;
   	    }
       }
-      $smarty->assign("apps",$cansubmitapps);
+      $smarty->assign("submitapps",$cansubmitapps);
       $smarty->display(ROOT.'/templates/market/submit.html');
   
 ?>

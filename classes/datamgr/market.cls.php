@@ -71,16 +71,17 @@
 		if($sapp["status"]=="W"||$sapp["status"]=="P"||$sapp["status"]=="S"){
 			return outResult(-1,"你的已经有其它应用正在审核过程中，请先处理");
 		}
+		if($this->dbmgr->checkHave("tb_market_app","app_id=$app_id and status<>'D' and status<>'F'")){
+			return outResult(-1,"不能重复提交该应用");
+		}
 		$this->dbmgr->begin_trans();
 		if($sapp["status"]=="F"){
-
-		$sql="update tb_market_app set app_id=$app_id,status='P',created_time=now(),remarks='$remarks' 
-		where id= ".$sapp["id"];
+			$sql="update tb_market_app set app_id=$app_id,status='P',created_time=now(),remarks='$remarks' 
+			where id= ".$sapp["id"];
 		}else{
-
-		$id=$this->dbmgr->getNewId("tb_market_app");
-		$sql="insert into tb_market_app (id,app_id,status,created_time,remarks) 
-		values ($id,$app_id,'P',now(),'$remarks')";
+			$id=$this->dbmgr->getNewId("tb_market_app");
+			$sql="insert into tb_market_app (id,app_id,status,created_time,remarks) 
+			values ($id,$app_id,'P',now(),'$remarks')";
 		}
 
 
@@ -123,6 +124,7 @@
         if($price<0){
            $price=0;
         }
+        $price=intval($price);
         $sapp=$this->getSubmittedApp();
 		if($sapp["status"]!="S"){
 			return outResult(-1,"没有可设置价格的应用");

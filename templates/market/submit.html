@@ -32,7 +32,7 @@
               <div class="form-group">
                     <select class="form-control" id="app_id" {{if $sapp.status!=""&&$sapp.status!="F"}}disabled{{/if}}>
                         <option value="">--请选择你的应用--</option>
-                        {{foreach from=$apps item=rs}}
+                        {{foreach from=$submitapps item=rs}}
                         <option value="{{$rs.id}}" {{if $sapp.app_id==$rs.id}}selected{{/if}}>{{$rs.type_name}}类应用: {{$rs.name}}</option>
                         {{/foreach}}
                     </select>
@@ -150,14 +150,23 @@
         });
         {{/if}}
             $("#btnSetPrice").click(function(){
-                warning("请确认最终价格，应用将会上架到应用商城，如果您有任何更新，请重新提交请求，你确定继续操作吗？",function(){
+                var price=$("#txtPrice").val();
+                try{
+                  price=parseInt(Number(price))+0;
+
+                }catch(e){
+                  price=0;
+                }
+                if(price<0){
+                  price=0;
+                }
+                warning("请确认最终价格为<b style='font-size:150%' class='text-primary'>"+price+"元</b>，应用将会上架到应用商城，如果您有任何更新，请重新提交请求，你确定继续操作吗？",function(){
                     
-                    var price=$("#txtPrice").val();
                     var json={action:"setpriceonline",price:price};
                     $("#btnSubmit").attr("disabled",true);
                     getJSON("/api/market",json,function(data){
                         if(data.code=="0"){
-                            window.location.href="/market/myapps";
+                            window.location.href="/market/apps";
                         }else{
                             alert(data.result);
                         }

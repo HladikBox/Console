@@ -87,9 +87,11 @@
       return outResult(0,"保存成功",$id);
     }
     public function getUserApps($UID){
-      $sql="select a.*,ap.name type_name, case a.run_status when 'C' then '等待配置' when 'P' then '运行中' when 'S' then  '已停止' end as run_status_name  from tb_app a
+      $sql="select a.*,ap.name type_name, case a.run_status when 'C' then '等待配置' when 'P' then '运行中' when 'S' then  '已停止' end as run_status_name,
+      ma.status market_status  from tb_app a
       inner join tb_app_type ap on a.type=ap.id
-      where user_id=$UID and a.status<>'D' order by created_date desc";
+      left join tb_market_app ma on a.id=ma.app_id and ma.status<>'D'
+      where user_id=$UID and a.status<>'D' order by market_status , created_date desc";
       $query = $this->dbmgr->query($sql);
       $result = $this->dbmgr->fetch_array_all($query);
 

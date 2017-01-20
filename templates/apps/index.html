@@ -28,10 +28,10 @@
             <p>您还没有任何应用,先去<a href="#" class="btnCreate">新建一个应用</a>吧!</p>
         </div>
           {{foreach from=$apps item=rs}}
-          <div class="box box-primary collapsed-box box-solid appinfobox" id="app_{{$rs.id}}" >
+          <div class="box {{if $rs.market_status!='A'}}box-primary{{else}}box-success{{/if}} collapsed-box box-solid appinfobox" id="app_{{$rs.id}}" >
             <div class="box-header with-border">
                 <div class="row">
-                    <div class="col-md-2">{{$rs.name}}</div>
+                    <div class="col-md-2">{{$rs.name}} {{if $rs.market_status=='A'}}<a class="label label-info" href="/market/apps" >上架应用</a>{{/if}}</div>
                     <div class="col-md-2">{{$rs.type_name}}类应用</div>
                     <div class="col-md-2"><span>{{getDateStr date=$rs.created_date}} 创建</span></div>
                     {{if $rs.run_status=="C"}}

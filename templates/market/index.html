@@ -1,0 +1,143 @@
+{{include  file="$smarty_root/header.html" }}
+
+
+
+
+<!-- =============================================== -->
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    
+    <div class="row">
+        <div class="col-md-12 text-center"><h2><span class="logo-lg"><b>App</b>Link</span>
+应用市场</h2></div>
+        <div class="col-md-4 col-md-offset-4">
+            <div  class="form-group">
+                  <input class="form-control text-center" type="text-center" placeholder="输入关键字查找应用" id="txtSearch" style="width:100%;" id="txtPrice" />
+            </div>
+        </div>
+        <div class="col-md-6 col-md-offset-3">
+        <h3>什么是AppLink应用？
+        <a href="/apps" class="pull-right" style="font-size: 50%;"><i class="fa fa-plus"></i> 创建应用</a> 
+        <a class="pull-right" href="/market/submit" style="font-size: 50%;"><i class="fa fa-plus"></i> 提交应用</a>
+        </h3>
+        <p>AppLink的应用就是开发者上传的一套项目解决方案，你通过购买应用并且根据开发者的安装向导就可以得到一个面向多平台多行业的APP解决方案。最终，根据你的需求，可以实现二次开发的一些定制化，提供给你或者你的客户，帮助你快速完成项目的开发。</p>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-md-12 margin">
+            <div class="row">
+                <div class="col-md-9 ">
+                    <h4>项目所属行业</h4>
+                    {{foreach from=$app_type_list item=rs}}
+                    <button class="btn btn-flat app_type" value="{{$rs.id}}" style="margin-bottom: 5px;" >&nbsp;{{$rs.name}}</button>
+                    {{/foreach}}
+                </div>
+                <div class="col-md-3 ">
+                    <h4>排序方式</h4>
+                    <div class="btn-group"  >
+                      <button type="button" class="btn btn-default btn-flat">最多购买</button>
+                      <button type="button" class="btn btn-default btn-flat dropdown-toggle" data-toggle="dropdown">
+                        <span class="caret"></span>
+                        <span class="sr-only">排序方式</span>
+                      </button>
+                      <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">最多购买</a></li>
+                        <li><a href="#">最近更新</a></li>
+                        <li><a href="#">评价最高</a></li>
+                      </ul>
+                    </div>
+
+                </div>
+                <div class="col-md-9 ">
+                    <h4>应用分类</h4>
+                    {{foreach from=$producttype item=rs key=key}}
+                    <button class="btn btn-flat product_type" value="{{$key}}" style="margin-bottom: 5px;">&nbsp;{{$rs}}</button>
+                    {{/foreach}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.content-wrapper -->
+{{include  file="$smarty_root/footer.html" }}
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".app_type").click(function(){
+            if($(this).hasClass("check")){
+                $(this).removeClass("btn-primary");
+                $(this).removeClass("fa");
+                $(this).removeClass("fa-check");
+                $(this).removeClass("check");
+            }else{
+                $(this).addClass("btn-primary");
+                $(this).addClass("fa");
+                $(this).addClass("fa-check");
+                $(this).addClass("check");
+            }
+            fixUrl();
+        });
+        $(".product_type").click(function(){
+            if($(this).hasClass("check")){
+                $(this).removeClass("btn-primary");
+                $(this).removeClass("fa");
+                $(this).removeClass("fa-check");
+                $(this).removeClass("check");
+            }else{
+                $(this).addClass("btn-primary");
+                $(this).addClass("fa");
+                $(this).addClass("fa-check");
+                $(this).addClass("check");
+            }
+            fixUrl();
+        });
+        $("#txtSearch").change(function(){
+            fixUrl();
+        });
+        function fixUrl(){
+            var app_type=new Array();
+            $(".app_type").each(function(){
+                if($(this).hasClass("check")){
+                    app_type.push($(this).val());
+                }
+            });
+            app_type=app_type.join(",");
+            var product_type=new Array();
+            $(".product_type").each(function(){
+                if($(this).hasClass("check")){
+                    product_type.push($(this).val());
+                }
+            });
+            product_type=product_type.join(",");
+
+            var param="?s="+$("#txtSearch").val()+(app_type!=""?"&at="+app_type:"")+(product_type!=""?"&pt="+product_type:"");
+            var state = {title:'',url:window.location.href.split("?")[0]};
+
+            history.pushState(state,'',param);
+        }
+        var at="{{$at}}";
+        at=at.split(",");
+        for(var i=0;i<at.length;i++){
+            if($(".app_type[value="+at[i]+"]").length>0){
+                var c=$(".app_type[value="+at[i]+"]");
+                c.addClass("btn-primary");
+                c.addClass("fa");
+                c.addClass("fa-check");
+                c.addClass("check");
+            }
+        }
+        var pt="{{$pt}}";
+        pt=pt.split(",");
+        for(var i=0;i<pt.length;i++){
+            if($(".product_type[value="+pt[i]+"]").length>0){
+                var c=$(".product_type[value="+pt[i]+"]");
+                c.addClass("btn-primary");
+                c.addClass("fa");
+                c.addClass("fa-check");
+                c.addClass("check");
+
+            }
+        }
+        $("#txtSearch").val("{{$s}}");
+    });
+</script>

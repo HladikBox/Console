@@ -36,5 +36,12 @@ include ROOT.'/classes/datamgr/app.cls.php';
 $apps=$appMgr->getUserApps($UID);
 $smarty->assign("apps",$apps);
 $smarty->assign("appcount",count($apps));
+$onlineappcount=0;
+foreach ($apps as $key => $value) {
+	if($value["market_status"]=="A"){
+		$onlineappcount++;
+	}
+}
+$smarty->assign("onlineappcount",$onlineappcount);
 
 ?>
