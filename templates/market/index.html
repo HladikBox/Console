@@ -59,21 +59,21 @@
         </div>
     </div>
     <div class="row margin">
-        <div class="col-md-12">
+        <div class="col-md-12 " id="itemlist">
             {{foreach from=$marketapplist item=rs}}
-            <div class="row bg-gray" style="margin-bottom:20px;">
+            <div class="row bg-gray itemapp" style="margin-bottom:20px;">
                 <div class="col-md-9" style="padding-bottom:20px;">
                     <h3><a href="/market/detail?id={{$rs.id}}">{{$rs.app_name}}</a></h3>
                     <span class="label label-primary spanAppType" val="{{$rs.app_type}}" >{{$rs.app_type}}</span>
                     <h4>{{$rs.app_description}}</h4>
                     {{foreach from=$rs.products.products.product item=product}}
-                    <span class="label label-success " val="{{$product.type}}"  data-toggle="tooltip" title="{{$product.summary}}">{{$product.typename}} {{$product.name}}</span>
+                    <span class="label label-success spanProductType" val="{{$product.type}}"  data-toggle="tooltip" title="{{$product.summary}}">{{$product.typename}} {{$product.name}}</span>
                     {{/foreach}}
                 </div>
                 <div class="col-md-3">
-                    <h3>{{if $rs.price==0}}<b class="text-success">免费</b>{{else}}<b class="text-primary">售价：{{$rs.price}}元</b>{{/if}}</h3>
-                    <h4>购买次数：<b>{{$rs.buycount}}</b>次</h4>
-                    <h4>最近更新时间：<b>{{$rs.approved_time}}</b></h4>
+                    <h3 class="priceinapp" val="{{$rs.price}}">{{if $rs.price==0}}<b class="text-success " >免费</b>{{else}}<b class="text-primary">售价：{{$rs.price}}元</b>{{/if}}</h3>
+                    <h4>购买次数：<b class="buycountinapp">{{$rs.buycount}}</b>次</h4>
+                    <h4>最近更新时间：<b class="approvedtimeinapp">{{$rs.approved_time}}</b></h4>
                     <h4 class="scoreinapp" score="{{$rs.score}}">综合评分：</h4>
                 </div>
             </div>
@@ -129,20 +129,66 @@
                     app_type.push($(this).val());
                 }
             });
-            app_type=app_type.join(",");
+            var app_typestr=app_type.join(",");
             var product_type=new Array();
             $(".product_type").each(function(){
                 if($(this).hasClass("check")){
                     product_type.push($(this).val());
                 }
             });
-            product_type=product_type.join(",");
-
-            var param = "?s=" + $("#txtSearch").val() + (app_type != "" ? "&at=" + app_type : "") + (product_type != "" ? "&pt=" + product_type : "") + "&o="+$("#btnOrder").val();
+            var product_typestr=product_type.join(",");
+            var searchstr=$.trim($("#txtSearch").val());
+            var param = "?s=" + searchstr + (app_typestr != "" ? "&at=" + app_typestr : "") + (product_typestr != "" ? "&pt=" + product_typestr : "") + "&o="+$("#btnOrder").val();
             var state = { title: '', url: window.location.href.split("?")[0] };
             
 
-            history.pushState(state,'',param);
+            history.pushState(state, '', param);
+
+            if (searchstr == "" && app_type.length == 0 && product_type.length == 0) {
+                $(".itemapp").removeClass("hide");
+            } else {
+                $(".itemapp").addClass("hide");
+                if (searchstr != "") {
+                    $(".itemapp").each(function () {
+                        var htm = $(this).html();
+                        if (htm.indexOf(searchstr) >= 0) {
+                            $(this).removeClass("hide");
+                        }
+                    });
+                }
+                for (var i = 0; i < app_type.length; i++) {
+                    var a = app_type[i];
+                    $(".spanAppType[val=" + a + "]").parent().parent().removeClass("hide");
+                }
+                for (var i = 0; i < product_type.length; i++) {
+                    var a = product_type[i];
+                    $(".spanProductType[val=" + a + "]").parent().parent().removeClass("hide");
+                }
+            }
+            var items=$(".itemapp");
+            var order = $("#btnOrder").val();
+
+            var div = $(".itemapp").sort(function (a, b) {
+                a = $(a);
+                b = $(b);
+                switch (order) {
+                    case "update":
+                        return a.find(".approvedtimeinapp").text() < b.find(".approvedtimeinapp").text();
+                        break;
+                    case "score":
+                        return Number(a.find(".scoreinapp").attr("score")) < Number(b.find(".scoreinapp").attr("score"));
+                        break;
+                    case "price":
+                        return Number(a.find(".priceinapp").attr("val")) > Number(b.find(".priceinapp").attr("val"));
+                        break;
+                    case "buy":
+                    default:
+                        return Number(a.find(".buycountinapp").text()) < Number(b.find(".buycountinapp").text());
+                }
+            });
+            $("#itemlist").empty();
+            $(div).appendTo('#itemlist');
+
         }
         var at = "{{$at}}";
         if (at != "") {
@@ -198,5 +244,6 @@
                 }
             }
         });
+        fixUrl();
     });
 </script>
