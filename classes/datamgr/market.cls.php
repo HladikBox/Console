@@ -29,6 +29,16 @@
 		
 	}
 
+    public function getMarketApp($id){
+        $id=$id+0;
+        $sql="select a.*,b.name app_type_name from tb_market_app a 
+        inner join tb_app_type b on a.app_type=b.id
+         where a.status='A' and a.id=$id ";
+		$query=$this->dbmgr->query($sql);
+        $result = $this->dbmgr->fetch_array($query);
+        return $result;
+    }
+
     public function getOnlineAppList(){
         $sql="select * from tb_market_app where status='A' order by buycount desc ";
 		$query=$this->dbmgr->query($sql);
@@ -168,8 +178,13 @@
         for($i=0;$i<count($productlist["products"]["product"]);$i++){
           $value=$productlist["products"]["product"][$i];
           $productlist["products"]["product"][$i]["codesize"]=dirsize($folder.iconv("utf-8", "gbk", $value["name"])."\\code");
-          $productlist["products"]["product"][$i]["imgscount"]=$productMgr->getFileCount($folder.iconv("utf-8", "gbk", $value["name"])."\\imgs",array("jpg","png","gif","ico"));
-          $productlist["products"]["product"][$i]["docscount"]=$productMgr->getFileCount($folder.iconv("utf-8", "gbk", $value["name"])."\\docs",array("doc","docx","ppt","pptx","pdf","xls","xlsx"));
+          $imgslist=$productMgr->getFileList($folder.iconv("utf-8", "gbk", $value["name"])."\\imgs",array("jpg","png","gif","ico"));
+          $productlist["products"]["product"][$i]["imgscount"]=count($imgslist);
+          $productlist["products"]["product"][$i]["imgsfiles"]=$imgslist;
+
+          $docslist=$productMgr->getFileList($folder.iconv("utf-8", "gbk", $value["name"])."\\docs",array("doc","docx","ppt","pptx","pdf","xls","xlsx","txt"));
+          $productlist["products"]["product"][$i]["docscount"]=count($docslist);
+          $productlist["products"]["product"][$i]["docsfiles"]=$docslist;
         }
         return $productlist;
       }

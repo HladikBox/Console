@@ -1,0 +1,93 @@
+{{include  file="$smarty_root/header.html" }}
+
+
+
+
+<!-- =============================================== -->
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            {{$appinfo.app_name}}
+            <small>{{$appinfo.app_description}} <span class="badge bg-green">{{$appinfo.app_type_name}}行业</span></small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="/market"><i class="fa fa-shopping-cart"></i> 应用商城</a></li>
+            <li class="active">应用详情</li>
+        </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs ">
+                <li class="active"><a href="#tab_da" id="btn_tab_da" data-toggle="tab">数据中心配置</a></li>
+                {{foreach from=$appinfo.products.products.product item=rs key=key}}
+                <li><a href="#tab_{{$key}}" id="btn_tab_{{$key}}" data-toggle="tab">{{$rs.typename}} {{$rs.name}}</a></li>
+                {{/foreach}}
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab_da">
+
+                    <div class="row">
+                        {{foreach from=$appinfo.model item=rs}}
+                        <div class="col-lg-3 col-xs-6">
+                            <!-- small box -->
+                            <div class="small-box bg-gray">
+                                <div class="inner">
+                                    <h3>{{$rs.name}}</h3>
+                                    <p>{{$rs.description}}</p>
+                                </div>
+                                <a href="#" class="small-box-footer">
+                                </a>
+                            </div>
+                        </div>
+                        {{/foreach}}
+                    </div>
+                </div>                
+
+
+
+
+                {{foreach from=$appinfo.products.products.product item=rs key=key}}
+                <div class="tab-pane" id="tab_{{$key}}">
+                    <h4>简单描述</h4>
+                    <hr />
+                    <p>{{$rs.summary}}</p>
+                    <br />
+                    <br />
+                    <h4>详情与安装</h4>
+                    <hr />
+                    <p>{{$rs.description}}详情与安装</p>
+                    <br />
+                    <br />
+                    <h4>截图说明</h4>
+                    <hr />
+                    <div class="row">
+                        {{foreach from=$rs.imgsfiles item=img}}
+                        <div class="col-md-2">
+                            <img class="img-responsive" src="/market/img?id={{$appinfo.id}}&product={{$rs.name}}&name={{$img}}" alt="image no find" />
+                        </div>
+                        {{/foreach}}
+                    </div>
+                    <br />
+                    <br />
+                    <h4>文件说明</h4>
+                    <hr />
+                    <div >
+                        {{foreach from=$rs.docsfiles item=doc}}
+                        <p><a href="/market/doc?id={{$appinfo.id}}&product={{$rs.name}}&name={{$doc}}">{{$doc}}</a></p>
+                        {{/foreach}}
+                    </div>
+
+                </div>               
+                {{/foreach}}
+            </div>
+            <!-- /.tab-content -->
+        </div>
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+{{include  file="$smarty_root/footer.html" }}

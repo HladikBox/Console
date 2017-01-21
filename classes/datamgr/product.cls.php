@@ -202,26 +202,32 @@
     for($i=0;$i<count($productlist["products"]["product"]);$i++){
       $value=$productlist["products"]["product"][$i];
       $productlist["products"]["product"][$i]["codesize"]=dirsize($folder.iconv("utf-8", "gbk", $value["name"])."\\code");
-      $productlist["products"]["product"][$i]["imgscount"]=$this->getFileCount($folder.iconv("utf-8", "gbk", $value["name"])."\\imgs",array("jpg","png","gif","ico"));
-      $productlist["products"]["product"][$i]["docscount"]=$this->getFileCount($folder.iconv("utf-8", "gbk", $value["name"])."\\docs",array("doc","docx","ppt","pptx","pdf","xls","xlsx"));
+
+      $imgslist=$this->getFileList($folder.iconv("utf-8", "gbk", $value["name"])."\\imgs",array("jpg","png","gif","ico"));
+      $productlist["products"]["product"][$i]["imgscount"]=count($imgslist);
+      //$productlist["products"]["product"][$i]["imgsfiles"]=$imgslist;
+
+      $docslist=$this->getFileList($folder.iconv("utf-8", "gbk", $value["name"])."\\docs",array("doc","docx","ppt","pptx","pdf","xls","xlsx","txt"));
+      $productlist["products"]["product"][$i]["docscount"]=count($docslist);
+      //$productlist["products"]["product"][$i]["docsfiles"]=$docslist;
     }
     return $productlist;
   }
 
-  public function getFileCount($path,$ext_arr){
-    $ret=0;
+  public function getFileList($path,$ext_arr){
+    $ret=array();
     $files=scandir($path);
     for($i=2;$i<count($files);$i++){
       $file=$files[$i];
       $exts=explode(".", $file);
       $ext=$exts[count($exts)-1];
       if(in_array(strtolower($ext), $ext_arr)){
-        $ret++;
+        $ret[]=$file;
       }
     }
     return $ret;
   }
-
+  
 
  }
  
