@@ -2,7 +2,7 @@ CREATE DATABASE  IF NOT EXISTS `applink` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `applink`;
 -- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
 --
--- Host: localhost    Database: applink
+-- Host: 127.0.0.1    Database: applink
 -- ------------------------------------------------------
 -- Server version	5.7.10-enterprise-commercial-advanced-log
 
@@ -27,10 +27,15 @@ DROP TABLE IF EXISTS `tb_market_app`;
 CREATE TABLE `tb_market_app` (
   `id` int(11) NOT NULL,
   `app_id` int(11) DEFAULT NULL,
-  `status` char(1) DEFAULT NULL,
-  `created_time` datetime DEFAULT NULL,
   `approved_time` datetime DEFAULT NULL,
-  `remarks` varchar(4000) DEFAULT NULL,
+  `price` int(11) DEFAULT NULL,
+  `score` int(11) DEFAULT NULL,
+  `app_name` varchar(255) DEFAULT NULL,
+  `app_type` int(11) DEFAULT NULL,
+  `app_description` varchar(4000) DEFAULT NULL,
+  `buycount` int(11) DEFAULT NULL,
+  `display` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -41,7 +46,7 @@ CREATE TABLE `tb_market_app` (
 
 LOCK TABLES `tb_market_app` WRITE;
 /*!40000 ALTER TABLE `tb_market_app` DISABLE KEYS */;
-INSERT INTO `tb_market_app` VALUES (1,5,'P','2017-01-17 17:58:03',NULL,'');
+INSERT INTO `tb_market_app` VALUES (1,7,'2017-01-23 22:56:16',200,1,'应用评分系统',26,'这是一个很牛逼的应用平分系统',0,1,621332),(2,6,'2017-01-23 23:09:13',77,0,'餐饮管理',22,'',0,1,621332);
 /*!40000 ALTER TABLE `tb_market_app` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -54,4 +59,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-01-17 17:59:08
+-- Dump completed on 2017-01-24  1:30:28

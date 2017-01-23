@@ -44,8 +44,24 @@
         if($user_id==0){
             throw new Exception("no user find", 1);
         }
+        $this->dbmgr->begin_trans();
         $sql="insert into tb_app_buy (market_app_id,user_id,price,discount,paid_date) values ($market_app_id,$user_id,$price,0,now())";
         $this->dbmgr->query($sql);
+
+        $sql="update tb_market_app set buycount=buycount+1 where id=$market_app_id and user_id=$user_id ";
+        $this->dbmgr->query($sql);
+
+        $this->dbmgr->commit_trans();
+    }
+    public function buyList($market_app_id){
+        Global $UID;
+        $market_app_id=$market_app_id+0;
+        $sql="select a.*,b.login,b.name user_name from tb_app_buy a
+        inner join tb_user_github b on a.user_id=b.id
+where market_app_id=$market_app_id and user_id=$UID 
+order by paid_date";
+        $query = $this->dbmgr->query($sql);
+        return $this->dbmgr->fetch_array_all($query);
     }
 
  }

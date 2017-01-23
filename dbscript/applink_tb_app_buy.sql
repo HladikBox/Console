@@ -1,6 +1,8 @@
+CREATE DATABASE  IF NOT EXISTS `applink` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `applink`;
 -- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
 --
--- Host: localhost    Database: applink
+-- Host: 127.0.0.1    Database: applink
 -- ------------------------------------------------------
 -- Server version	5.7.10-enterprise-commercial-advanced-log
 
@@ -38,7 +40,7 @@ CREATE TABLE `tb_app_buy` (
 
 LOCK TABLES `tb_app_buy` WRITE;
 /*!40000 ALTER TABLE `tb_app_buy` DISABLE KEYS */;
-INSERT INTO `tb_app_buy` VALUES (4,621332,500,0,'2017-01-23 16:49:02');
+INSERT INTO `tb_app_buy` VALUES (1,621332,200,0,'2017-01-24 00:06:54'),(2,621332,77,0,'2017-01-24 00:07:15');
 /*!40000 ALTER TABLE `tb_app_buy` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -51,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-01-23 16:50:05
+-- Dump completed on 2017-01-24  1:30:26

@@ -18,27 +18,31 @@ USE `applink`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `tb_setting`
+-- Table structure for table `tb_app_submit`
 --
 
-DROP TABLE IF EXISTS `tb_setting`;
+DROP TABLE IF EXISTS `tb_app_submit`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tb_setting` (
+CREATE TABLE `tb_app_submit` (
   `id` int(11) NOT NULL,
-  `max_created_apps` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `app_id` int(11) DEFAULT NULL,
+  `status` char(1) DEFAULT NULL,
+  `created_time` datetime DEFAULT NULL,
+  `remarks` varchar(4000) DEFAULT NULL,
+  `return_reason` varchar(4000) DEFAULT NULL,
+  `approved_time` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `tb_setting`
+-- Dumping data for table `tb_app_submit`
 --
 
-LOCK TABLES `tb_setting` WRITE;
-/*!40000 ALTER TABLE `tb_setting` DISABLE KEYS */;
-INSERT INTO `tb_setting` VALUES (1,5);
-/*!40000 ALTER TABLE `tb_setting` ENABLE KEYS */;
+LOCK TABLES `tb_app_submit` WRITE;
+/*!40000 ALTER TABLE `tb_app_submit` DISABLE KEYS */;
+INSERT INTO `tb_app_submit` VALUES (1,7,'D','2017-01-23 22:36:38','这是一个应用评分系统',NULL,'2017-01-23 22:42:20'),(2,7,'D','2017-01-23 23:06:47','',NULL,'2017-01-23 23:07:06'),(3,6,'D','2017-01-23 23:08:44','',NULL,'2017-01-23 23:09:07');
+/*!40000 ALTER TABLE `tb_app_submit` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -50,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-01-24  1:30:29
+-- Dump completed on 2017-01-24  1:30:27

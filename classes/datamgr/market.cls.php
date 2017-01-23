@@ -33,21 +33,21 @@
         $id=$id+0;
         $sql="select a.*,b.name app_type_name from tb_market_app a 
         inner join tb_app_type b on a.app_type=b.id
-         where a.status='A' and a.id=$id ";
+         where  a.id=$id ";
 		$query=$this->dbmgr->query($sql);
         $result = $this->dbmgr->fetch_array($query);
         return $result;
     }
 
     public function getOnlineAppList(){
-        $sql="select *,ifnull(buycount,0) buycount from tb_market_app where status='A' order by buycount desc ";
+        $sql="select *,ifnull(buycount,0) buycount from tb_market_app where display='1' order by buycount desc ";
 		$query=$this->dbmgr->query($sql);
         $result = $this->dbmgr->fetch_array_all($query);
         return $result;
     }
 
 	public function getSubmitCode($id){
-		$sql="select * from tb_market_app where status='W' and id=$id";
+		$sql="select * from tb_app_submit where status='W' and id=$id";
 		$query=$this->dbmgr->query($sql);
         $result = $this->dbmgr->fetch_array($query);
         $app_id=$result["app_id"]+0;
@@ -57,11 +57,12 @@
         }
         return $folder=ROOT."\\submit_apps\\$app_id";
 	}
+
 	public function discard(){
 		$sapp=$this->getSubmittedApp();
 		if($sapp["status"]=="F"||$sapp["status"]=="P"){
 			$id=$sapp["id"]+0;
-			$sql="update tb_market_app set status='D' where id=$id";
+			$sql="update tb_app_submit set status='D' where id=$id";
 			$query=$this->dbmgr->query($sql);
 			return outResult(0,"撤回成功",$id);
 		}
@@ -73,7 +74,7 @@
     public function getSubmittedApp(){
         
         Global $UID;
-        $sql="select a.* from tb_market_app a inner join tb_app b on a.app_id=b.id where b.user_id=$UID and a.status in ('P','W','S','F') ";
+        $sql="select a.* from tb_app_submit a inner join tb_app b on a.app_id=b.id where b.user_id=$UID and a.status in ('P','W','S','F') ";
         $query=$this->dbmgr->query($sql);
         $result = $this->dbmgr->fetch_array($query);
         return $result;
@@ -89,16 +90,16 @@
 		if($sapp["status"]=="W"||$sapp["status"]=="P"||$sapp["status"]=="S"){
 			return outResult(-1,"你的已经有其它应用正在审核过程中，请先处理");
 		}
-		if($this->dbmgr->checkHave("tb_market_app","app_id=$app_id and status<>'D' and status<>'F'")){
+		if($this->dbmgr->checkHave("tb_app_submit","app_id=$app_id and status<>'D' and status<>'F'")){
 			return outResult(-1,"不能重复提交该应用");
 		}
 		$this->dbmgr->begin_trans();
 		if($sapp["status"]=="F"){
-			$sql="update tb_market_app set app_id=$app_id,status='P',created_time=now(),remarks='$remarks' 
+			$sql="update tb_app_submit set app_id=$app_id,status='P',created_time=now(),remarks='$remarks' 
 			where id= ".$sapp["id"];
 		}else{
-			$id=$this->dbmgr->getNewId("tb_market_app");
-			$sql="insert into tb_market_app (id,app_id,status,created_time,remarks) 
+			$id=$this->dbmgr->getNewId("tb_app_submit");
+			$sql="insert into tb_app_submit (id,app_id,status,created_time,remarks) 
 			values ($id,$app_id,'P',now(),'$remarks')";
 		}
 
@@ -158,13 +159,27 @@
         $app_type=parameter_filter($appinfo["type"]);
         $app_description=parameter_filter($appinfo["description"]);
 
-
+        $this->dbmgr->begin_trans();
 		if($sapp["status"]!="S"){
 			return outResult(-1,"没有可设置价格的应用");
 		}
-        $id=$sapp["id"];
-         $sql="update tb_market_app set price=$price,status='A',score=$score,app_name='$app_name',app_type='$app_type',app_description='$app_description' where id=$id and status='S' ";
+        $sappid=$sapp["id"];
+        $app_id=$sapp["app_id"];
+
+        if($this->dbmgr->checkHave("tb_market_app","app_id=$app_id")){
+            $sql="update tb_market_app set price=$price,score=$score,app_name='$app_name',app_type='$app_type',app_description='$app_description',display='1' where app_id=$app_id  ";
+        }else{
+            $id=$this->dbmgr->getNewId("tb_market_app");
+            $sql="insert into tb_market_app (id,app_id,approved_time,price,score,app_name,app_type,app_description,buycount,display) values
+                                    ($id,$app_id,now(),$price,$score,'$app_name',$app_type,'$app_description',0,1)    ";
+        }
         $this->dbmgr->query($sql);
+
+        $sql="update tb_app_submit set status='D' where id=$sappid ";
+        $this->dbmgr->query($sql);
+
+
+        $this->dbmgr->commit_trans();
         
 		return outResult(0,"提交成功",$id);
     }
@@ -220,6 +235,24 @@
             return null;
         }
         return $productlist;
+    }
+
+    public function getMyAppList(){
+        Global $UID;
+        $sql="select a.id,a.app_name,a.app_description,a.display,a.approved_time,sum(c.price) total_price from tb_market_app a 
+left join tb_app_buy c on c.market_app_id=a.id and a.user_id=c.user_id
+where a.user_id=$UID
+group by a.id,a.app_name,a.app_description,a.display,a.approved_time
+order by approved_time ";
+        $query=$this->dbmgr->query($sql);
+        return $this->dbmgr->fetch_array_all($query);
+    }
+    public function setAppVisable($id){
+        Global $UID;
+        $id=$id+0;
+        $sql="update tb_market_app set display=mod(display+1,2) where id=$id and user_id=$UID";
+        $this->dbmgr->query($sql);
+		return outResult(0,"提交成功",$id);
     }
  }
  

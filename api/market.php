@@ -21,6 +21,8 @@
     outputJSON($marketMgr->getSubmittedApp());
   }elseif ($action=="setpriceonline") {
     outputJSON($marketMgr->setPriceAndOnline($_REQUEST["price"],$_REQUEST["score"]));
+  }elseif ($action=="visable") {
+    outputJSON($marketMgr->setAppVisable($_REQUEST["id"]));
   }
 
   

@@ -2,7 +2,7 @@ CREATE DATABASE  IF NOT EXISTS `applink` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `applink`;
 -- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
 --
--- Host: localhost    Database: applink
+-- Host: 127.0.0.1    Database: applink
 -- ------------------------------------------------------
 -- Server version	5.7.10-enterprise-commercial-advanced-log
 
@@ -41,7 +41,7 @@ CREATE TABLE `tb_app_workspace` (
 
 LOCK TABLES `tb_app_workspace` WRITE;
 /*!40000 ALTER TABLE `tb_app_workspace` DISABLE KEYS */;
-INSERT INTO `tb_app_workspace` VALUES (4,'SSH','','','2017-01-09 13:59:25',''),(5,'SSH','路径','密码','2017-01-09 16:05:28','用户名'),(6,'SSH','','','2017-01-09 14:05:21',''),(7,'SSH','','','2017-01-09 14:14:38',''),(8,'SSH','','','2017-01-10 14:13:15','');
+INSERT INTO `tb_app_workspace` VALUES (4,'SSH','','密码','2016-12-31 00:18:58','用户名'),(5,'SSH','路径','密码','2016-12-31 00:18:38','用户名'),(6,'SSH','','密码','2017-01-08 20:21:10','用户名'),(7,'SSH','','密码','2017-01-21 00:26:39','用户名');
 /*!40000 ALTER TABLE `tb_app_workspace` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -54,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-01-17 17:59:09
+-- Dump completed on 2017-01-24  1:30:29

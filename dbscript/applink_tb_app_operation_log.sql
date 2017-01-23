@@ -2,7 +2,7 @@ CREATE DATABASE  IF NOT EXISTS `applink` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `applink`;
 -- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
 --
--- Host: localhost    Database: applink
+-- Host: 127.0.0.1    Database: applink
 -- ------------------------------------------------------
 -- Server version	5.7.10-enterprise-commercial-advanced-log
 
@@ -26,11 +26,9 @@ DROP TABLE IF EXISTS `tb_app_operation_log`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tb_app_operation_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `log_id` int(11) DEFAULT NULL,
+  `app_id` int(11) DEFAULT NULL,
   `step_code` varchar(45) DEFAULT NULL,
   `created_date` datetime DEFAULT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `tb_app_operation_logcol` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -53,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-01-17 17:59:07
+-- Dump completed on 2017-01-24  1:30:27

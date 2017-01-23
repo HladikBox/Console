@@ -2,7 +2,7 @@ CREATE DATABASE  IF NOT EXISTS `applink` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `applink`;
 -- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
 --
--- Host: localhost    Database: applink
+-- Host: 127.0.0.1    Database: applink
 -- ------------------------------------------------------
 -- Server version	5.7.10-enterprise-commercial-advanced-log
 
@@ -43,7 +43,7 @@ CREATE TABLE `tb_app` (
 
 LOCK TABLES `tb_app` WRITE;
 /*!40000 ALTER TABLE `tb_app` DISABLE KEYS */;
-INSERT INTO `tb_app` VALUES (1,621332,'aaa',1,'2016-12-12 17:50:22','D','C','aaa'),(2,621332,'aaaa',1,'2016-12-14 15:47:01','D','C','aaaa'),(3,621332,'aaaaa',1,'2016-12-14 15:48:35','D','C','aaaaa'),(4,621332,'aaaaaa',2,'2016-12-14 15:49:26','D','P','aaaaaa'),(5,621332,'dogandcat',1,'2016-12-14 16:03:51','A','P','dogandcat'),(6,621332,'测试创建',1,'2017-01-09 13:56:34','D','P','test'),(7,621332,'测试',3,'2017-01-09 14:13:39','D','P','testtest'),(8,621332,'testjs',1,'2017-01-10 14:13:12','A','P','aaa'),(9,621332,'测试',1,'2017-01-11 12:56:21','A','C','testaa');
+INSERT INTO `tb_app` VALUES (1,621332,'aaa',1,'2016-12-12 17:50:22','D','C','aaa'),(2,621332,'aaaa',1,'2016-12-14 15:47:01','D','C','aaaa'),(3,621332,'aaaaa',1,'2016-12-14 15:48:35','D','C','aaaaa'),(4,621332,'新建应用',2,'2016-12-14 15:49:26','A','P','aaaaaa'),(5,621332,'FooterCMS初始化',1,'2016-12-14 16:03:51','A','P','godandcat'),(6,621332,'餐饮管理',22,'2017-01-08 16:23:37','A','P','cantin'),(7,621332,'应用评分系统',26,'2017-01-19 22:28:52','A','P','appaccess');
 /*!40000 ALTER TABLE `tb_app` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -56,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-01-17 17:59:06
+-- Dump completed on 2017-01-24  1:30:27
