@@ -64,6 +64,14 @@
 		$query = $this->dbmgr->query($sql);
 	}
 
+	public function getUserByLogin($login){
+		$login=parameter_filter($login);
+		$sql="select * from tb_user_github where login='$login' ";
+		$query = $this->dbmgr->query($sql);
+		$result = $this->dbmgr->fetch_array($query);
+		return $result;
+	}
+
  }
  
  $userMgr=UserMgr::getInstance();

@@ -40,7 +40,7 @@
     }
 
     public function getOnlineAppList(){
-        $sql="select * from tb_market_app where status='A' order by buycount desc ";
+        $sql="select *,ifnull(buycount,0) buycount from tb_market_app where status='A' order by buycount desc ";
 		$query=$this->dbmgr->query($sql);
         $result = $this->dbmgr->fetch_array_all($query);
         return $result;

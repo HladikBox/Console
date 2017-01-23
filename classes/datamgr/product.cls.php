@@ -144,9 +144,9 @@
       }
       $result = $xml_data->asXML($productfile);
       foreach( $productlist["products"]["product"] as  $value ) {
-        mkdir($folder."product\\".iconv('utf-8', 'gbk', $value["name"])."\\"."code", 0777, true);
-        mkdir($folder."product\\".iconv('utf-8', 'gbk', $value["name"])."\\"."imgs", 0777, true);
-        mkdir($folder."product\\".iconv('utf-8', 'gbk', $value["name"])."\\"."docs", 0777, true);
+        mkdir($folder."product\\".encode( $value["name"])."\\"."code", 0777, true);
+        mkdir($folder."product\\".encode( $value["name"])."\\"."imgs", 0777, true);
+        mkdir($folder."product\\".encode( $value["name"])."\\"."docs", 0777, true);
       }
 
       return outResult(0,"保存成功","");
@@ -201,13 +201,13 @@
     //dirsize
     for($i=0;$i<count($productlist["products"]["product"]);$i++){
       $value=$productlist["products"]["product"][$i];
-      $productlist["products"]["product"][$i]["codesize"]=dirsize($folder.iconv("utf-8", "gbk", $value["name"])."\\code");
+      $productlist["products"]["product"][$i]["codesize"]=dirsize($folder.encode( $value["name"])."\\code");
 
-      $imgslist=$this->getFileList($folder.iconv("utf-8", "gbk", $value["name"])."\\imgs",array("jpg","png","gif","ico"));
+      $imgslist=$this->getFileList($folder.encode( $value["name"])."\\imgs",array("jpg","png","gif","ico"));
       $productlist["products"]["product"][$i]["imgscount"]=count($imgslist);
       //$productlist["products"]["product"][$i]["imgsfiles"]=$imgslist;
 
-      $docslist=$this->getFileList($folder.iconv("utf-8", "gbk", $value["name"])."\\docs",array("doc","docx","ppt","pptx","pdf","xls","xlsx","txt"));
+      $docslist=$this->getFileList($folder.encode( $value["name"])."\\docs",array("doc","docx","ppt","pptx","pdf","xls","xlsx","txt"));
       $productlist["products"]["product"][$i]["docscount"]=count($docslist);
       //$productlist["products"]["product"][$i]["docsfiles"]=$docslist;
     }

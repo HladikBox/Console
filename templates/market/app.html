@@ -10,7 +10,12 @@
     <section class="content-header">
         <h1>
             {{$appinfo.app_name}}
-            <small>{{$appinfo.app_description}} <span class="badge bg-green">{{$appinfo.app_type_name}}行业</span></small>
+            <small>{{$appinfo.app_description}} <span class="badge bg-green">{{$appinfo.app_type_name}}</span></small>
+            {{if $is_paid!="1"}}
+            <a class="btn btn-primary" href="/market/pay?id={{$appinfo.id}}" style="margin-left: 30px;">立即购买{{if $appinfo.price>0}}支付{{$appinfo.price}}元{{/if}}</a>
+            {{else}}
+            <span class="badge bg-blue" style="margin-left: 30px;">已购买</span>
+            {{/if}}
         </h1>
         <ol class="breadcrumb">
             <li><a href="/market"><i class="fa fa-shopping-cart"></i> 应用商城</a></li>
@@ -46,9 +51,6 @@
                         {{/foreach}}
                     </div>
                 </div>                
-
-
-
 
                 {{foreach from=$appinfo.products.products.product item=rs key=key}}
                 <div class="tab-pane" id="tab_{{$key}}">
