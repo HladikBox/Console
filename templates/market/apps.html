@@ -32,9 +32,9 @@
             </div>
             <div class="box-body">
                 <table class="table table-condensed" >                    <tr>                        <th>应用名称</th>
-                        <th>应用简介</th>
+                        <th>是否应用市场可见</th>
                         <th>收益(元)</th>
-                        <th>是否应用市场可见</th>                    </tr>                    {{foreach from=$myapps item=rs}}                    <tr>                        <td><a href="/market/app?id={{$rs.id}}">{{$rs.app_name}}</a></td>
+                        <th>应用简介</th>                    </tr>                    {{foreach from=$myapps item=rs}}                    <tr>                        <td><a href="/market/app?id={{$rs.id}}">{{$rs.app_name}}</a></td>
                         <td>{{if $rs.display=="1"}}<span>是</span> <a class="btnVis fa fa-eye-slash" href="#" val="{{$rs.id}}"></a>{{else}}<span>否</span> <a class="btnVis fa fa-eye" href="#" val="{{$rs.id}}"></a>{{/if}}</td>                        <td><a href="/market/appincome?id={{$rs.id}}">{{$rs.total_price}}</a></td>
                         <td>{{$rs.app_description}}</td>                    </tr>                    {{/foreach}}                </table>
             </div>
