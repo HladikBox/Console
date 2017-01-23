@@ -36,8 +36,8 @@
                             <!-- small box -->
                             <div class="small-box bg-gray">
                                 <div class="inner">
-                                    <h3>{{$rs.name}}</h3>
-                                    <p>{{$rs.description}}</p>
+                                    <h4>{{$rs.name}}</h4>
+                                    <p><small>{{$rs.description}}</small></p>
                                 </div>
                                 <a href="#" class="small-box-footer">
                                 </a>
@@ -59,15 +59,17 @@
                     <br />
                     <h4>详情与安装</h4>
                     <hr />
-                    <p>{{$rs.description}}详情与安装</p>
+                    <p>{{$rs.description}}</p>
                     <br />
                     <br />
                     <h4>截图说明</h4>
                     <hr />
                     <div class="row">
                         {{foreach from=$rs.imgsfiles item=img}}
-                        <div class="col-md-2">
-                            <img class="img-responsive" src="/market/img?id={{$appinfo.id}}&product={{$rs.name}}&name={{$img}}" alt="image no find" />
+                        <div class="col-md-2 ">
+                            <a href="/market/img?id={{$appinfo.id}}&product={{$rs.name}}&name={{$img}}" class="thumbnail"  target="_blank" >
+                            <img src="/market/img?id={{$appinfo.id}}&product={{$rs.name}}&name={{$img}}" alt="image no find" />
+                            </a>
                         </div>
                         {{/foreach}}
                     </div>
@@ -77,7 +79,7 @@
                     <hr />
                     <div >
                         {{foreach from=$rs.docsfiles item=doc}}
-                        <p><a href="/market/doc?id={{$appinfo.id}}&product={{$rs.name}}&name={{$doc}}">{{$doc}}</a></p>
+                        <p><a href="/market/doc?id={{$appinfo.id}}&product={{$rs.name}}&name={{$doc}}" target="_blank">{{$doc}}</a></p>
                         {{/foreach}}
                     </div>
 

@@ -126,10 +126,10 @@
 
 		$productlist=$productMgr->getProductList($login,$alias);
 		foreach ($productlist["products"]["product"] as $key => $value) {
-			mkdir($despath."product\\".iconv("utf-8", "gbk", $value["name"]),0777,true);
-			recurse_copy($srcpath."product\\".iconv("utf-8", "gbk", $value["name"])."\\code",$despath."product\\".iconv("utf-8", "gbk", $value["name"])."\\code");
-			recurse_copy($srcpath."product\\".iconv("utf-8", "gbk", $value["name"])."\\code",$despath."product\\".iconv("utf-8", "gbk", $value["name"])."\\imgs");
-			recurse_copy($srcpath."product\\".iconv("utf-8", "gbk", $value["name"])."\\code",$despath."product\\".iconv("utf-8", "gbk", $value["name"])."\\docs");
+			mkdir($despath."product\\".encode( $value["name"]),0777,true);
+			recurse_copy($srcpath."product\\".encode( $value["name"])."\\code",$despath."product\\".encode( $value["name"])."\\code");
+			recurse_copy($srcpath."product\\".encode( $value["name"])."\\code",$despath."product\\".encode( $value["name"])."\\imgs");
+			recurse_copy($srcpath."product\\".encode( $value["name"])."\\code",$despath."product\\".encode( $value["name"])."\\docs");
 		}
 
 		$this->dbmgr->commit_trans();
@@ -177,12 +177,12 @@
         //dirsize
         for($i=0;$i<count($productlist["products"]["product"]);$i++){
           $value=$productlist["products"]["product"][$i];
-          $productlist["products"]["product"][$i]["codesize"]=dirsize($folder.iconv("utf-8", "gbk", $value["name"])."\\code");
-          $imgslist=$productMgr->getFileList($folder.iconv("utf-8", "gbk", $value["name"])."\\imgs",array("jpg","png","gif","ico"));
+          $productlist["products"]["product"][$i]["codesize"]=dirsize($folder.encode($value["name"])."\\code");
+          $imgslist=$productMgr->getFileList($folder.encode( $value["name"])."\\imgs",array("jpg","png","gif","ico"));
           $productlist["products"]["product"][$i]["imgscount"]=count($imgslist);
           $productlist["products"]["product"][$i]["imgsfiles"]=$imgslist;
 
-          $docslist=$productMgr->getFileList($folder.iconv("utf-8", "gbk", $value["name"])."\\docs",array("doc","docx","ppt","pptx","pdf","xls","xlsx","txt"));
+          $docslist=$productMgr->getFileList($folder.encode( $value["name"])."\\docs",array("doc","docx","ppt","pptx","pdf","xls","xlsx","txt"));
           $productlist["products"]["product"][$i]["docscount"]=count($docslist);
           $productlist["products"]["product"][$i]["docsfiles"]=$docslist;
         }

@@ -99,9 +99,9 @@
       }
       $result = $xml_data->asXML($productfile);
       foreach( $productlist["products"]["product"] as  $value ) {
-        mkdir($folder."product\\".iconv('utf-8', 'gbk', $value["name"])."\\"."code", 0777, true);
-        mkdir($folder."product\\".iconv('utf-8', 'gbk', $value["name"])."\\"."imgs", 0777, true);
-        mkdir($folder."product\\".iconv('utf-8', 'gbk', $value["name"])."\\"."docs", 0777, true);
+        mkdir($folder."product\\".encode( $value["name"])."\\"."code", 0777, true);
+        mkdir($folder."product\\".encode( $value["name"])."\\"."imgs", 0777, true);
+        mkdir($folder."product\\".encode( $value["name"])."\\"."docs", 0777, true);
       }
 
       return outResult(0,"保存成功","");
