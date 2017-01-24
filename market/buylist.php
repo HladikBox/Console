@@ -9,18 +9,13 @@
   require '../include/common.inc.php';
   include ROOT.'/include/init.inc.php';
   include ROOT.'/classes/datamgr/product.cls.php';
-  include ROOT.'/classes/datamgr/market.cls.php';
   include ROOT.'/classes/datamgr/model.cls.php';
+  include ROOT.'/classes/datamgr/market.cls.php';
   include ROOT.'/classes/datamgr/appbuy.cls.php';
-  
-  $id=$_REQUEST["id"];
-  $list=$appbuyMgr->sellList($id);
-  $smarty->assign("list",$list);
-  
-  $appinfo=$marketMgr->getMarketApp($id);
-  $smarty->assign("appinfo",$appinfo);
 
+  $myapps=$appbuyMgr->buyList();
+  $smarty->assign("myapps",$myapps);
 
-  $smarty->display(ROOT.'/templates/market/appincome.html');
+  $smarty->display(ROOT.'/templates/market/buylist.html');
   
 ?>

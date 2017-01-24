@@ -53,7 +53,7 @@
 
         $this->dbmgr->commit_trans();
     }
-    public function buyList($market_app_id){
+    public function sellList($market_app_id){
         Global $UID;
         $market_app_id=$market_app_id+0;
         $sql="select a.*,b.login,b.name user_name from tb_app_buy a
@@ -64,6 +64,16 @@ order by paid_date";
         return $this->dbmgr->fetch_array_all($query);
     }
 
+    public function buyList(){
+        Global $UID;
+        $sql="select c.id, c.app_name,a.price,b.login,c.app_description,a.paid_date,b.name user_name from tb_app_buy a
+        inner join tb_market_app c on a.market_app_id=c.id
+        inner join tb_user_github b on c.user_id=b.id
+where a.user_id=$UID 
+order by paid_date";
+        $query = $this->dbmgr->query($sql);
+        return $this->dbmgr->fetch_array_all($query);
+    }
  }
  
  $appbuyMgr=AppbuyMgr::getInstance();

@@ -1,0 +1,80 @@
+{{include  file="$smarty_root/header.html" }}
+
+
+
+
+<!-- =============================================== -->
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            我购买的应用
+        </h1>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+        <!-- Default box -->
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">应用列表</h3>
+
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
+                        <i class="fa fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="Remove">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="box-body">
+                <table class="table table-condensed" >
+                    <tr>
+                        <th>应用名称</th>
+                        <th>购买价格(元)</th>
+                        <th>应用简介</th>
+                        <th>应用作者</th>
+                    </tr>
+                    {{foreach from=$myapps item=rs}}
+                    <tr>
+                        <td><a href="/market/app?id={{$rs.id}}">{{$rs.app_name}}</a></td>
+                        <td>{{$rs.price}}</td>
+                        <td>{{$rs.app_description}}</td>
+                        <td><a href="https://www.github.com/{{$rs.login}}" target="_blank">{{$rs.user_name}}</a></td>
+                    </tr>
+                    {{/foreach}}
+                </table>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+{{include  file="$smarty_root/footer.html" }}
+
+<script>
+    $(document).ready(function () {
+        $(".btnVis").click(function () {
+            var id = $(this).attr("val");
+            var json = { action: "visable", id: id };
+            var thisa = $(this);
+            getJSON("/api/market", json, function (data) {
+                if (data.code == 0) {
+                    if (thisa.hasClass("fa-eye")) {
+                        thisa.removeClass("fa-eye").addClass("fa-eye-slash").parent().find("span").text("是");
+                    } else {
+                        thisa.removeClass("fa-eye-slash").addClass("fa-eye").parent().find("span").text("否");
+                    }
+                } else {
+                    error(data.result);
+                }
+            });
+        });
+    });
+</script>
