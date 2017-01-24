@@ -66,7 +66,7 @@ order by paid_date";
 
     public function buyList(){
         Global $UID;
-        $sql="select c.id, c.app_name,a.price,b.login,c.app_description,a.paid_date,b.name user_name from tb_app_buy a
+        $sql="select c.id,c.app_id, c.app_name,a.price,b.login,c.app_description,a.paid_date,b.name user_name from tb_app_buy a
         inner join tb_market_app c on a.market_app_id=c.id
         inner join tb_user_github b on c.user_id=b.id
 where a.user_id=$UID 

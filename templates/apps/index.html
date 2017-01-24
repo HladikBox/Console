@@ -131,6 +131,29 @@
                                 </div>
                                 <span class="help-block col-sm-offset-4"></span>
                             </div>
+                            <hr>
+                            <div class="form-group" id="appalias_fg">
+                                <label  class="col-sm-3 control-label"> 基于：</label>
+                                <div class="col-sm-9">
+                                    <select class="form-control" id="appcreateby">
+                                        <option value="">从零开始</option>
+                                        <optgroup label="我创建的">
+                                            {{foreach from=$apps item=rs}}
+                                            {{if $rs.run_status!='C'}}
+                                            <option value="A_{{$rs.id}}" >{{$rs.name}}</option>
+                                            {{/if}}
+                                            {{/foreach}}
+                                        </optgroup>
+                                        <optgroup label="我购买的">
+                                            {{foreach from=$buyapps item=rs}}
+                                            <option value="B_{{$rs.app_id}}" >{{$rs.app_name}}</option>
+                                            {{/foreach}}
+                                        </optgroup>
+                                    </select>
+                                </div>
+                                <label  class="col-sm-12 control-label"> <a href="/market">去应用市场找一下合适的应用？</a></label>
+                                
+                            </div>
                         </form>
                     </div>
                 </div>

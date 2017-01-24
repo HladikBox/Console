@@ -8,6 +8,10 @@
 
   require '../include/common.inc.php';
   include ROOT.'/include/init.inc.php';
+  include ROOT.'/classes/datamgr/appbuy.cls.php';
+
+  $buyapps=$appbuyMgr->buyList();
+  $smarty->assign("buyapps",$buyapps);
   
   
   $app_type_list=$appMgr->getAppTypeList();
