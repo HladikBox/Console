@@ -5,7 +5,6 @@
  * To change the template for this generated file go to
  * Window - Preferences - PHPeclipse - PHP - Code Templates
  */
-
  class AppMgr
  {
  	private static $instance = null;
@@ -39,12 +38,20 @@
         $result = $this->dbmgr->fetch_array_all($query);
         return $result;
     }
-    public function createApp($name,$type,$alias){
+    public function createApp($name,$type,$alias,$create_type,$create_app_id){
       Global $UID,$Setting;
       
       $name=parameter_filter($name);
       $alias=strtolower(parameter_filter($alias));
       $type=$type+0;
+
+      if($create_type!="A"&&$create_type!="B"){
+        $create_type="";
+        $create_app_id=0;
+      }else{
+        $create_app_id=$create_app_id+0;
+      }
+
       if(empty($name)||mb_strlen($name,'UTF8')>15){
         return outResult("-1","应用名称不能为空并控制在15个字符以内","appname");
       }
@@ -71,17 +78,17 @@
         return outResult("-1","这个应用代号已经用过了","appalias");
       }
 
-      $sql="select 1 from tb_app where user_id=$UID and status<>'D'";
+      $sql="select 1 from tb_app where user_id=$UID and id not in (select app_id from tb_market_app) and status<>'D'";
       $query = $this->dbmgr->query($sql);
       $result = $this->dbmgr->fetch_array_all($query);
 
       if(count($result)>=$Setting["max_created_apps"]){
-        return outResult("-1","你已经超过创建应用的数量了".$Setting["max_created_apps"]."a","appname");
+        return outResult("-1","你已经超过创建应用的数量了".$Setting["max_created_apps"],"appname");
       }
    
       $id=$this->dbmgr->getNewId("tb_app");
-      $sql="insert into tb_app (id,user_id,name,`type`,created_date,`status`,run_status,`alias`) values
-      ($id,$UID,'$name',$type,now(),'A','C','$alias')";
+      $sql="insert into tb_app (id,user_id,name,`type`,created_date,`status`,run_status,`alias`,`create_type`,`create_app_id`) values
+      ($id,$UID,'$name',$type,now(),'A','C','$alias','$create_type',$create_app_id)";
       $this->dbmgr->query($sql);
       
       return outResult(0,"保存成功",$id);
@@ -173,9 +180,21 @@
       $live_remote_login=parameter_filter($arr["live_remote_login"]);
       $live_remote_password=parameter_filter($arr["live_remote_password"]);
 
+      
+      $create_type=parameter_filter($arr["create_type"]);
+      $create_app_id=parameter_filter($arr["create_app_id"]);
+
+      
+      if($create_type!="A"&&$create_type!="B"){
+        $create_type="";
+        $create_app_id=0;
+      }else{
+        $create_app_id=$create_app_id+0;
+      }
+
       $this->dbmgr->begin_trans();
 
-      $sql="update tb_app set name='$name', `type`=$type where id=$app_id ";
+      $sql="update tb_app set name='$name', `type`=$type,create_type='$create_type',create_app_id=$create_app_id where id=$app_id ";
       $this->dbmgr->query($sql);
 
       if($this->dbmgr->checkHave("tb_app_info","app_id=$app_id")){
@@ -319,7 +338,7 @@
 
     }
     function initWorkspace($app_id){
-      Global $UID,$User,$CONFIG;
+      Global $UID,$User,$CONFIG,$productMgr;
 
 
       $path=$CONFIG['workspace']['path'];
@@ -333,13 +352,43 @@
 
       
 
-      if (!is_dir($path)){  
+      if (!file_exists($path)){  
         return outResult(-1,"用户文件夹 $subfolder 不存在","");
       }else{
         //echo $path;
         //print_r(scandir($path)>2);
         if(scandir($path)==false||count(scandir($path))<3){
-            recurse_copy(ROOT."/workspace_init",$path);
+
+            if($info["create_type"]=="A"&&$info["create_app_id"]>0){
+                $createapp=$this->getAppInfo($UID,$info["create_app_id"]);
+                $srcpath=$CONFIG['workspace']['path']."\\".$login."\\".$createapp["alias"]."\\";
+                recurse_copy($srcpath."api",$path."\\api");
+	            recurse_copy($srcpath."datamgr",$path."\\datamgr");
+	            recurse_copy($srcpath."js",$path."\\js");
+	            recurse_copy($srcpath."model",$path."\\model");
+	            recurse_copy($srcpath."modelmgr",$path."\\modelmgr");
+		        copy($srcpath."api.xml",$path."\\api.xml");
+		        copy($srcpath."menu.xml",$path."\\menu.xml");
+		        copy($srcpath."product.xml",$path."\\product.xml");
+
+		        $productlist=$productMgr->getProductList($login,$createapp["alias"]);
+		        foreach ($productlist["products"]["product"] as $key => $value) {
+			        mkdir($path."\\product\\".encode( $value["name"]),0777,true);
+			        recurse_copy($srcpath."product\\".encode( $value["name"])."\\code",$path."\\product\\".encode( $value["name"])."\\code");
+			        recurse_copy($srcpath."product\\".encode( $value["name"])."\\code",$path."\\product\\".encode( $value["name"])."\\imgs");
+			        recurse_copy($srcpath."product\\".encode( $value["name"])."\\code",$path."\\product\\".encode( $value["name"])."\\docs");
+		        }
+
+                copy(ROOT."/workspace_init/config.inc.php",$path."/config.inc.php");
+
+            }elseif($info["create_type"]=="B"&&$info["create_app_id"]>0){
+                recurse_copy(ROOT."/submit_apps/".$info["create_app_id"],$path);
+                copy(ROOT."/workspace_init/config.inc.php",$path."/config.inc.php");
+            }else{
+                recurse_copy(ROOT."/workspace_init",$path);
+            }
+
+            
             $configfile=$path."/config.inc.php";
             $content = @file_get_contents($configfile);
             if(!$content){

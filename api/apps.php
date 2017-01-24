@@ -38,6 +38,8 @@
     sleep(1);
     outputJSON($appMgr->setWorkspace($_REQUEST["app_id"]));
   }elseif($action=="initworkspace"){
+  
+ include_once ROOT.'/classes/datamgr/product.cls.php';
     sleep(1);
     outputJSON($appMgr->initWorkspace($_REQUEST["app_id"]));
   }elseif($action=="setworkspaceaccount"){

@@ -132,7 +132,7 @@
                                 <span class="help-block col-sm-offset-4"></span>
                             </div>
                             <hr>
-                            <div class="form-group" id="appalias_fg">
+                            <div class="form-group" >
                                 <label  class="col-sm-3 control-label"> 基于：</label>
                                 <div class="col-sm-9">
                                     <select class="form-control" id="appcreateby">
@@ -194,11 +194,21 @@
             var name = $("#appname").val();
             var type = $("#apptype").val();
             var alias = $("#appalias").val();
+            var appcreateby = $("#appcreateby").val().split("_");
+            var create_type = "";
+            var create_app_id = "";
+            if (appcreateby.length == 2) {
+                create_type = appcreateby[0];
+                create_app_id = appcreateby[1];
+            }
+
             var json = {
                 action: "createapp",
                 name: name,
                 type:type,
-                alias:alias
+                alias: alias,
+                create_type: create_type,
+                create_app_id: create_app_id
             };
             $("#btnCreatApp").attr("disabled", true);
             $(".has-error .help-block").html("");

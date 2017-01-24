@@ -167,11 +167,11 @@
         $app_id=$sapp["app_id"];
 
         if($this->dbmgr->checkHave("tb_market_app","app_id=$app_id")){
-            $sql="update tb_market_app set price=$price,score=$score,app_name='$app_name',app_type='$app_type',app_description='$app_description',display='1' where app_id=$app_id  ";
+            $sql="update tb_market_app set price=$price,score=$score,app_name='$app_name',app_type='$app_type',app_description='$app_description',display='1',user_id=$UID where app_id=$app_id  ";
         }else{
             $id=$this->dbmgr->getNewId("tb_market_app");
-            $sql="insert into tb_market_app (id,app_id,approved_time,price,score,app_name,app_type,app_description,buycount,display) values
-                                    ($id,$app_id,now(),$price,$score,'$app_name',$app_type,'$app_description',0,1)    ";
+            $sql="insert into tb_market_app (id,app_id,approved_time,price,score,app_name,app_type,app_description,buycount,display,user_id) values
+                                    ($id,$app_id,now(),$price,$score,'$app_name',$app_type,'$app_description',0,1,$UID)    ";
         }
         $this->dbmgr->query($sql);
 

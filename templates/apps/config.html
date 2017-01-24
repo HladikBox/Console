@@ -58,6 +58,27 @@
                     </div>
                   </div>
                   <div class="form-group">
+                      <label class="col-sm-2 control-label"> 基于：</label>
+                      <div class="col-sm-10">
+                          <select class="form-control" id="appcreateby">
+                              <option value="">从零开始</option>
+                              <optgroup label="我创建的">
+                                  {{foreach from=$apps item=rs}}
+                                  {{if $rs.run_status!='C'}}
+                                  <option value="A_{{$rs.id}}">{{$rs.name}}</option>
+                                  {{/if}}
+                                  {{/foreach}}
+                              </optgroup>
+                              <optgroup label="我购买的">
+                                  {{foreach from=$buyapps item=rs}}
+                                  <option value="B_{{$rs.app_id}}">{{$rs.app_name}}</option>
+                                  {{/foreach}}
+                              </optgroup>
+                          </select>
+                      </div>
+                      <label class="col-sm-12 control-label"> <a href="/market">去应用市场找一下合适的应用？</a></label>
+                  </div>
+                  <div class="form-group">
                     <label for="info_description" class="col-md-2 control-label">应用介绍</label>
                     <div class="col-md-10">
                       <input type="text" class="form-control" id="info_description" placeholder="请简单的介绍一下你的应用" value="{{$appinfo.description}}">
@@ -372,11 +393,23 @@
             $("#tabtitle").html('<i class="fa fa-th" ></i> '+$(this).text());
         });
         $(".btnSaveApp").click(function () {
+
+
+            var appcreateby = $("#appcreateby").val().split("_");
+            var create_type = "";
+            var create_app_id = "";
+            if (appcreateby.length == 2) {
+                create_type = appcreateby[0];
+                create_app_id = appcreateby[1];
+            }
+
             var json = {
                 action: "saveconfig", app_id: "{{$appinfo.id}}", name: $("#app_name").val(), type: $("#app_type").val(), alias: $("#app_alias").val()
           , description: $("#info_description").val(), contact_name: $("#info_contact_name").val(), contact_online: $("#info_contact_online").val(), contact_mobile: $("#info_contact_mobile").val()
           , live_server: $("#db_live_server").val(), live_dbname: $("#db_live_dbname").val(), live_login: $("#db_live_login").val(), live_password: $("#db_live_password").val()
-          , live_remote_type: $("#workspace_live_remote_type").val(), live_remote_server: $("#workspace_live_remote_server").val(), live_remote_login: $("#workspace_live_remote_login").val(), live_remote_password: $("#workspace_live_remote_password").val()
+          , live_remote_type: $("#workspace_live_remote_type").val(), live_remote_server: $("#workspace_live_remote_server").val(), live_remote_login: $("#workspace_live_remote_login").val(), live_remote_password: $("#workspace_live_remote_password").val(),
+          create_type: create_type,
+          create_app_id: create_app_id
             };
             //alert(json.length);
 
@@ -458,9 +491,9 @@
 
           job_1_saveconfig();
         }
-
-
-
+        if ("{{$appinfo.create_type}}" != "") {
+            $("#appcreateby").val("{{$appinfo.create_type}}_{{$appinfo.create_app_id}}");
+        }
 
 
     });
@@ -470,11 +503,25 @@
     }
 
         function job_1_saveconfig(nonext){
-          jobchangetoRunning(1);
+            jobchangetoRunning(1);
+
+
+
+            var appcreateby = $("#appcreateby").val().split("_");
+            var create_type = "";
+            var create_app_id = "";
+            if (appcreateby.length == 2) {
+                create_type = appcreateby[0];
+                create_app_id = appcreateby[1];
+            }
+
           var json={action:"saveconfig",app_id:"{{$appinfo.id}}",name:$("#app_name").val(),type:$("#app_type").val(),alias:$("#app_alias").val()
           ,description:$("#info_description").val(),contact_name:$("#info_contact_name").val(),contact_online:$("#info_contact_online").val(),contact_mobile:$("#info_contact_mobile").val()
           ,live_server:$("#db_live_server").val(),live_dbname:$("#db_live_dbname").val(),live_login:$("#db_live_login").val(),live_password:$("#db_live_password").val()
-          ,live_remote_type:$("#workspace_live_remote_type").val(),live_remote_server:$("#workspace_live_remote_server").val(),live_remote_login:$("#workspace_live_remote_login").val(),live_remote_password:$("#workspace_live_remote_password").val()
+          , live_remote_type: $("#workspace_live_remote_type").val(), live_remote_server: $("#workspace_live_remote_server").val(), live_remote_login: $("#workspace_live_remote_login").val(), live_remote_password: $("#workspace_live_remote_password").val(),
+          create_type: create_type,
+          create_app_id: create_app_id
+
             };
             //alert(json.length);
 

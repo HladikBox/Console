@@ -18,6 +18,14 @@
   //print_r($appinfo);
   $appinfo["dev_password"]=md5($User["login"]."_49339");
   $appinfo["dev_remote_password"]=md5($User["login"]."_49339");
+
+
+  include ROOT.'/classes/datamgr/appbuy.cls.php';
+
+  $buyapps=$appbuyMgr->buyList();
+  $smarty->assign("buyapps",$buyapps);
+
+
   //print_r($appinfo);
   $smarty->assign("appinfo",$appinfo);
   $smarty->display(ROOT.'/templates/apps/config.html');
