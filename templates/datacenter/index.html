@@ -1,0 +1,42 @@
+{{include  file="$smarty_root/header.html" }}
+
+        
+
+
+        <!-- =============================================== -->
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <div class="box box-primary">
+            <!-- /.box-header -->
+            <div class="box-body no-padding">
+              <div class="mailbox-read-info">
+                <h3>数据中心安装</h3>
+              </div>
+              <!-- /.mailbox-controls -->
+              <div class="mailbox-read-message">
+                <p>当开发者在本平台中完成了设计与开发之后，那么，你就可以把数据中心移植到你自己的服务器中进行托管。以下是数据中心配置的相关方式</p>
+                <ul>
+                    <li>1、本数据中心是基于PHP的。如果可以的话，请使用5.3或以上版本，否则请你自行测试以免使用过程中出现bug。</li>
+                    <li>2、在Apache中配置<a href="http://blog.csdn.net/chamtianjiao/article/details/7472210" target="_blank">虚拟目录</a>，因为数据中心需要设置在虚拟目录的根目录下。如:http://mycms.com下面</li>
+                    <li>3、下载<a href="https://github.com/HladikBox/FooterCMSDEV/archive/master.zip" target="_blank">数据中心</a>源代码，解压并放置到第2步中设置的虚拟目录的根目录下。</li>
+                    <li>4、把FTP目录下的文件拷贝到解压后的Users文件夹中，通常这个文件夹下面都会有config.inc.php，例如/Users/config.inc.php。</li>
+                    <li>5、修改相关的配置文件、主要修改/Users/config.inc.php中，<strong>$CONFIG['solution_configuration']</strong>改为release和数据库的连接信息，其它则根据你的信息修改则可以。</li>
+                    <li>6、成功的话，浏览器输入http://mycms.com就可以访问数据中心了。</li>
+                    <li>7、修改你的子应用的相关配置文件指向这个心的数据中心。</li>
+                </ul>
+              </div>
+              <!-- /.mailbox-read-message -->
+            </div>
+            <!-- /.box-footer -->
+            <div class="box-footer">
+            </div>
+            <!-- /.box-footer -->
+          </div>
+          <!-- /. box -->
+
+
+        </div>
+        <!-- /.content-wrapper -->
+
+
+{{include  file="$smarty_root/footer.html" }}
