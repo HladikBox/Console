@@ -1,0 +1,1 @@
+var dataapi_link="{{dataapi_link}}";//填写你自己服务器的服务器域名信息

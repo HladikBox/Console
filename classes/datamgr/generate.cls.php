@@ -28,7 +28,7 @@
       $alias=parameter_filter($alias);
       $apilist=$this->getOutApiList($login,$alias);
 
-      $urlhead=$CONFIG['workspace']['domain']."/$login/$alias/api/";
+      $urlhead="dataapi_link";
 
       $path=$CONFIG['workspace']['path']."\\$login\\$alias\\development\\";
       if(!file_exists($path)){
@@ -47,7 +47,7 @@
       }
 
       
-      $jsreplace="";
+      $jsreplace="<script src=\"api/api.config.js\"></script>\r\n";
       $trreplace="";
       $functionreplace="";
 
@@ -80,13 +80,13 @@ function $fmodel()
 
 
 
-        $url=$urlhead."$model/$func";
+        $url="/$model/$func";
         $repinput=true;
 
             if($api["type"]=="self"){
                 $jsstr.="
     this.$func = function(request_json,callback){
-        $.post('$url',request_json,callback);
+        $.post($urlhead+'$url',request_json,callback);
     };
 
 ";
@@ -96,7 +96,7 @@ function $fmodel()
                 
                 $jsstr.="
     this.$func = function(search_json,callback){
-        $.post('$url',search_json,callback);
+        $.post($urlhead+'$url',search_json,callback);
     };
 
 ";
@@ -105,7 +105,7 @@ function $fmodel()
                 $jsstr.="
     this.$func = function(id,callback){
         var json={id:id};
-        $.post('$url',json,callback);
+        $.post($urlhead+'$url',json,callback);
     };
 
 ";
@@ -114,7 +114,7 @@ function $fmodel()
                 $jsstr.="
     this.$func = function(field_json,callback){
         field_json.primary_id=field_json.id;
-        $.post('$url',field_json,callback);
+        $.post($urlhead+'$url',field_json,callback);
     };
 
 ";
@@ -124,7 +124,7 @@ function $fmodel()
                 $jsstr.="
     this.$func = function(id_array,callback){
         var json={idlist:id_array};
-        $.post('$url',json,callback);
+        $.post($urlhead+'$url',json,callback);
     };
 
 ";
@@ -173,7 +173,8 @@ function $fmodel()
       file_put_contents($apitester,str_replace('{{trreplace}}',$trreplace,file_get_contents($apitester))); 
       file_put_contents($apitester,str_replace('{{functionreplace}}',$functionreplace,file_get_contents($apitester))); 
 
-
+      $apiconfig=$path."\\api\\api.config.js";
+      file_put_contents($apiconfig,str_replace('{{dataapi_link}}',$CONFIG['workspace']['domain']."/$login/$alias/api",file_get_contents($apiconfig)));
       return $path;
     }
 
@@ -217,20 +218,21 @@ function $fmodel()
         foreach($funclist as $api){
         $description=$api["description"];
         $func=$api["func"];
-        $url=$urlhead."$model/$func";
+        $url="$model/$func";
         
             if($api["type"]=="self"){
                $funcstr.="
 
 //$description
 public $func(data) {
-        var url = '$url';
+        var url = ApiConfig.getApiUrl()+'$url';
         var headers = new Headers({
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            'Content-Type': 'application/x-www-form-urlencoded'
         });;
         let options = new RequestOptions({ headers: headers });
-        return this.http.post(url, data, { headers: headers }).toPromise()
+
+        let body=ApiConfig.ParamUrlencoded(data);
+        return this.http.post(url, body, options).toPromise()
             .then(res => res.json())
             .catch(err => {
                 this.handleError(err);
@@ -249,13 +251,13 @@ public $func(data) {
 
 //$description
 public $func(search_condition_json) {
-        var url = '$url';
+        var url = ApiConfig.getApiUrl()+'$url';
         var headers = new Headers({
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            'Content-Type': 'application/x-www-form-urlencoded'
         });;
         let options = new RequestOptions({ headers: headers });
-        return this.http.post(url, search_condition_json, { headers: headers }).toPromise()
+        let body=ApiConfig.ParamUrlencoded(search_condition_json);
+        return this.http.post(url, body, options).toPromise()
             .then(res => res.json())
             .catch(err => {
                 this.handleError(err);
@@ -271,14 +273,14 @@ public $func(search_condition_json) {
 
 //$description
 public $func(id) {
-        var url = '$url';
+        var url = ApiConfig.getApiUrl()+'$url';
         var headers = new Headers({
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            'Content-Type': 'application/x-www-form-urlencoded'
         });;
         let options = new RequestOptions({ headers: headers });
         let json={ 'id' : id };
-        return this.http.post(url, json, { headers: headers }).toPromise()
+        let body=ApiConfig.ParamUrlencoded(json);
+        return this.http.post(url, body, options).toPromise()
             .then(res => res.json())
             .catch(err => {
                 this.handleError(err);
@@ -293,13 +295,13 @@ public $func(id) {
 
 //$description
 public $func(update_json) {
-        var url = '$url';
+        var url = ApiConfig.getApiUrl()+'$url';
         var headers = new Headers({
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            'Content-Type': 'application/x-www-form-urlencoded'
         });;
         let options = new RequestOptions({ headers: headers });
-        return this.http.post(url, update_json, { headers: headers }).toPromise()
+        let body=ApiConfig.ParamUrlencoded(update_json);
+        return this.http.post(url, body, options).toPromise()
             .then(res => res.json())
             .catch(err => {
                 this.handleError(err);
@@ -314,14 +316,15 @@ public $func(update_json) {
 
 //$description
 public $func(idlist) {
-        var url = '$url';
+        var url = ApiConfig.getApiUrl()+'$url';
         var headers = new Headers({
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded',
             'Accept': 'application/json'
         });;
         let options = new RequestOptions({ headers: headers });
         let json={ 'idlist' : idlist };
-        return this.http.post(url, json, { headers: headers }).toPromise()
+        let body=ApiConfig.ParamUrlencoded(json);
+        return this.http.post(url, body, options).toPromise()
             .then(res => res.json())
             .catch(err => {
                 this.handleError(err);
@@ -339,7 +342,12 @@ public $func(idlist) {
 
         }
       }
-      
+
+      mkdir($path."\\app");
+      copy(ROOT."\\workspace_copy\\development\\typescript\\app\\api.config.ts",$path."\\app\\api.config.ts");
+      $apiconfig=$path."\\app\\api.config.ts";
+
+      file_put_contents($apiconfig,str_replace('{{$myapiaddress}}',$CONFIG['workspace']['domain']."/$login/$alias/api/",file_get_contents($apiconfig)));
       return $path;
     }
 
