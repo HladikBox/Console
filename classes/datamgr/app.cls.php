@@ -415,7 +415,29 @@
     }
     
     function setWorkspaceAccount($app_id){
-       return outResult(1,"技术不好，没办法做到动态添加远程账户，将尽快为你设置，请耐心等待","");
+
+       
+      Global $UID,$User,$CONFIG,$productMgr;
+
+
+      $path=$CONFIG['workspace']['path'];
+      $info=$this->getAppInfo($UID,$app_id);
+      //print_r($info);
+      $login=$User["login"];
+      $subfolder="/$login";
+      $path=$path.$subfolder;
+      $path=str_replace('\\','/',$path);
+      $password=md5($login."_49339");
+    
+
+      if($this->dbmgr->checkHave("`ftpserver`.FTP_USER","userid='$login'")){
+          return outResult("-1","FTP用户已经创建","appname");
+       }
+
+       $sql="insert into `ftpserver`.FTP_USER values('$login','$password','$path',1,0,0,0,0,0,0);";
+       $this->dbmgr->query($sql);
+
+       return outResult(0,"保存成功","");
 
     }
     function configDone($app_id){
