@@ -431,7 +431,7 @@
     
 
       if($this->dbmgr->checkHave("`ftpserver`.FTP_USER","userid='$login'")){
-          return outResult("-1","FTP用户已经创建","appname");
+          return outResult("1","FTP用户已经创建","appname");
        }
 
        $sql="insert into `ftpserver`.FTP_USER values('$login','$password','$path',1,0,0,0,0,0,0);";
