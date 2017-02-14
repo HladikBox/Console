@@ -222,6 +222,7 @@
                                     <td class="api_description">{{$rs.description}}</td>
                                     <td>
                                         <a href="javascript:openApiEditor('{{$rs.model}}','{{$rs.func}}');" ><i class="fa fa-pencil-square-o"></i></a>
+                                        {{if $rs.type!="model"}}<a class="fa fa-eye" href="ftp://remote.app-link.org/{{$appinfo.alias}}/api/{{$rs.model}}/{{$rs.func}}.php" target="_blank" ></a>{{/if}}
                                         <textarea  class="api_modelinput hide">{{$rs.modelinput}}</textarea>
                                         <textarea  class="api_input hide">{{$rs.input}}</textarea>
                                         <textarea  class="api_output hide" >{{$rs.output}}</textarea>
@@ -1200,6 +1201,7 @@
                 '<td class="api_description">' + description + '</td>' +
                 '<td>' +
                 '<a href="javascript:openApiEditor(\'' + model + '\',\'' + func + '\');" ><i class="fa fa-pencil-square-o"></i></a>' +
+                ' <a class="fa fa-eye" href="ftp://remote.app-link.org/{{$appinfo.alias}}/api/' + model + '/' + func + '.php" target="_blank" ></a>' +
                 '<input type="hidden" value="" class="api_input" />' +
                 '<input type="hidden" value="" class="api_output" />' +
                 '<input type="hidden" value="self" class="api_type" />' +
