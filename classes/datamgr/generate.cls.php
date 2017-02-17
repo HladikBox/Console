@@ -463,6 +463,17 @@ public function _list($search_param,$orderby){
         }
     $content.='
     }
+    if(isset($search_param["'.$field["key"].'_name"]))
+    {
+        ';
+        //$sql_where.=" and r_main.'.$field["key"].'=\'".$search_param['.$field["key"].']."\'";
+        if($field["type"]=="fkey"){
+
+          $content.='$sql_where.=" and '.$field["ntbname"].'.'.$field["displayfiel_named"].'=\'".$search_param["'.$field["key"].'_name"]."\'";';
+
+        }
+    $content.='
+    }
   ';              
                   if($field["type"]=="datetime"){
                     $content.='
