@@ -11,6 +11,10 @@
         <h1>
             应用管理
             <small>{{$appinfo.name}} <span class="badge bg-green">{{$appinfo.type_name}}</span></small>
+            <a class="btn btn-primary" href="ftp://remote.app-link.org/{{$appinfo.alias}}" target="_blank" style="margin-left:40px;" data-toggle="tooltip" title="请在应用配置中获取你的密码" >打开远程工作目录</a>
+            <a class="btn btn-warning" href="http://mysql.app-link.org/" target="_blank" data-toggle="tooltip" title="请在应用配置中获取你的密码">连接调试数据库</a>
+            <a class="btn btn-success hide" id="btnSyncDataBase" href="#"  >同步到正式数据库</a>
+            <a class="btn btn-info hide" id="btnSendToWorkspace" href="#"   >发布数据中心到正式环境</a>
         </h1>
         <ol class="breadcrumb">
             <li><a href="/apps"><i class="fa fa-th"></i> 我的应用</a></li>
@@ -110,8 +114,6 @@
                             </table>
                         </div>
                         <!-- /.col -->
-
-
                         <div class="col-md-3 hide" id="divMainMenu">
                             <div class="box box-success">
                                 <div class="box-header with-border">
@@ -220,6 +222,7 @@
                                     <td class="api_description">{{$rs.description}}</td>
                                     <td>
                                         <a href="javascript:openApiEditor('{{$rs.model}}','{{$rs.func}}');" ><i class="fa fa-pencil-square-o"></i></a>
+                                        {{if $rs.type!="model"}}<a class="fa fa-eye" href="ftp://remote.app-link.org/{{$appinfo.alias}}/api/{{$rs.model}}/{{$rs.func}}.php" target="_blank" ></a>{{/if}}
                                         <textarea  class="api_modelinput hide">{{$rs.modelinput}}</textarea>
                                         <textarea  class="api_input hide">{{$rs.input}}</textarea>
                                         <textarea  class="api_output hide" >{{$rs.output}}</textarea>
@@ -803,6 +806,12 @@
 <!-- /.modal -->
 
 
+
+
+
+
+
+
 <link rel="stylesheet" href="{{$rootpath}}plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
 
 {{include  file="$smarty_root/footer.html" }}
@@ -1192,6 +1201,7 @@
                 '<td class="api_description">' + description + '</td>' +
                 '<td>' +
                 '<a href="javascript:openApiEditor(\'' + model + '\',\'' + func + '\');" ><i class="fa fa-pencil-square-o"></i></a>' +
+                ' <a class="fa fa-eye" href="ftp://remote.app-link.org/{{$appinfo.alias}}/api/' + model + '/' + func + '.php" target="_blank" ></a>' +
                 '<input type="hidden" value="" class="api_input" />' +
                 '<input type="hidden" value="" class="api_output" />' +
                 '<input type="hidden" value="self" class="api_type" />' +
@@ -1565,6 +1575,14 @@
                 }
             });
 
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $("#btnSyncDataBase").click(function () {
+            alert("aa");
         });
     });
 </script>
