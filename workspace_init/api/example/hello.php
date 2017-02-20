@@ -34,7 +34,7 @@ logger_mgr::logDebug("Debug日志");
 
 
 #其它常用常量
-USERROOT    //用户目录根目录
+USER_ROOT    //用户目录根目录
 
 
 

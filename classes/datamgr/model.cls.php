@@ -131,7 +131,7 @@
     $model = json_decode(json_encode($xmlstring),true); 
 
     if($model["options"]["option"][0]==""&&$model["options"]["option"]["name"]!=""){
-      $temp=$model["options"]["option"][0];
+      $temp=$model["options"]["option"];
       $model["options"]["option"]=array();
       $model["options"]["option"][]=$temp;
     }
@@ -162,9 +162,6 @@
       $model["options"]["option"][$i]["json"]=json_encode($model["options"]["option"][$i]);
     }
 
-    for ($i=0; $i < count($model["javascripts"]["javascript"]); $i++) { 
-      $model["javascripts"]["javascript"][$i]["json"]=json_encode($model["javascripts"]["javascript"][$i]);
-    }
     $model=setArrayNoNull($model);
     return $model;
   }

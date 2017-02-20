@@ -62,7 +62,7 @@
 
         $fmodel=ucfirst($model);
         $jsstr="
-function $fmodel()
+function ".$fmodel."Api()
 {
 ";
         foreach($funclist as $api){
@@ -132,7 +132,7 @@ function $fmodel()
             }
             $functionreplace.="function try_".$model."_$func(){
 		var input=$(\"#tr_".$model."_$func .input\").val();
-		var $model=new $fmodel();";
+		var $model=new ".$fmodel."Api();";
 		
         if($repinput){
         $functionreplace.="try{
@@ -211,7 +211,7 @@ function $fmodel()
 
       foreach($apilist as $model=> $funclist){
         
-        $modelfile=$apipath."\\$model.ts";
+        $modelfile=$apipath."\\$model.api.ts";
         $fmodel=ucfirst($model);
         $funcstr="";
         
@@ -337,7 +337,7 @@ public $func(idlist) {
                 }
             }
             copy(ROOT."\\workspace_copy\\development\\typescript\\providers\\test.ts",$modelfile);
-            file_put_contents($modelfile,str_replace('{{$modelname}}',$fmodel,file_get_contents($modelfile))); 
+            file_put_contents($modelfile,str_replace('{{$modelname}}',$fmodel."Api",file_get_contents($modelfile))); 
             file_put_contents($modelfile,str_replace('{{funclist}}',$funcstr,file_get_contents($modelfile))); 
 
         }
@@ -460,6 +460,17 @@ public function _list($search_param,$orderby){
         }
         else{
           $content.='$sql_where.=" and r_main.'.$field["key"].' like \'%".$search_param["'.$field["key"].'"]."%\'";';
+        }
+    $content.='
+    }
+    if(isset($search_param["'.$field["key"].'_name"]))
+    {
+        ';
+        //$sql_where.=" and r_main.'.$field["key"].'=\'".$search_param['.$field["key"].']."\'";
+        if($field["type"]=="fkey"){
+
+          $content.='$sql_where.=" and '.$field["ntbname"].'.'.$field["displayfiel_named"].'=\'".$search_param["'.$field["key"].'_name"]."\'";';
+
         }
     $content.='
     }
