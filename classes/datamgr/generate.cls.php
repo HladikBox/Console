@@ -226,9 +226,7 @@ function ".$fmodel."Api()
 //$description
 public $func(data) {
         var url = ApiConfig.getApiUrl()+'$url';
-        var headers = new Headers({
-            'Content-Type': 'application/x-www-form-urlencoded'
-        });;
+        var headers = ApiConfig.GetHeader(url, data);
         let options = new RequestOptions({ headers: headers });
 
         let body=ApiConfig.ParamUrlencoded(data);
@@ -252,9 +250,7 @@ public $func(data) {
 //$description
 public $func(search_condition_json) {
         var url = ApiConfig.getApiUrl()+'$url';
-        var headers = new Headers({
-            'Content-Type': 'application/x-www-form-urlencoded'
-        });;
+        var headers = ApiConfig.GetHeader(url, search_condition_json);
         let options = new RequestOptions({ headers: headers });
         let body=ApiConfig.ParamUrlencoded(search_condition_json);
         return this.http.post(url, body, options).toPromise()
@@ -274,11 +270,9 @@ public $func(search_condition_json) {
 //$description
 public $func(id) {
         var url = ApiConfig.getApiUrl()+'$url';
-        var headers = new Headers({
-            'Content-Type': 'application/x-www-form-urlencoded'
-        });;
-        let options = new RequestOptions({ headers: headers });
         let json={ 'id' : id };
+        var headers = ApiConfig.GetHeader(url, json);
+        let options = new RequestOptions({ headers: headers });
         let body=ApiConfig.ParamUrlencoded(json);
         return this.http.post(url, body, options).toPromise()
             .then(res => res.json())
@@ -296,9 +290,7 @@ public $func(id) {
 //$description
 public $func(update_json) {
         var url = ApiConfig.getApiUrl()+'$url';
-        var headers = new Headers({
-            'Content-Type': 'application/x-www-form-urlencoded'
-        });;
+        var headers = ApiConfig.GetHeader(url, update_json);
         let options = new RequestOptions({ headers: headers });
         let body=ApiConfig.ParamUrlencoded(update_json);
         return this.http.post(url, body, options).toPromise()
@@ -317,12 +309,9 @@ public $func(update_json) {
 //$description
 public $func(idlist) {
         var url = ApiConfig.getApiUrl()+'$url';
-        var headers = new Headers({
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Accept': 'application/json'
-        });;
-        let options = new RequestOptions({ headers: headers });
         let json={ 'idlist' : idlist };
+        var headers = ApiConfig.GetHeader(url, json);
+        let options = new RequestOptions({ headers: headers });
         let body=ApiConfig.ParamUrlencoded(json);
         return this.http.post(url, body, options).toPromise()
             .then(res => res.json())

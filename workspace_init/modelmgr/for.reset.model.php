@@ -45,6 +45,12 @@ class myXmlModel extends XmlModel
     return $sql;
   }
   
+  //重新修改传入的请求
+  public function resetRequestData($dbMgr,$request){
+    
+    return $request;
+  }
+  
   //重写打开编辑时候加载的数据结果
   public function fixEditData($result){
     return $result;

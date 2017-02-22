@@ -70,6 +70,11 @@ class {{modelname}}XmlModel extends XmlModel
   public function fixUpdateSql($sql){
   	return $sql;
   }
+  //重新修改传入的请求
+  public function resetRequestData($dbMgr,$request){
+    
+    return $request;
+  }
   
   //保存成功时做的事情
   public function afterSave($dbmgr){
