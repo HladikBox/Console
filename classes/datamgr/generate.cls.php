@@ -450,8 +450,13 @@ public function _list($search_param,$orderby){
         else{
           $content.='$sql_where.=" and r_main.'.$field["key"].' like \'%".$search_param["'.$field["key"].'"]."%\'";';
         }
+        if($field["type"]=="fkey"){
+
+        }
     $content.='
-    }
+    }';
+    if($field["type"]=="fkey"){
+    $content.='
     if(isset($search_param["'.$field["key"].'_name"]))
     {
         ';
@@ -463,7 +468,8 @@ public function _list($search_param,$orderby){
         }
     $content.='
     }
-  ';              
+  ';   
+    }           
                   if($field["type"]=="datetime"){
                     $content.='
     if(isset($search_param["'.$field["key"].'_from"]))
