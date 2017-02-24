@@ -108,6 +108,11 @@ class {{modelname}}XmlModel extends XmlModel
   public function afterDelete($id_array,$dbmgr){
   	
   }
+
+  //请求列表前的数据过滤
+ public function fixApiListRequest($dbMgr,$request){
+  return $request;
+ }
   
   //修正api请求list时候的sql
  public function fixApiListSql($sql){

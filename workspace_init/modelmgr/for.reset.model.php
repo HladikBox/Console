@@ -110,6 +110,10 @@ class myXmlModel extends XmlModel
     
   }
   
+ public function fixApiListRequest($dbMgr,$request){
+  return $request;
+ }
+  
   //修正api请求list时候的sql
  public function fixApiListSql($sql){
   return $sql;
