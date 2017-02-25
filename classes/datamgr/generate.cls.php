@@ -763,6 +763,430 @@ $content
       //exit;
       return $path;
     }
+
+
+    public function generateCSharp($login,$alias,$modellist){
+    Global $CONFIG;
+      $login=parameter_filter($login);
+      $alias=parameter_filter($alias);
+      $apilist=$this->getOutApiList($login,$alias);
+
+      $urlhead=$CONFIG['workspace']['domain']."/$login/$alias/api/";
+
+      $path=$CONFIG['workspace']['path']."\\$login\\$alias\\development\\";
+      if(!file_exists($path)){
+        mkdir($path,true);
+      }
+      $path=$CONFIG['workspace']['path']."\\$login\\$alias\\development\\csharp";
+      if(!file_exists($path)){
+        mkdir($path,true);
+      }else{
+        delDir($path);
+      }
+
+      $apipath=$path."\\model";
+      if(!file_exists($apipath)){
+        mkdir($apipath,true);
+      }
+
+      
+      $functionreplace="";
+
+
+      foreach($apilist as $model=> $funclist){
+        
+        $modelfile=$apipath."\\$model.php";
+        $fmodel=ucfirst($model);
+        $modelobj=$modellist[$model];
+        $content="public static class $fmodel".'Mgr 
+{
+';
+        
+        foreach($funclist as $api){
+        $description=$api["description"];
+        $func=$api["func"];
+        $url=$urlhead."$model/$func";
+        $content.="//$description";
+            if($api["type"]=="self"){
+               
+                $content.='
+public function '.$func.'($param){';
+
+                $apifuncfile=$CONFIG['workspace']['path']."\\$login\\$alias\\api\\$model\\$func.php";
+                $lines = @file($apifuncfile);
+                $start=false;
+                foreach($lines as $l){
+                    if($start){
+                        $l=str_replace("<?php","",$l);
+                        $l=str_replace("?>","",$l);
+                        $l=str_replace('$dbmgr','$this->dbmgr',$l);
+                        if(strstr($l,"outputJson(")){
+                            $l=str_replace("outputJson(","return ",$l);
+                            $lastkh=strrpos($l, ')', -1);
+                            $l=substr($l,0,$lastkh-1).substr($l,$lastkh);
+                        }
+                        $content.=" ".$l;
+                    }
+                    if(substr(trim($l),0,13)=="////starthere"){
+                        $start=true;
+                    }
+                }
+
+
+                $content.='
+}
+';
+
+            }else{
+
+                if($func=="list"){
+                    
+                    $content.='
+public function _list($search_param,$orderby){
+
+    $sql_where="";
+
+';
+                $search_cond="";
+                if(trim($modelobj["searchcondition"])!=""){
+                    $search_cond=" and ".$modelobj["searchcondition"];
+                }
+                $sql_key=" r_main.id ";
+                $sql_table=" from  ".$modelobj["tablename"]." r_main ";
+                foreach($modelobj["fields"]["field"] as $field){
+                    $content.='
+    if(isset($search_param["'.$field["key"].'"]))
+    {
+        ';
+        //$sql_where.=" and r_main.'.$field["key"].'=\'".$search_param['.$field["key"].']."\'";
+        if($field["type"]=="fkey"){
+
+          $content.='$sql_where.=" and r_main.'.$field["key"].'=\'".$search_param["'.$field["key"].'"]."\'";';
+
+        }elseif($field["type"]=="datetime"){
+          //
+        }
+        else{
+          $content.='$sql_where.=" and r_main.'.$field["key"].' like \'%".$search_param["'.$field["key"].'"]."%\'";';
+        }
+        if($field["type"]=="fkey"){
+
+        }
+    $content.='
+    }';
+    if($field["type"]=="fkey"){
+    $content.='
+    if(isset($search_param["'.$field["key"].'_name"]))
+    {
+        ';
+        //$sql_where.=" and r_main.'.$field["key"].'=\'".$search_param['.$field["key"].']."\'";
+        if($field["type"]=="fkey"){
+
+          $content.='$sql_where.=" and '.$field["ntbname"].'.'.$field["displayfiel_named"].'=\'".$search_param["'.$field["key"].'_name"]."\'";';
+
+        }
+    $content.='
+    }
+  ';   
+    }           
+                  if($field["type"]=="datetime"){
+                    $content.='
+    if(isset($search_param["'.$field["key"].'_from"]))
+    {
+        $sql_where.=" and r_main.'.$field["key"].'>=\'".$search_param["'.$field["key"].'_from"]."\'";
+    }
+
+    if(isset($search_param["'.$field["key"].'_to"]))
+    {
+        $sql_where.=" and r_main.'.$field["key"].'<=\'".$search_param["'.$field["key"].'_to"]."\'";
+    }
+  ';        
+
+                  }
+
+
+
+                  if($field["type"]=="flist"&&$field["relatetable"]!=""){
+                    $table=$field["relatetable"];
+                    
+                    $sql_key=$sql_key." ,'' ".$field["key"];
+                  }else if($field["type"]=="select"){
+
+                    $sql_key=$sql_key." ,case   r_main.".$field["key"]." ";
+                    foreach ($field["options"]["option"] as $option){
+                      $sql_key=$sql_key." when '".$option["value"]."' then '".$option["name"]."'";
+                    }
+                    $sql_key=$sql_key." else 'unknow' ";
+                    $sql_key=$sql_key." end as ".$field["key"];
+
+                  }else if($field["type"]=="check"){
+
+                    $sql_key=$sql_key." ,case   r_main.".$field["key"]." when 'Y' then '".$field["yvalue"]."' else '".$field["nvalue"]."' ";
+                    $sql_key=$sql_key." end as ".$field["key"];
+
+                  }else if($field["type"]=="fkey"){
+                  
+                    $sql_key=$sql_key." ,".$field["ntbname"].".".$field["displayfield"]." ".$field["key"]."_name,r_main.".$field["key"];
+
+                  }else{
+
+                    $sql_key=$sql_key." ,r_main.".$field["key"];
+
+                  }
+
+
+                   if($field["type"]=="fkey"){
+                        $sql_table=$sql_table." left join ".$field["tablename"]." ".$field["ntbname"]." on r_main.".$field["key"]."=".$field["ntbname"].".id ";
+                   }
+
+                }
+
+                $content.='
+    $sql="select '.$sql_key.' '.$sql_table.' where 1=1 $sql_where '.$search_cond.'
+    $orderby";
+                $query = $this->dbmgr->query($sql);
+                $result = $this->dbmgr->fetch_array_all($query);
+
+                return $result;
+';
+
+                }elseif($func=="get"){
+
+$content.='
+public function '.$func.'($id){
+
+  ';
+
+
+
+  $sql_key=" r_main.id ";
+                $sql_table=" from  ".$modelobj["tablename"]." r_main ";
+                foreach($modelobj["fields"]["field"] as $field){
+                   
+
+
+                  if($field["type"]=="flist"&&$field["relatetable"]!=""){
+                    $table=$field["relatetable"];
+                    
+                    $sql_key=$sql_key." ,'' ".$field["key"];
+                  }else if($field["type"]=="select"){
+
+                    $sql_key=$sql_key." ,case   r_main.".$field["key"]." ";
+                    foreach ($field["options"]["option"] as $option){
+                      $sql_key=$sql_key." when '".$option["value"]."' then '".$option["name"]."'";
+                    }
+                    $sql_key=$sql_key." else 'unknow' ";
+                    $sql_key=$sql_key." end as ".$field["key"];
+
+                  }else if($field["type"]=="check"){
+
+                    $sql_key=$sql_key." ,case   r_main.".$field["key"]." when 'Y' then '".$field["yvalue"]."' else '".$field["nvalue"]."' ";
+                    $sql_key=$sql_key." end as ".$field["key"];
+
+                  }else if($field["type"]=="fkey"){
+                  
+                    $sql_key=$sql_key." ,".$field["ntbname"].".".$field["displayfield"]." ".$field["key"]."_name,r_main.".$field["key"];
+
+                  }else{
+
+                    $sql_key=$sql_key." ,r_main.".$field["key"];
+
+                  }
+
+
+                   if($field["type"]=="fkey"){
+                        $sql_table=$sql_table." left join ".$field["tablename"]." ".$field["ntbname"]." on r_main.".$field["key"]."=".$field["ntbname"].".id ";
+                   }
+
+                }
+
+                $content.='
+    $sql="select '.$sql_key.' '.$sql_table.' where r_main.id=$id ";
+                $query = $this->dbmgr->query($sql);
+                $result = $this->dbmgr->fetch_array($query);
+
+                ';
+                foreach($modelobj["fields"]["field"] as $field){
+                    if($field["type"]=="flist"){
+
+                      $r_tablename=$field["tablename"];
+                      $r_relatetable=$field["relatetable"];
+                      $r_ntbname=$field["ntbname"];
+                      $r_condition=empty($field["condition"])?"":" and ".$field["condition"];
+
+                      if($field["relatetable"]!=""){
+                        $content.='
+                          $sql="select '.$r_ntbname.'.* from '.$r_relatetable.' 
+                          inner join '.$r_tablename.' '.$r_ntbname.' on '.$r_relatetable.'.fid='.$r_ntbname.'.id
+                          where '.$r_relatetable.'.pid=$id '.$r_condition.' ";
+                          $query = $this->dbmgr->query($sql);
+                          $rs = $this->dbmgr->fetch_array_all($query);
+
+                          $result["'.$field["key"].'"]=$rs;
+
+                        ';
+                      }else{
+
+                        $content.='
+                          if(!empty($result["'.$field["key"].'"])){
+                            $idlist="0".$result["'.$field["key"].'"];
+                            $sql="select '.$r_ntbname.'.* from  '.$r_tablename.' '.$r_ntbname.'
+                            where id in ( $idlist )  '.$r_condition.' ";
+                            $query = $this->dbmgr->query($sql);
+                            $rs = $this->dbmgr->fetch_array_all($query);
+
+                            $result["'.$field["key"].'"]=$rs;
+                          }
+                        ';
+                      }
+                    }
+                }
+
+                $content.='
+
+
+                return $result;
+';
+                
+                }elseif($func=="update"){
+
+
+$content.='
+public function '.$func.'($request,$id=0){
+  //id=0为插入新字段
+  ';
+              $insertsql="insert into ".$modelobj["tablename"]." (id";
+              $updatesql="update ".$modelobj["tablename"]." set updated_date=now() ";
+              $otherupdatesql="";
+              foreach($modelobj["fields"]["field"] as $value){
+                if($value["ismutillang"]=="1"){
+                  $haveMutilLang=true;
+                  continue;
+                }
+                if($value["type"]=="grid"){
+                  continue;
+                }
+                if($value["type"]=="flist"&&$value["relatetable"]!=""){
+                  continue;
+                }
+                if($value["nosave"]=="1"){
+                  continue;
+                }
+                $insertsql=$insertsql.",`".$value["key"]."`";
+              }
+              $insertsql=$insertsql." ) values (";
+              $insertsql=$insertsql.'$id';
+              foreach($modelobj["fields"]["field"] as $value){
+                
+                
+                if($value["type"]=="grid"
+                ||$value["ismutillang"]){
+                  continue;
+                }
+                if($value["type"]=="flist"&&$value["relatetable"]!=""){
+                  continue;
+                }
+                if($value["nosave"]=="1"){
+                  continue;
+                }
+
+                if($value["type"]=="password"){
+                  $insertsql=$insertsql.',\'".md5($request["'.$value["key"].'"])."\'';
+                  $updatesql=$updatesql.',`'.$value["key"].'`=\'".md5($request["'.$value["key"].'"])."\'';
+                }else{
+                  $insertsql=$insertsql.',\'".parameter_filter($request["'.$value["key"].'"])."\'';
+                  $updatesql=$updatesql.',`'.$value["key"].'`=\'".parameter_filter($request["'.$value["key"].'"])."\'';
+                }
+                if($value["type"]=="check"&&$value["unique"]=="1"&&parameter_filter($request[$value["key"]])=="Y"){
+                  $otherupdatesql.=' $this->dbmgr->query("update "'.$modelobj["tablename"].'" set '.$value["key"].'=\'N\' where ".$request["'.$value["key"].'"].=\'Y\'");';
+                }
+                if($value["type"]=="flist"&&$value["relatetable"]!=""){
+                  $otherupdatesql.='
+                  $fidlist=explode(\',\', $request["'.$value["key"].'"]);
+                  foreach ($fidlist as  $fid) {
+                    $this->dbmgr->query("insert into '.$value["relatetable"].' values($id,$fid)");
+                  }
+                  ';
+                  
+                }
+              }
+
+            $content.=' 
+              $id=$id+0;
+              $this->dbmgr->begin_trans();
+
+              if($id==0){
+                $id=$this->dbmgr->getNewId("'.$modelobj["tablename"].'");
+                $sql="'.$insertsql.' )";
+              }else{
+                $sql="'.$updatesql.' where id=$id";
+              }
+
+              '.$otherupdatesql.'
+              $this->dbmgr->query($sql);
+
+              $this->dbmgr->commit_trans();
+              return $id;
+            ';
+
+
+              
+                }elseif($func=="delete"){
+
+$content.='
+public function '.$func.'($idlist){
+  $idlist=explode(",",$idlist);
+    for($i=0;$i<count($idlist);$i++){
+        $idlist[$i]=$idlist[$i]+0;
+    }
+
+    $idlist=join(",",$idlist);
+    $dbMgr->begin_trans();
+
+  $sql="update '.$modelobj["tablename"].' set status=\'D\' where id in ($idlist)";
+  $query = $this->dbmgr->query($sql);
+
+    $dbMgr->commit_trans();
+    return true;
+  ';      
+
+                
+                }
+                
+                $content.='
+}
+';
+            }
+            //copy(ROOT."\\workspace_copy\\development\\typescript\\providers\\test.ts",$modelfile);
+           // file_put_contents($modelfile,str_replace('{{$modelname}}',$fmodel,file_get_contents($modelfile))); 
+            //file_put_contents($modelfile,str_replace('{{funclist}}',$funcstr,file_get_contents($modelfile))); 
+
+        }
+
+        $content.="
+}
+"; 
+        //echo $content;
+        $content="<?php
+$content
+?>";
+           file_put_contents($modelfile, $content);
+      }
+
+      recurse_copy(ROOT."\\workspace_copy\\development\\php\\",$path);
+
+
+
+
+
+      //exit;
+      return $path;
+    }
+
+
+
+
+
     
     public function getOutApiList($login,$alias){
     Global $CONFIG;
