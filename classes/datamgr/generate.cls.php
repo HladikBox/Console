@@ -7,23 +7,23 @@
  */  
  class GenerateMgr
  {
- 	private static $instance = null;
-	public static $dbmgr = null;
-	public static function getInstance() {
-		return self :: $instance != null ? self :: $instance : new GenerateMgr();
-	}
+  private static $instance = null;
+  public static $dbmgr = null;
+  public static function getInstance() {
+    return self :: $instance != null ? self :: $instance : new GenerateMgr();
+  }
 
-	private function __construct() {
-		
-	}
-	
-	public  function __destruct ()
-	{
-		
-	}
+  private function __construct() {
+    
+  }
+  
+  public  function __destruct ()
+  {
+    
+  }
 
     public function generateAjax($login,$alias){
-		Global $CONFIG;
+    Global $CONFIG;
       $login=parameter_filter($login);
       $alias=parameter_filter($alias);
       $apilist=$this->getOutApiList($login,$alias);
@@ -71,12 +71,12 @@ function ".$fmodel."Api()
         $func=$api["func"];
 
         $trreplace.="
-		<tr id=\"tr_".$model."_$func\">
-			<td>$model/$func</td>
-			<td><textarea class=\"input\"></textarea></td>
-			<td><button onclick=\"try_".$model."_$func();\">测试</button></td>
-			<td><textarea class=\"output\"></textarea></td>
-		</tr>";
+    <tr id=\"tr_".$model."_$func\">
+      <td>$model/$func</td>
+      <td><textarea class=\"input\"></textarea></td>
+      <td><button onclick=\"try_".$model."_$func();\">测试</button></td>
+      <td><textarea class=\"output\"></textarea></td>
+    </tr>";
 
 
 
@@ -131,29 +131,29 @@ function ".$fmodel."Api()
                 }
             }
             $functionreplace.="function try_".$model."_$func(){
-		var input=$(\"#tr_".$model."_$func .input\").val();
-		var $model=new ".$fmodel."Api();";
-		
+    var input=$(\"#tr_".$model."_$func .input\").val();
+    var $model=new ".$fmodel."Api();";
+    
         if($repinput){
         $functionreplace.="try{
-			if(input!=\"\")
-			input=JSON.parse(input);
-		}catch(e){
-			$(\"#tr_".$model."_$func .output\").val(\"输入json错误\"+e.message );
-			return;
-		}";
+      if(input!=\"\")
+      input=JSON.parse(input);
+    }catch(e){
+      $(\"#tr_".$model."_$func .output\").val(\"输入json错误\"+e.message );
+      return;
+    }";
         }
-		
-		$functionreplace.="
+    
+    $functionreplace.="
         try{
-			$model.$func(input,function(data){
-				$(\"#tr_".$model."_$func .output\").val(data);
-			});
-		}catch(e){
-			$(\"#tr_".$model."_$func .output\").val(e.message );
-			return;
-		}
-	}";
+      $model.$func(input,function(data){
+        $(\"#tr_".$model."_$func .output\").val(data);
+      });
+    }catch(e){
+      $(\"#tr_".$model."_$func .output\").val(e.message );
+      return;
+    }
+  }";
 
 
         }
@@ -182,7 +182,7 @@ function ".$fmodel."Api()
     
     
     public function generateTypeScript($login,$alias){
-		Global $CONFIG;
+    Global $CONFIG;
       $login=parameter_filter($login);
       $alias=parameter_filter($alias);
       $apilist=$this->getOutApiList($login,$alias);
@@ -343,7 +343,7 @@ public $func(idlist) {
     
     
     public function generatePHP($login,$alias,$modellist){
-		Global $CONFIG;
+    Global $CONFIG;
       $login=parameter_filter($login);
       $alias=parameter_filter($alias);
       $apilist=$this->getOutApiList($login,$alias);
@@ -379,7 +379,7 @@ public $func(idlist) {
 {
     public $dbmgr = null;
     public function __construct($dbmgr) {
-	    $this->dbmgr=$dbmgr;	
+      $this->dbmgr=$dbmgr;  
     }
 ';
         
@@ -440,7 +440,9 @@ public function _list($search_param,$orderby){
     {
         ';
         //$sql_where.=" and r_main.'.$field["key"].'=\'".$search_param['.$field["key"].']."\'";
-        if($field["type"]=="fkey"){
+        if($field["type"]=="fkey"
+          ||$field["type"]=="number"
+          ||$field["type"]=="select"){
 
           $content.='$sql_where.=" and r_main.'.$field["key"].'=\'".$search_param["'.$field["key"].'"]."\'";';
 
@@ -449,9 +451,6 @@ public function _list($search_param,$orderby){
         }
         else{
           $content.='$sql_where.=" and r_main.'.$field["key"].' like \'%".$search_param["'.$field["key"].'"]."%\'";';
-        }
-        if($field["type"]=="fkey"){
-
         }
     $content.='
     }';
@@ -463,7 +462,7 @@ public function _list($search_param,$orderby){
         //$sql_where.=" and r_main.'.$field["key"].'=\'".$search_param['.$field["key"].']."\'";
         if($field["type"]=="fkey"){
 
-          $content.='$sql_where.=" and '.$field["ntbname"].'.'.$field["displayfiel_named"].'=\'".$search_param["'.$field["key"].'_name"]."\'";';
+          $content.='$sql_where.=" and '.$field["ntbname"].'.'.$field["displayfield"].'=\'".$search_param["'.$field["key"].'_name"]."\'";';
 
         }
     $content.='
@@ -784,18 +783,20 @@ $content
         delDir($path);
       }
 
-      $apipath=$path."\\model";
+      $apipath=$path."\\AppLink.api";
       if(!file_exists($apipath)){
         mkdir($apipath,true);
       }
 
       
       $functionreplace="";
-
+      $ItemGroupReplace="";
 
       foreach($apilist as $model=> $funclist){
         
-        $modelfile=$apipath."\\$model.php";
+        $modelfile=$apipath."\\$model.cs";
+        $ItemGroupReplace.='<Compile Include="'.$model.'.cs" />
+        ';
         $fmodel=ucfirst($model);
         $modelobj=$modellist[$model];
         $content="public static class $fmodel".'Mgr 
@@ -806,45 +807,40 @@ $content
         $description=$api["description"];
         $func=$api["func"];
         $url=$urlhead."$model/$func";
-        $content.="//$description";
-            if($api["type"]=="self"){
-               
-                $content.='
-public function '.$func.'($param){';
-
-                $apifuncfile=$CONFIG['workspace']['path']."\\$login\\$alias\\api\\$model\\$func.php";
-                $lines = @file($apifuncfile);
-                $start=false;
-                foreach($lines as $l){
-                    if($start){
-                        $l=str_replace("<?php","",$l);
-                        $l=str_replace("?>","",$l);
-                        $l=str_replace('$dbmgr','$this->dbmgr',$l);
-                        if(strstr($l,"outputJson(")){
-                            $l=str_replace("outputJson(","return ",$l);
-                            $lastkh=strrpos($l, ')', -1);
-                            $l=substr($l,0,$lastkh-1).substr($l,$lastkh);
-                        }
-                        $content.=" ".$l;
-                    }
-                    if(substr(trim($l),0,13)=="////starthere"){
-                        $start=true;
-                    }
-                }
-
-
-                $content.='
-}
+        $content.='
+        /// <summary>
+        /// '.$description.'
+        /// </summary>
+        ';
+            
+               $content.='
+        /// <param name="api">Get from APIFactory.GetInstance()</param>
+        /// <param name="requsetParam">list.add(new AppLink.core.Param("key","value")</param>
+        /// <returns>Object[] or Object to change to Dictionary<string,string>[] or Dictionary<string,string></returns>
+               ';
+                $content.='        public static Object '.$func.'(APIInstance api, List<Param> requsetParam){
+              return api.CallApi("'.$model.'/'.$func.'", requsetParam);
+        }
+';
+        $content.='
+        /// <param name="api">Get from APIFactory.GetInstance()</param>
+        /// <param name="requestParam">list.add(new AppLink.core.Param("key","value")</param>
+        /// <param name="requestParam">Async Call back to get data</param>
+        ';
+        $content.='        public static void '.$func.'(APIInstance api, List<Param> requsetParam,APIInstance.CallbackDelegate callback){
+              api.CallApiAsync("'.$model.'/'.$func.'", requsetParam, callback);
+        }
 ';
 
-            }else{
+
+            {
 
                 if($func=="list"){
                     
                     $content.='
-public function _list($search_param,$orderby){
+public static DataTable list(DBInstance dbmgr,List<Param> searchParam,string orderby=""){
 
-    $sql_where="";
+    StringBuilder sql_where=new StringBuilder();
 
 ';
                 $search_cond="";
@@ -855,34 +851,33 @@ public function _list($search_param,$orderby){
                 $sql_table=" from  ".$modelobj["tablename"]." r_main ";
                 foreach($modelobj["fields"]["field"] as $field){
                     $content.='
-    if(isset($search_param["'.$field["key"].'"]))
+    if(Param.FindContainParamKey(searchParam,"'.$field["key"].'"))
     {
         ';
         //$sql_where.=" and r_main.'.$field["key"].'=\'".$search_param['.$field["key"].']."\'";
-        if($field["type"]=="fkey"){
-
-          $content.='$sql_where.=" and r_main.'.$field["key"].'=\'".$search_param["'.$field["key"].'"]."\'";';
-
+        if($field["type"]=="fkey"
+          ||$field["type"]=="number"
+          ||$field["type"]=="select"){
+          //
+          $content.='sql_where.Append(" and r_main.'.$field["key"].'=@'.$field["key"].' ");';
         }elseif($field["type"]=="datetime"){
           //
         }
         else{
-          $content.='$sql_where.=" and r_main.'.$field["key"].' like \'%".$search_param["'.$field["key"].'"]."%\'";';
-        }
-        if($field["type"]=="fkey"){
-
+          
+          $content.='sql_where.Append(" and r_main.'.$field["key"].' like @'.$field["key"].' ");';
         }
     $content.='
     }';
     if($field["type"]=="fkey"){
     $content.='
-    if(isset($search_param["'.$field["key"].'_name"]))
+    if(Param.FindContainParamKey(searchParam,"'.$field["key"].'_name"))
     {
         ';
         //$sql_where.=" and r_main.'.$field["key"].'=\'".$search_param['.$field["key"].']."\'";
         if($field["type"]=="fkey"){
 
-          $content.='$sql_where.=" and '.$field["ntbname"].'.'.$field["displayfiel_named"].'=\'".$search_param["'.$field["key"].'_name"]."\'";';
+          $content.='sql_where.Append(" and '.$field["ntbname"].'.'.$field["displayfield"].' like @'.$field["key"].'_name ");';
 
         }
     $content.='
@@ -891,14 +886,14 @@ public function _list($search_param,$orderby){
     }           
                   if($field["type"]=="datetime"){
                     $content.='
-    if(isset($search_param["'.$field["key"].'_from"]))
+    if(Param.FindContainParamKey(searchParam,"'.$field["key"].'_from"))
     {
-        $sql_where.=" and r_main.'.$field["key"].'>=\'".$search_param["'.$field["key"].'_from"]."\'";
+        sql_where.Append(" and r_main.'.$field["key"].'>=@'.$field["key"].'_from ");
     }
 
-    if(isset($search_param["'.$field["key"].'_to"]))
+    if(Param.FindContainParamKey(searchParam,"'.$field["key"].'_to"))
     {
-        $sql_where.=" and r_main.'.$field["key"].'<=\'".$search_param["'.$field["key"].'_to"]."\'";
+        sql_where.Append(" and r_main.'.$field["key"].'<=@'.$field["key"].'_to  ");
     }
   ';        
 
@@ -942,22 +937,20 @@ public function _list($search_param,$orderby){
                 }
 
                 $content.='
-    $sql="select '.$sql_key.' '.$sql_table.' where 1=1 $sql_where '.$search_cond.'
-    $orderby";
-                $query = $this->dbmgr->query($sql);
-                $result = $this->dbmgr->fetch_array_all($query);
-
-                return $result;
+    string sql="select '.$sql_key.' '.$sql_table.' where 1=1 "+sql_where.ToString()+" '.$search_cond.' "+orderby;
+                
+                return dbmgr.ExecuteDataTable(sql, searchParam);
+';
+                $content.='
+}
 ';
 
                 }elseif($func=="get"){
 
 $content.='
-public function '.$func.'($id){
+public static Dictionary<string,object> '.$func.'(DBInstance dbmgr,int id){
 
   ';
-
-
 
   $sql_key=" r_main.id ";
                 $sql_table=" from  ".$modelobj["tablename"]." r_main ";
@@ -1001,9 +994,23 @@ public function '.$func.'($id){
                 }
 
                 $content.='
-    $sql="select '.$sql_key.' '.$sql_table.' where r_main.id=$id ";
-                $query = $this->dbmgr->query($sql);
-                $result = $this->dbmgr->fetch_array($query);
+
+
+    Dictionary<string,object> retDict=new Dictionary<string,object>();
+
+
+    string sql="select '.$sql_key.' '.$sql_table.' where r_main.id="+id.ToString();
+                DataTable dt=dbmgr.ExecuteDataTable(sql, null);
+                if (dt.Rows.Count == 0)
+                {
+                    return retDict;
+                }
+
+                DataRow dr = dt.Rows[0];
+                foreach (DataColumn item in dt.Columns)
+                {
+                    retDict.Add(item.ColumnName, dr[item.ColumnName]);
+                }
 
                 ';
                 foreach($modelobj["fields"]["field"] as $field){
@@ -1016,26 +1023,23 @@ public function '.$func.'($id){
 
                       if($field["relatetable"]!=""){
                         $content.='
-                          $sql="select '.$r_ntbname.'.* from '.$r_relatetable.' 
+                          string flistsql="select '.$r_ntbname.'.* from '.$r_relatetable.' 
                           inner join '.$r_tablename.' '.$r_ntbname.' on '.$r_relatetable.'.fid='.$r_ntbname.'.id
-                          where '.$r_relatetable.'.pid=$id '.$r_condition.' ";
-                          $query = $this->dbmgr->query($sql);
-                          $rs = $this->dbmgr->fetch_array_all($query);
+                          where '.$r_relatetable.'.pid="+id.ToString()+" '.$r_condition.' ";
+                          DataTable flistdt= dbmgr.ExecuteDataTable(flistsql, null);
 
-                          $result["'.$field["key"].'"]=$rs;
-
+                          retDict.Add("'.$field["key"].'", flistdt);
                         ';
                       }else{
 
                         $content.='
-                          if(!empty($result["'.$field["key"].'"])){
-                            $idlist="0".$result["'.$field["key"].'"];
-                            $sql="select '.$r_ntbname.'.* from  '.$r_tablename.' '.$r_ntbname.'
-                            where id in ( $idlist )  '.$r_condition.' ";
-                            $query = $this->dbmgr->query($sql);
-                            $rs = $this->dbmgr->fetch_array_all($query);
+                          if(!string.IsNullOrEmpty(dr["'.$field["key"].'"].ToString())){
+                            string idlist="0".$result["'.$field["key"].'"];
+                            string flistsql="select '.$r_ntbname.'.* from  '.$r_tablename.' '.$r_ntbname.'
+                            where id in ( "+idlist+" )  '.$r_condition.' ";
+                            DataTable flistdt= dbmgr.ExecuteDataTable(flistsql, null);
 
-                            $result["'.$field["key"].'"]=$rs;
+                            retDict.Add("'.$field["key"].'", flistdt);
                           }
                         ';
                       }
@@ -1045,14 +1049,17 @@ public function '.$func.'($id){
                 $content.='
 
 
-                return $result;
+                return retDict;
+';
+                $content.='
+}
 ';
                 
                 }elseif($func=="update"){
 
 
 $content.='
-public function '.$func.'($request,$id=0){
+public static int '.$func.'(DBInstance dbmgr,List<Param> request,int id=0){
   //id=0为插入新字段
   ';
               $insertsql="insert into ".$modelobj["tablename"]." (id";
@@ -1075,7 +1082,7 @@ public function '.$func.'($request,$id=0){
                 $insertsql=$insertsql.",`".$value["key"]."`";
               }
               $insertsql=$insertsql." ) values (";
-              $insertsql=$insertsql.'$id';
+              $insertsql=$insertsql.'"+id.ToString()+"';
               foreach($modelobj["fields"]["field"] as $value){
                 
                 
@@ -1090,21 +1097,23 @@ public function '.$func.'($request,$id=0){
                   continue;
                 }
 
+                  $insertsql=$insertsql.',@'.$value["key"].' ';
+                  $updatesql=$updatesql.',`'.$value["key"].'`=@'.$value["key"].' ';
+
                 if($value["type"]=="password"){
-                  $insertsql=$insertsql.',\'".md5($request["'.$value["key"].'"])."\'';
-                  $updatesql=$updatesql.',`'.$value["key"].'`=\'".md5($request["'.$value["key"].'"])."\'';
-                }else{
-                  $insertsql=$insertsql.',\'".parameter_filter($request["'.$value["key"].'"])."\'';
-                  $updatesql=$updatesql.',`'.$value["key"].'`=\'".parameter_filter($request["'.$value["key"].'"])."\'';
+                  $content.=' Param.GetParam("'.$value["key"].'").Value=Utils.MD5Encrypt(Param.GetParam("'.$value["key"].'").Value.ToString()); ';
                 }
+
+
+
                 if($value["type"]=="check"&&$value["unique"]=="1"&&parameter_filter($request[$value["key"]])=="Y"){
-                  $otherupdatesql.=' $this->dbmgr->query("update "'.$modelobj["tablename"].'" set '.$value["key"].'=\'N\' where ".$request["'.$value["key"].'"].=\'Y\'");';
+                  $otherupdatesql.=' dbmgr.ExecuteNonQuery(tx,"update "'.$modelobj["tablename"].'" set '.$value["key"].'=\'N\' where ".$request["'.$value["key"].'"].=\'Y\'",null);';
                 }
                 if($value["type"]=="flist"&&$value["relatetable"]!=""){
                   $otherupdatesql.='
-                  $fidlist=explode(\',\', $request["'.$value["key"].'"]);
-                  foreach ($fidlist as  $fid) {
-                    $this->dbmgr->query("insert into '.$value["relatetable"].' values($id,$fid)");
+                  string[] fidlist=Param.GetParam(request,"'.$value["key"].'").Value.ToString().Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+                  foreach (string fid as fidlist) {
+                    dbmgr.ExecuteNonQuery(tx,"insert into '.$value["relatetable"].' values("+id.ToString()+","+fid.ToString()+")",null);
                   }
                   ';
                   
@@ -1112,50 +1121,62 @@ public function '.$func.'($request,$id=0){
               }
 
             $content.=' 
-              $id=$id+0;
-              $this->dbmgr->begin_trans();
+              using (DbConnection conn = dbmgr.GetDbConnection())
+            {
+                conn.Open();
+                using (DbTransaction tx = conn.BeginTransaction())
+                {
 
-              if($id==0){
-                $id=$this->dbmgr->getNewId("'.$modelobj["tablename"].'");
-                $sql="'.$insertsql.' )";
-              }else{
-                $sql="'.$updatesql.' where id=$id";
+                string sql="";
+
+                if(id==0){
+                  id=dbmgr.getNewId("'.$modelobj["tablename"].'");
+                  sql="'.$insertsql.' )";
+                }else{
+                  sql="'.$updatesql.' where id="+id.ToString();
+                }
+
+                dbmgr.ExecuteNonQuery(tx,sql,request);
+
+                '.$otherupdatesql.'
+                
+
+                tx.Commit();
+                return id;
+
               }
-
-              '.$otherupdatesql.'
-              $this->dbmgr->query($sql);
-
-              $this->dbmgr->commit_trans();
-              return $id;
+            }
             ';
 
 
+                $content.='
+}
+';
               
                 }elseif($func=="delete"){
 
 $content.='
-public function '.$func.'($idlist){
-  $idlist=explode(",",$idlist);
-    for($i=0;$i<count($idlist);$i++){
-        $idlist[$i]=$idlist[$i]+0;
-    }
+public static void '.$func.'(DBInstance dbmgr, List<int> idlist){
+  string stridlist = string.Join(",", idlist);
+using (DbConnection conn = dbmgr.GetDbConnection())
+            {
+                conn.Open();
+                using (DbTransaction tx = conn.BeginTransaction()){
 
-    $idlist=join(",",$idlist);
-    $dbMgr->begin_trans();
+  string sql="update '.$modelobj["tablename"].' set status=\'D\' where id in ("+stridlist+")";
+  dbmgr.ExecuteNonQuery(tx,sql,null);
 
-  $sql="update '.$modelobj["tablename"].' set status=\'D\' where id in ($idlist)";
-  $query = $this->dbmgr->query($sql);
-
-    $dbMgr->commit_trans();
-    return true;
+   tx.Commit();
+}
+}
   ';      
+                $content.='
+}
+';
 
                 
                 }
                 
-                $content.='
-}
-';
             }
             //copy(ROOT."\\workspace_copy\\development\\typescript\\providers\\test.ts",$modelfile);
            // file_put_contents($modelfile,str_replace('{{$modelname}}',$fmodel,file_get_contents($modelfile))); 
@@ -1167,17 +1188,37 @@ public function '.$func.'($idlist){
 }
 "; 
         //echo $content;
-        $content="<?php
-$content
-?>";
+        $content="using AppLink.core;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace AppLink.api
+{
+  $content
+}
+";
            file_put_contents($modelfile, $content);
       }
 
-      recurse_copy(ROOT."\\workspace_copy\\development\\php\\",$path);
 
 
+      recurse_copy(ROOT."\\workspace_copy\\development\\csharp\\",$path);
+
+      $filename=$apipath."\\AppLink.api.csproj";
+      file_put_contents($filename,str_replace('<!--repacefilehere-->',$ItemGroupReplace,file_get_contents($filename)));
 
 
+      $filename=$path."\\AppLink.example\\App.config";
+      file_put_contents($filename,str_replace('{{applink.mysql.hosts}}',"mysql.app-link.org",file_get_contents($filename)));
+      file_put_contents($filename,str_replace('{{applink.mysql.userid}}',$login,file_get_contents($filename)));
+      file_put_contents($filename,str_replace('{{applink.mysql.password}}',md5($login."_49339"),file_get_contents($filename)));
+      file_put_contents($filename,str_replace('{{applink.mysql.database}}',$login."_".$alias,file_get_contents($filename)));
+      file_put_contents($filename,str_replace('{{applink.api}}',"http://cmsdev.app-link.org/$login/$alias/api/",file_get_contents($filename)));
 
       //exit;
       return $path;

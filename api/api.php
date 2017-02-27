@@ -26,6 +26,9 @@
     }elseif($_REQUEST["type"]=="php"){
         $modellist=$modelMgr->getModelList($User["login"],$appinfo["alias"]);
         $folder=$generateMgr->generatePHP($User["login"],$appinfo["alias"],$modellist);
+    }elseif($_REQUEST["type"]=="csharp"){
+        $modellist=$modelMgr->getModelList($User["login"],$appinfo["alias"]);
+        $folder=$generateMgr->generateCSharp($User["login"],$appinfo["alias"],$modellist);
     }
     $zip=new ZipArchive();
     $zipfile=$CONFIG['workspace']['path']."\\".$User["login"]."\\".$appinfo["alias"]."\\logs\\sourcecode_".$_REQUEST["type"].".zip";

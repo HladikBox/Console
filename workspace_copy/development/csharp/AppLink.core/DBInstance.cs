@@ -231,6 +231,12 @@ namespace AppLink.core
 
         #endregion
 
+        public int getNewId(string tablename)
+        {
+            string sql = "select id from "+tablename;
+            int id = (int)this.ExecuteScalar(sql, null);
+            return id + 1;
+        }
 
     }
 }

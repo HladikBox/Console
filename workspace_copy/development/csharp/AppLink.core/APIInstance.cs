@@ -16,7 +16,7 @@ namespace AppLink.core
 
     public class APIInstance
     {
-        public delegate void CallbackDelegate(Object dt);
+        public delegate void CallbackDelegate(string url,List<Param> param,Object dt);
         
         public string URLHeader { get; set; }
 
@@ -40,7 +40,7 @@ namespace AppLink.core
             try
             {
                 url = URLHeader + url;
-                string postdata = changePostToStr(post);
+                string postdata = ChangePostToStr(post);
 
                 string sign = "";
                 string md5str = "";
@@ -50,7 +50,7 @@ namespace AppLink.core
                     md5str = url + "~" + postdata + "~" + TOKEN + "~" + RID;
                     fmd5str = md5str;
                     md5str = md5str.ToUpper();
-                    sign = MD5Encrypt(md5str + SALT);
+                    sign = Utils.MD5Encrypt(md5str + SALT);
                 }
 
                 request = (HttpWebRequest)WebRequest.Create(url);
@@ -82,7 +82,7 @@ namespace AppLink.core
                 stream.Write(postdatabytes, 0, postdatabytes.Length);
                 stream.Close();
 
-                CallObject call = new CallObject(callbackmethod,this);
+                CallObject call = new CallObject(callbackmethod,this,url,post);
 
                 request.BeginGetResponse(new AsyncCallback(call.GetResponseCallback), request);
 
@@ -104,7 +104,7 @@ namespace AppLink.core
             try
             {
                 url = URLHeader + url;
-                string postdata = changePostToStr(post);
+                string postdata = ChangePostToStr(post);
 
                 string sign = "";
                 string md5str = "";
@@ -114,7 +114,7 @@ namespace AppLink.core
                     md5str = url + "~" + postdata + "~" + TOKEN + "~" + RID;
                     fmd5str = md5str;
                     md5str = md5str.ToUpper();
-                    sign = MD5Encrypt(md5str + SALT);
+                    sign = Utils.MD5Encrypt(md5str + SALT);
                 }
 
                 request = (HttpWebRequest)WebRequest.Create(url);
@@ -169,7 +169,7 @@ namespace AppLink.core
             }
         }
 
-        private string changePostToStr(List<Param> post)
+        public static string ChangePostToStr(List<Param> post)
         {
             if (post == null)
             {
@@ -212,26 +212,6 @@ namespace AppLink.core
         }
         #endregion
 
-        public static string MD5Encrypt(string strText)
-        {
-            string pwd = string.Empty;
-
-            //实例化一个md5对像
-            MD5 md5 = MD5.Create();
-
-            // 加密后是一个字节类型的数组，这里要注意编码UTF8/Unicode等的选择　
-            byte[] s = md5.ComputeHash(Encoding.UTF8.GetBytes(strText));
-
-            // 通过使用循环，将字节类型的数组转换为字符串，此字符串是常规字符格式化所得
-            for (int i = 0; i < s.Length; i++)
-            {
-                // 将得到的字符串使用十六进制类型格式。格式后的字符是小写的字母，如果使用大写（X）则格式后的字符是大写字符 
-                pwd = pwd + s[i].ToString("X");
-            }
-
-            return pwd.ToLower();
-        }
-
         private string TOKEN { set; get; }
         private string RID { set; get; }
 
@@ -254,10 +234,14 @@ namespace AppLink.core
         class CallObject{
             private CallbackDelegate callback;
             private APIInstance api;
-            public CallObject(CallbackDelegate callback,APIInstance api)
+            private string URL ;
+            private List<Param> PARAM;
+            public CallObject(CallbackDelegate callback,APIInstance api,string url,List<Param> param)
             {
                 this.callback += callback;
                 this.api = api;
+                this.URL = url;
+                this.PARAM = param;
             }
 
             public void GetResponseCallback(IAsyncResult asynchronousResult)
@@ -276,7 +260,7 @@ namespace AppLink.core
                     string content = sr.ReadToEnd();
                     sr.Close();
                     Object dt= ToDataTable(content);
-                    this.callback(dt);
+                    this.callback(URL, PARAM, dt);
                 }
                 catch (Exception ex)
                 {

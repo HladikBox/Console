@@ -8,6 +8,30 @@ namespace AppLink.core
 {
     public class Param
     {
+        public static bool FindContainParamKey(List<Param> list,string key) 
+        {
+            foreach (var item in list)
+            {
+                if (item.name == key)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static Param GetParam(List<Param> list, string key)
+        {
+            foreach (var item in list)
+            {
+                if (item.name == key)
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+
         string name;
 
         public string Name
