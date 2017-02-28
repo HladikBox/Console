@@ -499,11 +499,6 @@ public function _list($search_param,$orderby){
                     $sql_key=$sql_key." else 'unknow' ";
                     $sql_key=$sql_key." end as ".$field["key"];
 
-                  }else if($field["type"]=="check"){
-
-                    $sql_key=$sql_key." ,case   r_main.".$field["key"]." when 'Y' then '".$field["yvalue"]."' else '".$field["nvalue"]."' ";
-                    $sql_key=$sql_key." end as ".$field["key"];
-
                   }else if($field["type"]=="fkey"){
                   
                     $sql_key=$sql_key." ,".$field["ntbname"].".".$field["displayfield"]." ".$field["key"]."_name,r_main.".$field["key"];
@@ -556,11 +551,6 @@ public function '.$func.'($id){
                       $sql_key=$sql_key." when '".$option["value"]."' then '".$option["name"]."'";
                     }
                     $sql_key=$sql_key." else 'unknow' ";
-                    $sql_key=$sql_key." end as ".$field["key"];
-
-                  }else if($field["type"]=="check"){
-
-                    $sql_key=$sql_key." ,case   r_main.".$field["key"]." when 'Y' then '".$field["yvalue"]."' else '".$field["nvalue"]."' ";
                     $sql_key=$sql_key." end as ".$field["key"];
 
                   }else if($field["type"]=="fkey"){
@@ -914,11 +904,6 @@ public static DataTable list(DBInstance dbmgr,List<Param> searchParam,string ord
                     $sql_key=$sql_key." else 'unknow' ";
                     $sql_key=$sql_key." end as ".$field["key"];
 
-                  }else if($field["type"]=="check"){
-
-                    $sql_key=$sql_key." ,case   r_main.".$field["key"]." when 'Y' then '".$field["yvalue"]."' else '".$field["nvalue"]."' ";
-                    $sql_key=$sql_key." end as ".$field["key"];
-
                   }else if($field["type"]=="fkey"){
                   
                     $sql_key=$sql_key." ,".$field["ntbname"].".".$field["displayfield"]." ".$field["key"]."_name,r_main.".$field["key"];
@@ -969,11 +954,6 @@ public static Dictionary<string,object> '.$func.'(DBInstance dbmgr,int id){
                       $sql_key=$sql_key." when '".$option["value"]."' then '".$option["name"]."'";
                     }
                     $sql_key=$sql_key." else 'unknow' ";
-                    $sql_key=$sql_key." end as ".$field["key"];
-
-                  }else if($field["type"]=="check"){
-
-                    $sql_key=$sql_key." ,case   r_main.".$field["key"]." when 'Y' then '".$field["yvalue"]."' else '".$field["nvalue"]."' ";
                     $sql_key=$sql_key." end as ".$field["key"];
 
                   }else if($field["type"]=="fkey"){
