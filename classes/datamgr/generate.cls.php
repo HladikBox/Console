@@ -248,9 +248,8 @@ public $func(data) {
                 if($func=="list"){
                 
                $funcstr.='
-
-//$description
-public $func(search_condition_json) {
+//'.$description.'
+public list(search_condition_json) {
         var url = ApiConfig.getApiUrl()+"'.$url.'";
         var headers = ApiConfig.GetHeader(url, search_condition_json);
         let options = new RequestOptions({ headers: headers });
