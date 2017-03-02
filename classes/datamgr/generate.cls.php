@@ -181,7 +181,7 @@ function ".$fmodel."Api()
 
     
     
-    public function generateTypeScript($login,$alias){
+    public function generateTypeScript($login,$alias,$modellist){
     Global $CONFIG;
       $login=parameter_filter($login);
       $alias=parameter_filter($alias);
@@ -214,7 +214,9 @@ function ".$fmodel."Api()
         $modelfile=$apipath."\\$model.api.ts";
         $fmodel=ucfirst($model);
         $funcstr="";
-        
+        $modelobj=$modellist[$model];
+
+
         foreach($funclist as $api){
         $description=$api["description"];
         $func=$api["func"];
@@ -245,11 +247,11 @@ public $func(data) {
 
                 if($func=="list"){
                 
-               $funcstr.="
+               $funcstr.='
 
 //$description
 public $func(search_condition_json) {
-        var url = ApiConfig.getApiUrl()+'$url';
+        var url = ApiConfig.getApiUrl()+"'.$url.'";
         var headers = ApiConfig.GetHeader(url, search_condition_json);
         let options = new RequestOptions({ headers: headers });
         let body=ApiConfig.ParamUrlencoded(search_condition_json);
@@ -261,7 +263,120 @@ public $func(search_condition_json) {
 
         
     }
-";
+
+
+//先从服务器中同步数据到本地数据库，再从本地数据库中搜索数据
+public listInDB(search_condition_json, callback) {
+    
+    var db = DBHelper.GetInstance();
+    if (db.isDBReady() == false) {
+        this.list(search_condition_json).then(data => {
+            callback(data);
+        });
+        return;
+    }
+        var ost = this;
+        this.createTable();
+        try {
+            db.getLastestUpdatedTime(this.tableName(), function (calltime) {
+                //alert(calltime);
+                var url = ApiConfig.getApiUrl() + "'.$url.'";
+                var headers = ApiConfig.GetHeader(url, {"lastupdatecalltime":calltime});
+                let options = new RequestOptions({ headers: headers });
+                let body = ApiConfig.ParamUrlencoded({"lastupdatecalltime":calltime});
+                try {
+                    var ret = ost.http.post(url, body, options).toPromise()
+                        .then(res => {
+                            var data = res.json();
+                            try {
+                                DBHelper.GetInstance().batchUpdate(ost.tableName(), ost.tableColumns(), data, function () {
+                                    
+                                    DBHelper.GetInstance().updateLastestCallTime(ost.tableName());
+                                    ost.query(search_condition_json, callback);
+                                });
+                            } catch (ex) {
+                                ost.query(search_condition_json, callback);
+                            }
+                        })
+                        .catch(err => {
+                            ost.query(search_condition_json, callback);
+                        });
+                } catch (err){
+                    
+                }
+            });
+        } catch (ex){
+            this.query(search_condition_json, callback);
+        }
+}
+
+    public query(condition, callback) {
+        this.createTable();
+        var sql = "select * from " + this.tableName() + " where 1=1 ";
+        var searchdata = new Array();
+        for (let i in condition) {
+            var columns = this.tableColumns();
+            var coltype = columns[i];
+            if (coltype == "varchar") {
+                sql += " and " + i + " like ?";
+                searchdata.push(condition[i]);
+            } else if (coltype=="int") {
+                sql += " and " + i + " = ?";
+                searchdata.push(condition[i]);
+            }
+        }
+        if (condition["orderby"] != null && condition["orderby"] != "") {
+            sql += " order by "+condition["orderby"];
+        }
+
+        DBHelper.GetInstance().query(sql, searchdata, callback);
+    }
+
+    public tableName() {
+        return "'.$model.'";
+    }
+
+    public static CreateTable = false;
+    public createTable() {
+        if ('.$fmodel.'Api.CreateTable == false) {
+            DBHelper.GetInstance().createTable(this.tableName(), this.tableColumns());
+            '.$fmodel.'Api.CreateTable = true;
+        }
+    }
+
+    public tableColumns() {
+        var columns = {};';
+foreach($modelobj["fields"]["field"] as $field){
+  if($field["type"]=="number"){
+    $funcstr.='
+    columns["'.$field["key"].'"] = "int";//'.$field["name"];
+  }elseif($field["type"]=="fkey"){
+    $funcstr.='
+    columns["'.$field["key"].'"] = "int";//'.$field["name"];
+    $funcstr.='
+    columns["'.$field["key"].'_name"] = "varchar";//'.$field["name"];
+  }elseif($field["type"]=="select"){
+    $funcstr.='
+    columns["'.$field["key"].'"] = "varchar";//'.$field["name"];
+    $funcstr.='
+    columns["'.$field["key"].'_name"] = "varchar";//'.$field["name"];
+  }elseif($field["type"]=="flist"&&$field["relatetable"]!=""){
+
+  }elseif($field["type"]=="grid"){
+
+  }else{
+    $funcstr.='
+    columns["'.$field["key"].'"] = "varchar";//'.$field["name"];
+  }
+}
+
+        $funcstr.='
+        return columns;
+    }
+
+
+
+';
                 
                 }elseif($func=="get"){
                 
