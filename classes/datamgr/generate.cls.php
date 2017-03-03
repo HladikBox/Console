@@ -556,12 +556,11 @@ public function _list($search_param,$orderby){
         //$sql_where.=" and r_main.'.$field["key"].'=\'".$search_param['.$field["key"].']."\'";
         if($field["type"]=="fkey"
           ||$field["type"]=="number"
-          ||$field["type"]=="select"){
+          ||$field["type"]=="select"
+          ||$field["type"]=="datetime"){
 
           $content.='$sql_where.=" and r_main.'.$field["key"].'=\'".$search_param["'.$field["key"].'"]."\'";';
 
-        }elseif($field["type"]=="datetime"){
-          //
         }
         else{
           $content.='$sql_where.=" and r_main.'.$field["key"].' like \'%".$search_param["'.$field["key"].'"]."%\'";';
@@ -604,15 +603,6 @@ public function _list($search_param,$orderby){
                     $table=$field["relatetable"];
                     
                     $sql_key=$sql_key." ,'' ".$field["key"];
-                  }else if($field["type"]=="select"){
-
-                    $sql_key=$sql_key." ,case   r_main.".$field["key"]." ";
-                    foreach ($field["options"]["option"] as $option){
-                      $sql_key=$sql_key." when '".$option["value"]."' then '".$option["name"]."'";
-                    }
-                    $sql_key=$sql_key." else 'unknow' ";
-                    $sql_key=$sql_key." end as ".$field["key"];
-
                   }else if($field["type"]=="fkey"){
                   
                     $sql_key=$sql_key." ,".$field["ntbname"].".".$field["displayfield"]." ".$field["key"]."_name,r_main.".$field["key"];
@@ -658,15 +648,6 @@ public function '.$func.'($id){
                     $table=$field["relatetable"];
                     
                     $sql_key=$sql_key." ,'' ".$field["key"];
-                  }else if($field["type"]=="select"){
-
-                    $sql_key=$sql_key." ,case   r_main.".$field["key"]." ";
-                    foreach ($field["options"]["option"] as $option){
-                      $sql_key=$sql_key." when '".$option["value"]."' then '".$option["name"]."'";
-                    }
-                    $sql_key=$sql_key." else 'unknow' ";
-                    $sql_key=$sql_key." end as ".$field["key"];
-
                   }else if($field["type"]=="fkey"){
                   
                     $sql_key=$sql_key." ,".$field["ntbname"].".".$field["displayfield"]." ".$field["key"]."_name,r_main.".$field["key"];
@@ -739,8 +720,8 @@ $content.='
 public function '.$func.'($request,$id=0){
   //id=0为插入新字段
   ';
-              $insertsql="insert into ".$modelobj["tablename"]." (id";
-              $updatesql="update ".$modelobj["tablename"]." set updated_date=now() ";
+              $insertsql="insert into ".$modelobj["tablename"]." (id,created_user,created_date,updated_user,updated_date";
+              $updatesql="update ".$modelobj["tablename"]." set updated_user=-1, updated_date=now() ";
               $otherupdatesql="";
               foreach($modelobj["fields"]["field"] as $value){
                 if($value["ismutillang"]=="1"){
@@ -759,7 +740,7 @@ public function '.$func.'($request,$id=0){
                 $insertsql=$insertsql.",`".$value["key"]."`";
               }
               $insertsql=$insertsql." ) values (";
-              $insertsql=$insertsql.'$id';
+              $insertsql=$insertsql.'$id,-1,now(),-1,now()';
               foreach($modelobj["fields"]["field"] as $value){
                 
                 
@@ -827,7 +808,7 @@ public function '.$func.'($idlist){
     $idlist=join(",",$idlist);
     $dbMgr->begin_trans();
 
-  $sql="update '.$modelobj["tablename"].' set status=\'D\' where id in ($idlist)";
+  $sql="update '.$modelobj["tablename"].' set status=\'D\' and updated_date=now() where id in ($idlist)";
   $query = $this->dbmgr->query($sql);
 
     $dbMgr->commit_trans();
@@ -961,11 +942,10 @@ public static DataTable list(DBInstance dbmgr,List<Param> searchParam,string ord
         //$sql_where.=" and r_main.'.$field["key"].'=\'".$search_param['.$field["key"].']."\'";
         if($field["type"]=="fkey"
           ||$field["type"]=="number"
-          ||$field["type"]=="select"){
+          ||$field["type"]=="select"
+          ||$field["type"]=="datetime"){
           //
           $content.='sql_where.Append(" and r_main.'.$field["key"].'=@'.$field["key"].' ");';
-        }elseif($field["type"]=="datetime"){
-          //
         }
         else{
           
@@ -1009,15 +989,6 @@ public static DataTable list(DBInstance dbmgr,List<Param> searchParam,string ord
                     $table=$field["relatetable"];
                     
                     $sql_key=$sql_key." ,'' ".$field["key"];
-                  }else if($field["type"]=="select"){
-
-                    $sql_key=$sql_key." ,case   r_main.".$field["key"]." ";
-                    foreach ($field["options"]["option"] as $option){
-                      $sql_key=$sql_key." when '".$option["value"]."' then '".$option["name"]."'";
-                    }
-                    $sql_key=$sql_key." else 'unknow' ";
-                    $sql_key=$sql_key." end as ".$field["key"];
-
                   }else if($field["type"]=="fkey"){
                   
                     $sql_key=$sql_key." ,".$field["ntbname"].".".$field["displayfield"]." ".$field["key"]."_name,r_main.".$field["key"];
@@ -1061,15 +1032,6 @@ public static Dictionary<string,object> '.$func.'(DBInstance dbmgr,int id){
                     $table=$field["relatetable"];
                     
                     $sql_key=$sql_key." ,'' ".$field["key"];
-                  }else if($field["type"]=="select"){
-
-                    $sql_key=$sql_key." ,case   r_main.".$field["key"]." ";
-                    foreach ($field["options"]["option"] as $option){
-                      $sql_key=$sql_key." when '".$option["value"]."' then '".$option["name"]."'";
-                    }
-                    $sql_key=$sql_key." else 'unknow' ";
-                    $sql_key=$sql_key." end as ".$field["key"];
-
                   }else if($field["type"]=="fkey"){
                   
                     $sql_key=$sql_key." ,".$field["ntbname"].".".$field["displayfield"]." ".$field["key"]."_name,r_main.".$field["key"];
@@ -1156,8 +1118,8 @@ $content.='
 public static int '.$func.'(DBInstance dbmgr,List<Param> request,int id=0){
   //id=0为插入新字段
   ';
-              $insertsql="insert into ".$modelobj["tablename"]." (id";
-              $updatesql="update ".$modelobj["tablename"]." set updated_date=now() ";
+              $insertsql="insert into ".$modelobj["tablename"]." (id,created_user,created_date,updated_user,updated_date";
+              $updatesql="update ".$modelobj["tablename"]." set updated_user=-2, updated_date=now() ";
               $otherupdatesql="";
               foreach($modelobj["fields"]["field"] as $value){
                 if($value["ismutillang"]=="1"){
@@ -1176,7 +1138,7 @@ public static int '.$func.'(DBInstance dbmgr,List<Param> request,int id=0){
                 $insertsql=$insertsql.",`".$value["key"]."`";
               }
               $insertsql=$insertsql." ) values (";
-              $insertsql=$insertsql.'"+id.ToString()+"';
+              $insertsql=$insertsql.'"+id.ToString()+",-2,now(),-2,now()';
               foreach($modelobj["fields"]["field"] as $value){
                 
                 

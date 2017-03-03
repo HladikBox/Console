@@ -8,6 +8,18 @@ namespace AppLink.core
 {
     public class Param
     {
+        public static List<Param> ConvertDictionaryToList(Dictionary<string,object> dict)
+        {
+            List<Param> list = new List<Param>();
+
+            foreach (var item in dict)
+            {
+                list.Add(new Param(item.Key,item.Value));
+            }
+
+            return list;
+        }
+        
         public static bool FindContainParamKey(List<Param> list,string key) 
         {
             foreach (var item in list)

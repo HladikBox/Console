@@ -233,10 +233,16 @@ namespace AppLink.core
 
         public int getNewId(string tablename)
         {
-            string sql = "select id from "+tablename;
-            int id = (int)this.ExecuteScalar(sql, null);
+            int id = 0;
+            string sql = "select ifnull(max(id),0) from " + tablename + " where id>0";
+            DataTable dt = this.ExecuteDataTable(sql, null);
+            foreach (DataRow dr in dt.Rows)
+            {
+                id = Convert.ToInt32(dr[0]);
+            }
             return id + 1;
         }
+
 
     }
 }
