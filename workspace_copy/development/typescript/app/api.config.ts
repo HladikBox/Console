@@ -1,3 +1,6 @@
+import { Headers, RequestOptions } from '@angular/http';
+import { SQLite } from 'ionic-native';
+
 export class ApiConfig {
 	
     public static getApiUrl() {
