@@ -6,6 +6,9 @@ export class ApiConfig {
     public static getApiUrl() {
         return "{{$myapiaddress}}";
     }
+    public static getUploadPath() {
+        return "{{$myapiuploadaddress}}";
+    }
 	
     public static ParamUrlencoded(json) {
         var arr = new Array();

@@ -451,6 +451,8 @@ public $func(idlist) {
       $apiconfig=$path."\\app\\api.config.ts";
 
       file_put_contents($apiconfig,str_replace('{{$myapiaddress}}',$CONFIG['workspace']['domain']."/$login/$alias/api/",file_get_contents($apiconfig)));
+
+      file_put_contents($apiconfig,str_replace('{{$myapiuploadaddress}}',$CONFIG['workspace']['domain']."/$login/$alias/upload/",file_get_contents($apiconfig)));
       return $path;
     }
 
@@ -518,7 +520,7 @@ public function '.$func.'($param){';
                         if(strstr($l,"outputJson(")){
                             $l=str_replace("outputJson(","return ",$l);
                             $lastkh=strrpos($l, ')', -1);
-                            $l=substr($l,0,$lastkh-1).substr($l,$lastkh);
+                            $l=substr($l,0,$lastkh).substr($l,$lastkh+1);
                         }
                         $content.=" ".$l;
                     }
