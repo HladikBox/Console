@@ -310,6 +310,16 @@ public listInDB(search_condition_json, callback) {
 }
 
     public query(condition, callback) {
+		
+		var db = DBHelper.GetInstance();
+		if (db.isDBReady() == false) {
+			this.list(condition).then(data => {
+				callback(data);
+			});
+			return;
+		}
+		
+		
         this.createTable();
         var sql = "select * from " + this.tableName() + " where 1=1 ";
         var searchdata = new Array();
