@@ -11,6 +11,6 @@ $CONFIG['database']['database']	= '';
 $CONFIG['database']['user']		= '';  
 $CONFIG['database']['psw']		= ''; 
 
-
+die("please config the connect info here".__FILE__);//别忘记删掉这行
 
             ?>

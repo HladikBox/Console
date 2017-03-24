@@ -112,14 +112,14 @@ class DbMysql
 		$this->select_db($dbname);
 		if(!($query = @mysql_query($sql, $this->conn)))
 		{
-			logger_mgr::logError("sql error :$sql");
+			//logger_mgr::logError("sql error :$sql");
 			if($this->in_trans>0)
 			{
 				$this->rollback_trans();
 			}
 			$this->halt($sql.'Sqlsrv Query Error', $sql);
 		}
-		logger_mgr::logDebug("sql :$sql");
+		//logger_mgr::logDebug("sql :$sql");
 		$this->querynum++;
 		
 		return $query;
