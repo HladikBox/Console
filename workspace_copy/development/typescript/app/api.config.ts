@@ -13,19 +13,10 @@ export class ApiConfig {
     public static ParamUrlencoded(json) {
         var arr = new Array();
         for (let i in json) {
-			if(ApiConfig.IsArray(json[i])){
-				for(let j of json[i]){
-					arr.push(  i + "=" + encodeURI(j));
-				}
-			}else{
-				arr.push(  i + "=" + encodeURI(json[i]));
-			}
+            arr.push(  i + "=" + encodeURI(json[i]));
         }
         return arr.join("&");
     }
-	public static IsArray(o){
-		return Object.prototype.toString.call(o)=='[object Array]';
-	}
     private static TOKEN=null;
     private static RID = null;
 

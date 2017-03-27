@@ -77,7 +77,7 @@ class {{modelname}}XmlModel extends XmlModel
   }
   
   //保存成功时做的事情
-  public function afterSave($dbmgr){
+  public function afterSave($dbmgr,$id){
   	if(MODULE=="api"){
 		  //api调用保存
 	}else{
