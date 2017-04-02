@@ -24,7 +24,7 @@ class GithubMgr {
     $data["client_id"]=$this->client_id;
     $data["client_secret"]=$this->client_secret;
     $data["code"]=$code;
-	$ret= request_post($url,$data);
+	  $ret= request_post($url,$data);
     $ret=explode("&",$ret);
     $ret=explode("=",$ret[0]);
     $access_token=$ret[1];
@@ -38,7 +38,7 @@ class GithubMgr {
   }
 
   public function getUser(){
-    $url="https://api.github.com/user?access_token=dcc45be8d6f66d1603ca4966032296b53aafcfab";
+    $url="https://api.github.com/user?access_token=".$this->access_token;
     $res= request_get($url);
     $res=json_decode($res,true);
     //print_r($res);
