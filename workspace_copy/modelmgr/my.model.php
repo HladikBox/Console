@@ -10,6 +10,13 @@ class {{modelname}}XmlModel extends XmlModel
 	parent::fixModelData($xmldata);
   }
   
+  
+  //重新修改传入的请求
+  public function resetRequestData($dbMgr,$request){
+    
+    return $request;
+  }
+  
   //每次调用显示列表界面
   public function fixShowList($data){
 	  return $data;
@@ -69,11 +76,6 @@ class {{modelname}}XmlModel extends XmlModel
   //保存的update语句的重写
   public function fixUpdateSql($sql){
   	return $sql;
-  }
-  //重新修改传入的请求
-  public function resetRequestData($dbMgr,$request){
-    
-    return $request;
   }
   
   //保存成功时做的事情
