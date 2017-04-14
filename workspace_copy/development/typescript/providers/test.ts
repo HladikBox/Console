@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { LoadingController, Loading} from 'ionic-angular';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { Headers, RequestOptions } from '@angular/http';

@@ -226,15 +226,25 @@ function ".$fmodel."Api()
                $funcstr.="
 
 //$description
-public $func(data) {
+public $func(data, showLoadingModal:boolean=true) {
         var url = ApiConfig.getApiUrl()+'$url';
         var headers = ApiConfig.GetHeader(url, data);
         let options = new RequestOptions({ headers: headers });
 
         let body=ApiConfig.ParamUrlencoded(data);
+
+        let loading: Loading=null;
+        if(showLoadingModal){
+          loading = ApiConfig.GetLoadingModal();
+        }
+
         return this.http.post(url, body, options).toPromise()
-            .then(res => res.json())
+            .then((res) => {
+                ApiConfig.DimissLoadingModal(loading);
+                return res.json();
+            })
             .catch(err => {
+                ApiConfig.DimissLoadingModal(loading);
                 this.handleError(err);
             });
 
@@ -249,14 +259,25 @@ public $func(data) {
                 
                $funcstr.='
 //'.$description.'
-public list(search_condition_json) {
+public list(search_condition_json, showLoadingModal:boolean=true) {
         var url = ApiConfig.getApiUrl()+"'.$url.'";
         var headers = ApiConfig.GetHeader(url, search_condition_json);
         let options = new RequestOptions({ headers: headers });
         let body=ApiConfig.ParamUrlencoded(search_condition_json);
+
+
+        let loading: Loading=null;
+        if(showLoadingModal){
+          loading = ApiConfig.GetLoadingModal();
+        }
+
         return this.http.post(url, body, options).toPromise()
-            .then(res => res.json())
+            .then((res) => {
+                ApiConfig.DimissLoadingModal(loading);
+                return res.json();
+            })
             .catch(err => {
+                ApiConfig.DimissLoadingModal(loading);
                 this.handleError(err);
             });
 
@@ -265,7 +286,7 @@ public list(search_condition_json) {
 
 
 //先从服务器中同步数据到本地数据库，再从本地数据库中搜索数据
-public listInDB(search_condition_json, callback) {
+public listInDB(search_condition_json, callback, showLoadingModal:boolean=true) {
     
     var db = DBHelper.GetInstance();
     if (db.isDBReady() == false) {
@@ -276,6 +297,12 @@ public listInDB(search_condition_json, callback) {
     }
         var ost = this;
         this.createTable();
+
+        let loading: Loading=null;
+        if(showLoadingModal){
+          loading = ApiConfig.GetLoadingModal();
+        }
+
         try {
             db.getLastestUpdatedTime(this.tableName(), function (calltime) {
                 //alert(calltime);
@@ -289,22 +316,25 @@ public listInDB(search_condition_json, callback) {
                             var data = res.json();
                             try {
                                 DBHelper.GetInstance().batchUpdate(ost.tableName(), ost.tableColumns(), data, function () {
-                                    
+                                        ApiConfig.DimissLoadingModal(loading);
                                     DBHelper.GetInstance().updateLastestCallTime(ost.tableName());
                                     ost.query(search_condition_json, callback);
                                 });
                             } catch (ex) {
+                                ApiConfig.DimissLoadingModal(loading);
                                 ost.query(search_condition_json, callback);
                             }
                         })
                         .catch(err => {
+                            ApiConfig.DimissLoadingModal(loading);
                             ost.query(search_condition_json, callback);
                         });
                 } catch (err){
-                    
+                    ApiConfig.DimissLoadingModal(loading);
                 }
             });
         } catch (ex){
+            ApiConfig.DimissLoadingModal(loading);
             this.query(search_condition_json, callback);
         }
 }
@@ -392,15 +422,26 @@ foreach($modelobj["fields"]["field"] as $field){
                $funcstr.="
 
 //$description
-public $func(id) {
+public $func(id, showLoadingModal:boolean=true) {
         var url = ApiConfig.getApiUrl()+'$url';
         let json={ 'id' : id };
         var headers = ApiConfig.GetHeader(url, json);
         let options = new RequestOptions({ headers: headers });
         let body=ApiConfig.ParamUrlencoded(json);
+
+
+        let loading: Loading=null;
+        if(showLoadingModal){
+          loading = ApiConfig.GetLoadingModal();
+        }
+
         return this.http.post(url, body, options).toPromise()
-            .then(res => res.json())
+            .then((res) => {
+                ApiConfig.DimissLoadingModal(loading);
+                return res.json();
+            })
             .catch(err => {
+                ApiConfig.DimissLoadingModal(loading);
                 this.handleError(err);
             });
 
@@ -412,14 +453,25 @@ public $func(id) {
                $funcstr.="
 
 //$description
-public $func(update_json) {
+public $func(update_json, showLoadingModal:boolean=true) {
         var url = ApiConfig.getApiUrl()+'$url';
         var headers = ApiConfig.GetHeader(url, update_json);
         let options = new RequestOptions({ headers: headers });
         let body=ApiConfig.ParamUrlencoded(update_json);
+
+
+        let loading: Loading=null;
+        if(showLoadingModal){
+          loading = ApiConfig.GetLoadingModal();
+        }
+
         return this.http.post(url, body, options).toPromise()
-            .then(res => res.json())
+            .then((res) => {
+                ApiConfig.DimissLoadingModal(loading);
+                return res.json();
+            })
             .catch(err => {
+                ApiConfig.DimissLoadingModal(loading);
                 this.handleError(err);
             });
 
@@ -431,15 +483,26 @@ public $func(update_json) {
                $funcstr.="
 
 //$description
-public $func(idlist) {
+public $func(idlist, showLoadingModal:boolean=true) {
         var url = ApiConfig.getApiUrl()+'$url';
         let json={ 'idlist' : idlist };
         var headers = ApiConfig.GetHeader(url, json);
         let options = new RequestOptions({ headers: headers });
         let body=ApiConfig.ParamUrlencoded(json);
+
+
+        let loading: Loading=null;
+        if(showLoadingModal){
+          loading = ApiConfig.GetLoadingModal();
+        }
+
         return this.http.post(url, body, options).toPromise()
-            .then(res => res.json())
+            .then((res) => {
+                ApiConfig.DimissLoadingModal(loading);
+                return res.json();
+            })
             .catch(err => {
+                ApiConfig.DimissLoadingModal(loading);
                 this.handleError(err);
             });
 
@@ -463,6 +526,8 @@ public $func(idlist) {
       file_put_contents($apiconfig,str_replace('{{$myapiaddress}}',$CONFIG['workspace']['domain']."/$login/$alias/api/",file_get_contents($apiconfig)));
 
       file_put_contents($apiconfig,str_replace('{{$myapiuploadaddress}}',$CONFIG['workspace']['domain']."/$login/$alias/upload/",file_get_contents($apiconfig)));
+
+      file_put_contents($apiconfig,str_replace('{{$myapifileuploadaddress}}',$CONFIG['workspace']['domain']."/$login/$alias/fileupload",file_get_contents($apiconfig)));
       return $path;
     }
 

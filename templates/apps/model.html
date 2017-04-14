@@ -1087,8 +1087,11 @@
             } else if (field_type == "longtext") {
                 $("#f_" + field_type + "_default").val(json.default);
             } else if (field_type == "select") {
+                try{
+                  $(".f_select_option").remove();
+                }catch(eccx){
 
-                $(".f_select_option").remove();
+                }
                 for (var i = 0; i < json.options.option.length; i++) {
                     var option = json.options.option[i];
                     AddSelectOption(option.name, option.value, option.default);

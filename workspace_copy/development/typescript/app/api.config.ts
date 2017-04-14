@@ -1,5 +1,6 @@
 import { Headers, RequestOptions } from '@angular/http';
-import { SQLite } from 'ionic-native';
+import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
+import { LoadingController, Loading} from 'ionic-angular';
 
 export class ApiConfig {
 	
@@ -8,6 +9,9 @@ export class ApiConfig {
     }
     public static getUploadPath() {
         return "{{$myapiuploadaddress}}";
+    }
+    public static getFileUploadAPI() {
+        return "{{$myapifileuploadaddress}}";
     }
 	
     public static ParamUrlencoded(json) {
@@ -56,7 +60,31 @@ export class ApiConfig {
         ApiConfig.RID = rid;
     }
 
+    public static MD5(str) {
+        return md5.hex_md5(str);
+    }
 
+    public static LoadingCtrl: LoadingController = null;
+
+    public static SetLoadingCtrl(loadCtrl: LoadingController) {
+        ApiConfig.LoadingCtrl = loadCtrl;
+    }
+
+    public static GetLoadingModal(){
+        let loading: Loading = null;
+        var ctrl = ApiConfig.LoadingCtrl;
+        if (ctrl != null) {
+            loading = ctrl.create({});
+            loading.present();
+        }
+        return loading;
+    }
+
+    public static DimissLoadingModal(loading: Loading) {
+        if (loading != null) {
+            loading.dismiss();
+        }
+    }
 
 
 
@@ -68,17 +96,19 @@ export class ApiConfig {
 
 
 
-
 export class DBHelper {
     private static instance = null;
+    private static sqlite: SQLite = null;
     private dbname = "apidb.db";
     private location = "default";
     private dbready = false;
-    private db;
+    private db: SQLiteObject = null;
     private DBHelper() {
-        
-    }
 
+    }
+    public static init(sqlite) {
+        DBHelper.sqlite = sqlite;
+    }
     public getDbName() {
         return this.dbname;
     }
@@ -91,8 +121,17 @@ export class DBHelper {
     public static GetInstance() {
         if (DBHelper.instance == null) {
             DBHelper.instance = new DBHelper();
-            DBHelper.instance.db = new SQLite();
-            DBHelper.instance.checkDBReady();
+
+            DBHelper.sqlite.create({
+                name: DBHelper.instance.dbname,
+                location: DBHelper.instance.location
+            }).then(data => {
+                DBHelper.instance.db = data;
+                DBHelper.instance.dbready = true;
+            }, data => {
+                var data1 = data;
+                DBHelper.instance.dbready = false;
+            });
         }
         return DBHelper.instance;
     }
@@ -101,72 +140,57 @@ export class DBHelper {
         return this.dbready;
     }
 
-    private checkDBReady() {
-        var help = this;
-        this.db.openDatabase({
-            name: this.dbname,
-            location: this.location // the location field is required
-        }).then(() => {
-            help.dbready = true;
-            });
-    }
-    
+
     public batchUpdate(tablename, columns, data, callback) {
         var objdb = this.db;
         var help = this;
-        objdb.openDatabase({
-            name: this.dbname,
-            location: this.location // the location field is required
-        }).then(() => {
-            var idlist = new Array();
-            idlist.push(0);
-            for (let i in data){
-                var id = data[i].id;
-                idlist.push(id);
-            }
-            objdb.executeSql("select id from " + tablename + " where id in (" + idlist.join(",") + ")", []).then((existsData => {
-                
-                objdb.transaction(function (tx) {
-                        for (let i in data) {
-                            var id = data[i].id;
-                            var isexists = false;
-                            for (var c = 0; c < existsData.rows.length; c++) {
-                                if (id == existsData.rows.item(c).id) {
-                                    isexists = true;
-                                    break;
-                                }
-                            }
-                            var perUpdateData = help.fixUpdateData(columns, data[i]);
-                            perUpdateData.push(id);
-                            var sql = "";
-                            if (isexists) {
-                                sql = "update " + tablename + " set updated_date=datetime('now', 'localtime') ";
-                                for (let col in columns) {
-                                    sql += " ," + col + "=? ";
-                                }
-                                sql += " where id=? ";
-                            } else {
-                                sql = "insert into " + tablename + " (updated_date";
-                                for (let col in columns) {
-                                    sql += " ," + col + " ";
-                                }
-                                sql += " ,id) values (datetime('now', 'localtime') ";
-                                for (let col in columns) {
-                                    sql += " ,? ";
-                                }
-                                sql += " ,?);"
-                            }
-                            tx.executeSql(sql, perUpdateData);
+
+        var idlist = new Array();
+        idlist.push(0);
+        for (let i in data) {
+            var id = data[i].id;
+            idlist.push(id);
+        }
+        objdb.executeSql("select id from " + tablename + " where id in (" + idlist.join(",") + ")", []).then((existsData => {
+
+            objdb.transaction(function (tx) {
+                for (let i in data) {
+                    var id = data[i].id;
+                    var isexists = false;
+                    for (var c = 0; c < existsData.rows.length; c++) {
+                        if (id == existsData.rows.item(c).id) {
+                            isexists = true;
+                            break;
                         }
-                }).then(txResult => {
-                    callback();
-                    }, (txerr) => {
-                        alert("Batch update error for debug :"+txerr.message);
-                    });
-            }));
-        }, (err) => {
-            console.error('Unable to open database: ', err);
-        });
+                    }
+                    var perUpdateData = help.fixUpdateData(columns, data[i]);
+                    perUpdateData.push(id);
+                    var sql = "";
+                    if (isexists) {
+                        sql = "update " + tablename + " set updated_date=datetime('now', 'localtime') ";
+                        for (let col in columns) {
+                            sql += " ," + col + "=? ";
+                        }
+                        sql += " where id=? ";
+                    } else {
+                        sql = "insert into " + tablename + " (updated_date";
+                        for (let col in columns) {
+                            sql += " ," + col + " ";
+                        }
+                        sql += " ,id) values (datetime('now', 'localtime') ";
+                        for (let col in columns) {
+                            sql += " ,? ";
+                        }
+                        sql += " ,?);"
+                    }
+                    tx.executeSql(sql, perUpdateData);
+                }
+            }).then(txResult => {
+                callback();
+            }, (txerr) => {
+                alert("Batch update error for debug :" + txerr.message);
+            });
+        }));
     }
     public fixUpdateData(columns, data) {
         var ret = new Array();
@@ -177,114 +201,85 @@ export class DBHelper {
     }
 
     public query(sql, param, callback) {
-        this.db.openDatabase({
-            name: this.dbname,
-            location: this.location // the location field is required
-        }).then(() => {
+        this.db.executeSql(sql, param).then(data => {
 
-            this.db.executeSql(sql, param).then(data => {
+            var ret = new Array();
+            for (var i = 0; i < data.rows.length; i++) {
+                ret.push(data.rows.item(i));
+            }
+            callback(ret);
+        }).catch((err) => {
+            alert("query error for debug " + err.message
+            );
+        });;
+    }
 
-                var ret =new Array();
-                for (var i = 0; i < data.rows.length; i++) {
-                    ret.push(data.rows.item(i));
+    public createTable(tablename, columns) {
+        this.db.executeSql("CREATE TABLE IF NOT EXISTS " + tablename + " (id int,updated_date datetime)", {}).then((data) => {
+
+            for (let col in columns) {
+
+                try {
+                    this.db.executeSql("ALTER TABLE " + tablename + " add column " + col + " " + columns[col], []).then(() => { }, (err) => {
+
+                    });
+                } catch (ex) {
+
+                }
+            }
+
+        }).catch(() => {
+
+        });
+    }
+
+    public getLastestUpdatedTime(objname, callback) {
+        this.db.executeSql("CREATE TABLE IF NOT EXISTS tb_api_lastcall (objname varchar,calltime datetime)", {}).then((data) => {
+
+            this.db.executeSql("select calltime from tb_api_lastcall where objname=?", [objname]).then(data => {
+
+                var ret = '1970-01-01 00:00:00';
+                if (data.rows.length > 0) {
+                    ret = data.rows.item(0).calltime;
+                    var val = new Date(data.rows.item(0).calltime);
+                    ret = val.getFullYear() + "-" + (val.getMonth() + 1) + "-" + val.getDate() +
+                        " " + val.getHours() + ":" + val.getMinutes() + ":" + val.getSeconds()
                 }
                 callback(ret);
-            }).catch((err) => {
-                alert("query error for debug "+err.message
-                );
-            });;
-        }, (err) => {
-            console.error('Unable to open database: ', err);
-        });
-    }
-
-    public createTable(tablename,columns) {
-        this.db.openDatabase({
-            name: this.dbname,
-            location: this.location // the location field is required
-        }).then(() => {
-            this.db.executeSql("CREATE TABLE IF NOT EXISTS " + tablename + " (id int,updated_date datetime)", {}).then((data) => {
-
-                for (let col in columns) {
-
-                    try {
-                        this.db.executeSql("ALTER TABLE " + tablename + " add column " + col + " " + columns[col],[]).then(() => { }, (err) => {
-                            
-                        });
-                    } catch (ex) {
-                        
-                    }
-                }
-
-            }).catch(() => {
-
             });
 
-        }, (err) => {
-            console.error('Unable to open database: ', err);
+        }).catch(() => {
+
         });
-    }
 
-    public getLastestUpdatedTime(objname,callback) {
-        
-        this.db.openDatabase({
-            name: this.dbname,
-            location: this.location // the location field is required
-        }).then(() => {
-            this.db.executeSql("CREATE TABLE IF NOT EXISTS tb_api_lastcall (objname varchar,calltime datetime)", {}).then((data) => {
-                
-                this.db.executeSql("select calltime from tb_api_lastcall where objname=?", [objname]).then(data => {
-                    
-                    var ret = '1970-01-01 00:00:00';
-                    if (data.rows.length > 0) {
-                        ret = data.rows.item(0).calltime;
-                        var val =new Date( data.rows.item(0).calltime);
-                        ret=val.getFullYear() + "-" + (val.getMonth() + 1) + "-" + val.getDate() +
-                            " " + val.getHours() + ":" + val.getMinutes() + ":" + val.getSeconds()
-                    }
-                    callback(ret);
-                });
-
-            }).catch(() => {
-
-            });
-                //db.executeSql("select * from ");
-        }, (err) => {
-            console.error('Unable to open database: ', err);
-        });
     }
     public updateLastestCallTime(objname) {
-        this.db.openDatabase({
-            name: this.dbname,
-            location: this.location // the location field is required
-        }).then(() => {
-            this.db.executeSql("select calltime from tb_api_lastcall where objname=?", [objname]).then(data => {
-                
-                var now = new Date();
-                if (data.rows.length > 0) {
-                    this.db.executeSql("update tb_api_lastcall set calltime=? where objname=?", [now, objname]).then((data1) => {
-                        
-                    }, (err) => {
-                        console.error('Unable to execute sql: ', err);
-                    });;
-                } else {
-                    this.db.executeSql("insert into tb_api_lastcall (objname,calltime) values (?,?)", [objname, now]).then((data1) => {
-                       
-                    }, (err) => {
-                        console.error('Unable to execute sql: ', err);
-                    });
-                }
-            });
-            //db.executeSql("select * from ");
-        }, (err) => {
-            console.error('Unable to open database: ', err);
+
+        this.db.executeSql("select calltime from tb_api_lastcall where objname=?", [objname]).then(data => {
+
+            var now = new Date();
+            if (data.rows.length > 0) {
+                this.db.executeSql("update tb_api_lastcall set calltime=? where objname=?", [now, objname]).then((data1) => {
+
+                }, (err) => {
+                    console.error('Unable to execute sql: ', err);
+                });;
+            } else {
+                this.db.executeSql("insert into tb_api_lastcall (objname,calltime) values (?,?)", [objname, now]).then((data1) => {
+
+                }, (err) => {
+                    console.error('Unable to execute sql: ', err);
+                });
+            }
         });
+
     }
     public static FormatDateTime(val: Date) {
-        return 
+        return;
     }
 
 }
+
 
 
 
