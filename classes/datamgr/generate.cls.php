@@ -578,7 +578,7 @@ public $func(idlist, showLoadingModal:boolean=true) {
       file_put_contents($apiconfig,str_replace('{{$myapifileuploadaddress}}',$CONFIG['workspace']['domain']."/$login/$alias/fileupload",file_get_contents($apiconfig)));
 
 	  
-      copy(ROOT."\\workspace_copy\\development\\typescript\\app\\api.config.ts",$path."\\app\\app.util.ts");
+      copy(ROOT."\\workspace_copy\\development\\typescript\\app\\app.util.ts",$path."\\app\\app.util.ts");
       $util=$path."\\app\\app.util.ts";
       file_put_contents($util,str_replace('{{aliaslogin}}',"/$login/$alias",file_get_contents($util)));
 
