@@ -253,7 +253,7 @@ public $func(data, showLoadingModal:boolean=true) {
                 if(showLoadingModal){
 					ApiConfig.DimissLoadingModal();
                 }
-                this.handleError(err);
+                return ApiConfig.ErrorHandle('$url',data,err);
             });
 
         
@@ -293,7 +293,7 @@ public list(search_condition_json, showLoadingModal:boolean=true) {
                 if(showLoadingModal){
 					ApiConfig.DimissLoadingModal();
                 }
-                ApiConfig.ErrorHandle("'.$url.'",search_condition_json,err);
+                return ApiConfig.ErrorHandle("'.$url.'",search_condition_json,err);
             });
 
         
@@ -478,7 +478,7 @@ public $func(id, showLoadingModal:boolean=true) {
                                   if(showLoadingModal){
                                     ApiConfig.DimissLoadingModal();
                                   }
-                ApiConfig.ErrorHandle('$url',json,err);
+                return ApiConfig.ErrorHandle('$url',json,err);
             });
 
         
@@ -514,7 +514,7 @@ public $func(update_json, showLoadingModal:boolean=true) {
                                   if(showLoadingModal){
                                     ApiConfig.DimissLoadingModal();
                                   }
-                ApiConfig.ErrorHandle('$url',update_json,err);
+                return ApiConfig.ErrorHandle('$url',update_json,err);
             });
 
         
@@ -551,7 +551,7 @@ public $func(idlist, showLoadingModal:boolean=true) {
                                   if(showLoadingModal){
                                     ApiConfig.DimissLoadingModal();
                                   }
-                ApiConfig.ErrorHandle('$url',json,err);
+                return ApiConfig.ErrorHandle('$url',json,err);
             });
 
         
