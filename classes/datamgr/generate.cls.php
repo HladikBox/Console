@@ -240,13 +240,13 @@ public $func(data, showLoadingModal:boolean=true) {
 
         return this.http.post(url, body, options).toPromise()
             .then((res) => {
-                ApiConfig.DimissLoadingModal(loading);
+                ApiConfig.DimissLoadingModal();
 				if(ApiConfig.DataLoadedHandle('$url',data,res)){
 					return res.json();
 				}
             })
             .catch(err => {
-                ApiConfig.DimissLoadingModal(loading);
+                ApiConfig.DimissLoadingModal();
                 this.handleError(err);
             });
 
@@ -275,13 +275,13 @@ public list(search_condition_json, showLoadingModal:boolean=true) {
 
         return this.http.post(url, body, options).toPromise()
             .then((res) => {
-                ApiConfig.DimissLoadingModal(loading);
+                ApiConfig.DimissLoadingModal();
 				if(ApiConfig.DataLoadedHandle("'.$url.'",search_condition_json,res)){
 					return res.json();
 				}
             })
             .catch(err => {
-                ApiConfig.DimissLoadingModal(loading);
+                ApiConfig.DimissLoadingModal();
                 ApiConfig.ErrorHandle('$url',search_condition_json,err);
             });
 
@@ -324,25 +324,36 @@ public listInDB(search_condition_json, callback, showLoadingModal:boolean=true) 
                             var data = res.json();
                             try {
                                 DBHelper.GetInstance().batchUpdate(ost.tableName(), ost.tableColumns(), data, function () {
-                                        ApiConfig.DimissLoadingModal(loading);
+                                  if(showLoadingModal){
+                                    ApiConfig.DimissLoadingModal();
+                                  }
+                                        
                                     DBHelper.GetInstance().updateLastestCallTime(ost.tableName());
                                     ost.query(search_condition_json, callback);
                                 });
                             } catch (ex) {
-                                ApiConfig.DimissLoadingModal(loading);
+                                  if(showLoadingModal){
+                                    ApiConfig.DimissLoadingModal();
+                                  }
                                 ost.query(search_condition_json, callback);
                             }
                         })
                         .catch(err => {
-                            ApiConfig.DimissLoadingModal(loading);
+                                  if(showLoadingModal){
+                                    ApiConfig.DimissLoadingModal();
+                                  }
                             ost.query(search_condition_json, callback);
                         });
                 } catch (err){
-                    ApiConfig.DimissLoadingModal(loading);
+                                  if(showLoadingModal){
+                                    ApiConfig.DimissLoadingModal();
+                                  }
                 }
             });
         } catch (ex){
-            ApiConfig.DimissLoadingModal(loading);
+                                  if(showLoadingModal){
+                                    ApiConfig.DimissLoadingModal();
+                                  }
             this.query(search_condition_json, callback);
         }
 }
@@ -445,13 +456,17 @@ public $func(id, showLoadingModal:boolean=true) {
 
         return this.http.post(url, body, options).toPromise()
             .then((res) => {
-                ApiConfig.DimissLoadingModal(loading);
+                                  if(showLoadingModal){
+                                    ApiConfig.DimissLoadingModal();
+                                  }
 				if(ApiConfig.DataLoadedHandle('$url',json,res)){
 					return res.json();
 				}
             })
             .catch(err => {
-                ApiConfig.DimissLoadingModal(loading);
+                                  if(showLoadingModal){
+                                    ApiConfig.DimissLoadingModal();
+                                  }
                 ApiConfig.ErrorHandle('$url',json,err);
             });
 
@@ -477,13 +492,17 @@ public $func(update_json, showLoadingModal:boolean=true) {
 
         return this.http.post(url, body, options).toPromise()
             .then((res) => {
-                ApiConfig.DimissLoadingModal(loading);
+                                  if(showLoadingModal){
+                                    ApiConfig.DimissLoadingModal();
+                                  }
 				if(ApiConfig.DataLoadedHandle('$url',update_json,res)){
 					return res.json();
 				}
             })
             .catch(err => {
-                ApiConfig.DimissLoadingModal(loading);
+                                  if(showLoadingModal){
+                                    ApiConfig.DimissLoadingModal();
+                                  }
                 ApiConfig.ErrorHandle('$url',update_json,err);
             });
 
@@ -510,13 +529,17 @@ public $func(idlist, showLoadingModal:boolean=true) {
 
         return this.http.post(url, body, options).toPromise()
             .then((res) => {
-                ApiConfig.DimissLoadingModal(loading);
+                                  if(showLoadingModal){
+                                    ApiConfig.DimissLoadingModal();
+                                  }
 				if(ApiConfig.DataLoadedHandle('$url',json,res)){
 					return res.json();
 				}
             })
             .catch(err => {
-                ApiConfig.DimissLoadingModal(loading);
+                                  if(showLoadingModal){
+                                    ApiConfig.DimissLoadingModal();
+                                  }
                 ApiConfig.ErrorHandle('$url',json,err);
             });
 
