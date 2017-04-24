@@ -13,7 +13,7 @@ export class AppUtil {
         s = s.replace(/&#39;/g, "\'");
         s = s.replace(/&quot;/g, "\"");
 
-        //s = s.replace("\"/alucard263096/news/upload/", "\""+ApiConfig.getUploadPath());
+        s = s.replace("\"{{aliaslogin}}/upload/", "\""+ApiConfig.getUploadPath());
         return s;
     }
 

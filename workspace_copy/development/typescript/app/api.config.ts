@@ -1,6 +1,7 @@
-import { Headers, RequestOptions } from '@angular/http';
+import { Headers, RequestOptions, Http, Response } from '@angular/http';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
-import { LoadingController, Loading} from 'ionic-angular';
+import { LoadingController, Loading } from 'ionic-angular';
+import { Observable } from 'rxjs/Observable';
 
 export class ApiConfig {
 	
@@ -86,6 +87,29 @@ export class ApiConfig {
         }
     }
 
+	public static DataLoadedHandle(url,post,data):boolean {
+        try {
+            data = data.json();
+			if(data.code!=null){
+				if(data.code=="404"){
+					return false;
+				}
+			}
+            return true;
+
+        } catch (e) {
+			return false;
+        }
+    }
+
+	public static ErrorHandle(url,post,error: Response) {
+        try {
+            return Observable.throw(error.json().error || 'Server Error');
+
+        } catch (e) {
+
+        }
+    }  
 
 
 	
@@ -279,6 +303,7 @@ export class DBHelper {
     }
 
 }
+
 
 
 

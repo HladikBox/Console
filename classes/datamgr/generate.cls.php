@@ -241,7 +241,9 @@ public $func(data, showLoadingModal:boolean=true) {
         return this.http.post(url, body, options).toPromise()
             .then((res) => {
                 ApiConfig.DimissLoadingModal(loading);
-                return res.json();
+				if(ApiConfig.DataLoadedHandle('$url',data,res)){
+					return res.json();
+				}
             })
             .catch(err => {
                 ApiConfig.DimissLoadingModal(loading);
@@ -274,11 +276,13 @@ public list(search_condition_json, showLoadingModal:boolean=true) {
         return this.http.post(url, body, options).toPromise()
             .then((res) => {
                 ApiConfig.DimissLoadingModal(loading);
-                return res.json();
+				if(ApiConfig.DataLoadedHandle("'.$url.'",search_condition_json,res)){
+					return res.json();
+				}
             })
             .catch(err => {
                 ApiConfig.DimissLoadingModal(loading);
-                this.handleError(err);
+                ApiConfig.ErrorHandle('$url',search_condition_json,err);
             });
 
         
@@ -313,6 +317,10 @@ public listInDB(search_condition_json, callback, showLoadingModal:boolean=true) 
                 try {
                     var ret = ost.http.post(url, body, options).toPromise()
                         .then(res => {
+						
+							if(ApiConfig.DataLoadedHandle("'.$url.'",search_condition_json,res)==false){
+								return;
+							}
                             var data = res.json();
                             try {
                                 DBHelper.GetInstance().batchUpdate(ost.tableName(), ost.tableColumns(), data, function () {
@@ -438,11 +446,13 @@ public $func(id, showLoadingModal:boolean=true) {
         return this.http.post(url, body, options).toPromise()
             .then((res) => {
                 ApiConfig.DimissLoadingModal(loading);
-                return res.json();
+				if(ApiConfig.DataLoadedHandle('$url',json,res)){
+					return res.json();
+				}
             })
             .catch(err => {
                 ApiConfig.DimissLoadingModal(loading);
-                this.handleError(err);
+                ApiConfig.ErrorHandle('$url',json,err);
             });
 
         
@@ -468,11 +478,13 @@ public $func(update_json, showLoadingModal:boolean=true) {
         return this.http.post(url, body, options).toPromise()
             .then((res) => {
                 ApiConfig.DimissLoadingModal(loading);
-                return res.json();
+				if(ApiConfig.DataLoadedHandle('$url',update_json,res)){
+					return res.json();
+				}
             })
             .catch(err => {
                 ApiConfig.DimissLoadingModal(loading);
-                this.handleError(err);
+                ApiConfig.ErrorHandle('$url',update_json,err);
             });
 
         
@@ -499,11 +511,13 @@ public $func(idlist, showLoadingModal:boolean=true) {
         return this.http.post(url, body, options).toPromise()
             .then((res) => {
                 ApiConfig.DimissLoadingModal(loading);
-                return res.json();
+				if(ApiConfig.DataLoadedHandle('$url',json,res)){
+					return res.json();
+				}
             })
             .catch(err => {
                 ApiConfig.DimissLoadingModal(loading);
-                this.handleError(err);
+                ApiConfig.ErrorHandle('$url',json,err);
             });
 
         
@@ -528,6 +542,12 @@ public $func(idlist, showLoadingModal:boolean=true) {
       file_put_contents($apiconfig,str_replace('{{$myapiuploadaddress}}',$CONFIG['workspace']['domain']."/$login/$alias/upload/",file_get_contents($apiconfig)));
 
       file_put_contents($apiconfig,str_replace('{{$myapifileuploadaddress}}',$CONFIG['workspace']['domain']."/$login/$alias/fileupload",file_get_contents($apiconfig)));
+
+	  
+      copy(ROOT."\\workspace_copy\\development\\typescript\\app\\api.config.ts",$path."\\app\\app.util.ts");
+      $util=$path."\\app\\app.util.ts";
+      file_put_contents($util,str_replace('{{aliaslogin}}',"/$login/$alias",file_get_contents($util)));
+
       return $path;
     }
 

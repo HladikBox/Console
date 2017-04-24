@@ -23,10 +23,6 @@ export class {{$modelname}} {
 
     {{funclist}}
 
-
-    private handleError(error: Response) {
-        console.log(error);
-        return Observable.throw(error.json().error || 'Server Error');
-    }
+    
 
 }
