@@ -240,13 +240,19 @@ public $func(data, showLoadingModal:boolean=true) {
 
         return this.http.post(url, body, options).toPromise()
             .then((res) => {
-                ApiConfig.DimissLoadingModal();
+                
+                if(showLoadingModal){
+					ApiConfig.DimissLoadingModal();
+                }
 				if(ApiConfig.DataLoadedHandle('$url',data,res)){
 					return res.json();
 				}
             })
             .catch(err => {
-                ApiConfig.DimissLoadingModal();
+                
+                if(showLoadingModal){
+					ApiConfig.DimissLoadingModal();
+                }
                 this.handleError(err);
             });
 
@@ -275,13 +281,18 @@ public list(search_condition_json, showLoadingModal:boolean=true) {
 
         return this.http.post(url, body, options).toPromise()
             .then((res) => {
-                ApiConfig.DimissLoadingModal();
+                
+                if(showLoadingModal){
+					ApiConfig.DimissLoadingModal();
+                }
 				if(ApiConfig.DataLoadedHandle("'.$url.'",search_condition_json,res)){
 					return res.json();
 				}
             })
             .catch(err => {
-                ApiConfig.DimissLoadingModal();
+                if(showLoadingModal){
+					ApiConfig.DimissLoadingModal();
+                }
                 ApiConfig.ErrorHandle('$url',search_condition_json,err);
             });
 

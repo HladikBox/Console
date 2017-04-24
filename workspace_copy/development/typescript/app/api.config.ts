@@ -70,7 +70,8 @@ export class ApiConfig {
     public static SetLoadingCtrl(loadCtrl: LoadingController) {
         ApiConfig.LoadingCtrl = loadCtrl;
     }
-
+    private static loading:Loading = null;
+    private static loadingQueueCount = 0;
     public static GetLoadingModal(): Loading{
         var ctrl = ApiConfig.LoadingCtrl;
         if (ctrl != null && ApiConfig.loading == null) {
