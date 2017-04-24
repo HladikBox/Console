@@ -293,7 +293,7 @@ public list(search_condition_json, showLoadingModal:boolean=true) {
                 if(showLoadingModal){
 					ApiConfig.DimissLoadingModal();
                 }
-                ApiConfig.ErrorHandle('$url',search_condition_json,err);
+                ApiConfig.ErrorHandle("'.$url.'",search_condition_json,err);
             });
 
         
