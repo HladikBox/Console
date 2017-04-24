@@ -70,25 +70,45 @@ export class ApiConfig {
         ApiConfig.LoadingCtrl = loadCtrl;
     }
 
-    public static GetLoadingModal(){
-        let loading: Loading = null;
+    public static GetLoadingModal(): Loading{
         var ctrl = ApiConfig.LoadingCtrl;
-        if (ctrl != null) {
-            loading = ctrl.create({});
-            loading.present();
+        if (ctrl != null && ApiConfig.loading == null) {
+            ApiConfig.loadingQueueCount = 0;
+            ApiConfig.loading = ctrl.create({
+                spinner: 'ios',
+                //cssClass: 'myloading',
+                duration: 10000
+            });
+            ApiConfig.loading.present();
         }
-        return loading;
+        ApiConfig.loadingQueueCount++;
+        return null;
     }
 
-    public static DimissLoadingModal(loading: Loading) {
-        if (loading != null) {
-            loading.dismiss();
+    public static DimissLoadingModal() {
+        try {
+            ApiConfig.loadingQueueCount--;
+            if (ApiConfig.loading != null && ApiConfig.loadingQueueCount == 0) {
+                ApiConfig.loading.dismiss();
+                ApiConfig.loading = null;
+                ApiConfig.loadingQueueCount = 0;
+            }
+        } catch (e) {
+
         }
     }
 
+    public static ForceDimissLoadingModal() {
+        try {
+            if (ApiConfig.loading != null) {
+                ApiConfig.loading.dismiss();
+                ApiConfig.loading = null;
+                ApiConfig.loadingQueueCount = 0;
+            }
+        } catch (e) {
 
-
-	
+        }
+    }
 }
 
 
