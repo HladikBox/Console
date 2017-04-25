@@ -434,7 +434,7 @@
           return outResult("1","FTP用户已经创建","appname");
        }
 
-       $sql="insert into `ftpserver`.FTP_USER values('$login','$password','$path',1,1000,1000,1000,1000,0,0);";
+       $sql="insert into `ftpserver`.FTP_USER values('$login','$password','$path',1,1,300,30000,30000,0,0);";
        $this->dbmgr->query($sql);
 
        return outResult(0,"保存成功","");
