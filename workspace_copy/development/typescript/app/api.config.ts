@@ -18,7 +18,7 @@ export class ApiConfig {
     public static ParamUrlencoded(json) {
         var arr = new Array();
         for (let i in json) {
-            arr.push(  i + "=" + encodeURI(json[i]));
+            arr.push(  i + "=" + encodeURIComponent(json[i]));
         }
         return arr.join("&");
     }
