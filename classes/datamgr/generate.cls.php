@@ -240,18 +240,20 @@ public $func(data, showLoadingModal:boolean=true) {
 
         return this.http.post(url, body, options).toPromise()
             .then((res) => {
-                
-                if(showLoadingModal){
-					ApiConfig.DimissLoadingModal();
-                }
-				if(ApiConfig.DataLoadedHandle('$url',data,res)){
-					return res.json();
-				}
+              if(ApiConfig.DataLoadedHandle('$url',data,res)){
+                  if(showLoadingModal){
+      					     ApiConfig.DimissLoadingModal();
+                  }
+      				
+      					 return res.json();
+      				}else{
+                return Promise.reject(res);
+              }
             })
             .catch(err => {
                 
                 if(showLoadingModal){
-					ApiConfig.DimissLoadingModal();
+					         ApiConfig.DimissLoadingModal();
                 }
                 return ApiConfig.ErrorHandle('$url',data,err);
             });
@@ -281,17 +283,19 @@ public list(search_condition_json, showLoadingModal:boolean=true) {
 
         return this.http.post(url, body, options).toPromise()
             .then((res) => {
-                
-                if(showLoadingModal){
-					ApiConfig.DimissLoadingModal();
-                }
-				if(ApiConfig.DataLoadedHandle("'.$url.'",search_condition_json,res)){
-					return res.json();
-				}
+                if(ApiConfig.DataLoadedHandle("'.$url.'",search_condition_json,res)){
+                  if(showLoadingModal){
+                     ApiConfig.DimissLoadingModal();
+                  }
+              
+                 return res.json();
+              }else{
+                return Promise.reject(res);
+              }
             })
             .catch(err => {
                 if(showLoadingModal){
-					ApiConfig.DimissLoadingModal();
+					           ApiConfig.DimissLoadingModal();
                 }
                 return ApiConfig.ErrorHandle("'.$url.'",search_condition_json,err);
             });
@@ -467,17 +471,20 @@ public $func(id, showLoadingModal:boolean=true) {
 
         return this.http.post(url, body, options).toPromise()
             .then((res) => {
-                                  if(showLoadingModal){
-                                    ApiConfig.DimissLoadingModal();
-                                  }
-				if(ApiConfig.DataLoadedHandle('$url',json,res)){
-					return res.json();
-				}
+              if(ApiConfig.DataLoadedHandle('$url',json,res)){
+                  if(showLoadingModal){
+                     ApiConfig.DimissLoadingModal();
+                  }
+              
+                 return res.json();
+              }else{
+                return Promise.reject(res);
+              }
             })
             .catch(err => {
-                                  if(showLoadingModal){
-                                    ApiConfig.DimissLoadingModal();
-                                  }
+                if(showLoadingModal){
+                    ApiConfig.DimissLoadingModal();
+                }
                 return ApiConfig.ErrorHandle('$url',json,err);
             });
 
@@ -503,12 +510,17 @@ public $func(update_json, showLoadingModal:boolean=true) {
 
         return this.http.post(url, body, options).toPromise()
             .then((res) => {
-                                  if(showLoadingModal){
-                                    ApiConfig.DimissLoadingModal();
-                                  }
-				if(ApiConfig.DataLoadedHandle('$url',update_json,res)){
-					return res.json();
-				}
+
+              if(ApiConfig.DataLoadedHandle('$url',update_json,res)){
+                  if(showLoadingModal){
+                     ApiConfig.DimissLoadingModal();
+                  }
+              
+                 return res.json();
+              }else{
+                return Promise.reject(res);
+              }
+                                 
             })
             .catch(err => {
                                   if(showLoadingModal){
@@ -540,17 +552,22 @@ public $func(idlist, showLoadingModal:boolean=true) {
 
         return this.http.post(url, body, options).toPromise()
             .then((res) => {
-                                  if(showLoadingModal){
-                                    ApiConfig.DimissLoadingModal();
-                                  }
-				if(ApiConfig.DataLoadedHandle('$url',json,res)){
-					return res.json();
-				}
+
+              if(ApiConfig.DataLoadedHandle('$url',json,res)){
+                  if(showLoadingModal){
+                     ApiConfig.DimissLoadingModal();
+                  }
+              
+                 return res.json();
+              }else{
+                return Promise.reject(res);
+              }
+                                  
             })
             .catch(err => {
-                                  if(showLoadingModal){
-                                    ApiConfig.DimissLoadingModal();
-                                  }
+                if(showLoadingModal){
+                    ApiConfig.DimissLoadingModal();
+                }
                 return ApiConfig.ErrorHandle('$url',json,err);
             });
 
