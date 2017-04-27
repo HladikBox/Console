@@ -40,11 +40,24 @@ export class ApiConfig {
             for (let i of arr) {
                 jsonarr[i] = postparam[i];
             }
-            var poststr = ApiConfig.ParamUrlencoded(jsonarr);
+            var poststrarr = new Array();
+            for (let i in jsonarr) {
+                var str = jsonarr[i].toString() ;
+                str = str.replace(/[\-|\~|\_|\.|\!|\~|\*|\'|\(|\)]/g, "");
+                str = encodeURIComponent(str);
+                poststrarr.push(i + "=" + str);
+            }
+            var poststr = poststrarr.join("&");
+
+
             var md5str = url + "~" + poststr + "~" + ApiConfig.TOKEN + "~" + ApiConfig.RID;
-            fmd5str = md5str;
             md5str = md5str.toUpperCase();
+            fmd5str = md5str + ApiConfig.MDSalt;
+            console.log(fmd5str);
+            
+
             sign = md5.hex_md5(md5str + ApiConfig.MDSalt);
+            console.log(sign);
         }
 
         var headers = new Headers({
@@ -115,14 +128,14 @@ export class ApiConfig {
         try {
             data = data.json();
 			if(data.code!=null){
-				if(data.code=="404"){
-					return false;
-				}
+                if (data.code == "404" || data.code == "401" || data.code == "500") {
+                    console.error(data.return.debuggenSign);
+                    console.error(data.return.genSign);
+                    return false;
+                }
 			}
             return true;
 
-
-	
         } catch (e) {
 			return false;
         }
