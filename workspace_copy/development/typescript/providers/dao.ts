@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import { AbstractDao } from "./dao.abstract";
 import { Http } from '@angular/http';
-import { {{fmodel}}Api } from "./channel.api";
+import { {{fmodel}}Api } from "./{{model}}.api";
 
 @Injectable()
 export class {{fmodel}}Dao extends AbstractDao {
