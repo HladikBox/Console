@@ -145,12 +145,7 @@ export class ApiConfig {
     }
 
 	public static ErrorHandle(url,post,error: Response) {
-        try {
-            return Observable.throw(error.json().error || 'Server Error');
-
-        } catch (e) {
-
-        }
+        return Observable.throw(error.json().error || 'Server Error').toPromise();
     }  
 }
 

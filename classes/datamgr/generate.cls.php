@@ -502,13 +502,14 @@ public $func(idlist, showLoadingModal:boolean=true) {
 ";
                 
                 }
+				
             }
             copy(ROOT."\\workspace_copy\\development\\typescript\\providers\\api.ts",$modelfile);
             file_put_contents($modelfile,str_replace('{{$modelname}}',$fmodel."Api",file_get_contents($modelfile))); 
             file_put_contents($modelfile,str_replace('{{funclist}}',$funcstr,file_get_contents($modelfile)));
 			
 			if($funcdaostr!=""){
-				$funcdaostr='
+				$daostr='
 				
 		public tableName() {
 			return "'.$model.'";
@@ -518,29 +519,29 @@ public $func(idlist, showLoadingModal:boolean=true) {
 			var columns = {};';
 		foreach($modelobj["fields"]["field"] as $field){
 		  if($field["type"]=="number"){
-			$funcstr.='
+			$daostr.='
 			columns["'.$field["key"].'"] = "int";//'.$field["name"];
 		  }elseif($field["type"]=="fkey"){
-			$funcstr.='
+			$daostr.='
 			columns["'.$field["key"].'"] = "int";//'.$field["name"];
-			$funcstr.='
+			$daostr.='
 			columns["'.$field["key"].'_name"] = "varchar";//'.$field["name"];
 		  }elseif($field["type"]=="select"){
-			$funcstr.='
+			$daostr.='
 			columns["'.$field["key"].'"] = "varchar";//'.$field["name"];
-			$funcstr.='
+			$daostr.='
 			columns["'.$field["key"].'_name"] = "varchar";//'.$field["name"];
 		  }elseif($field["type"]=="flist"&&$field["relatetable"]!=""){
 
 		  }elseif($field["type"]=="grid"){
 
 		  }else{
-			$funcstr.='
+			$daostr.='
 			columns["'.$field["key"].'"] = "varchar";//'.$field["name"];
 		  }
 		}
 
-			$funcstr.='
+			$daostr.='
 			return columns;
 		}
 				'.$funcdaostr;
@@ -548,7 +549,7 @@ public $func(idlist, showLoadingModal:boolean=true) {
 			$modelfile=$apipath."\\$model.dao.ts";
             copy(ROOT."\\workspace_copy\\development\\typescript\\providers\\dao.ts",$modelfile);
             file_put_contents($modelfile,str_replace('{{fmodel}}',$fmodel,file_get_contents($modelfile))); 
-            file_put_contents($modelfile,str_replace('{{funclist}}',$funcstr,file_get_contents($funcdaostr)));
+            file_put_contents($modelfile,str_replace('{{funclist}}',$daostr,file_get_contents($modelfile)));
 				
 			}
 			
