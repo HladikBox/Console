@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { LoadingController, Loading} from 'ionic-angular';
+import { Loading} from 'ionic-angular';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-import { Headers, RequestOptions } from '@angular/http';
+import { RequestOptions } from '@angular/http';
 import { ApiConfig } from '../app/api.config'
 
 import 'rxjs/add/operator/toPromise';
