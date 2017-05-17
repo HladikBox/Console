@@ -214,6 +214,7 @@ function ".$fmodel."Api()
         $modelfile=$apipath."\\$model.api.ts";
         $fmodel=ucfirst($model);
         $funcstr="";
+		$funcdaostr="";
         $modelobj=$modellist[$model];
 
 
@@ -303,153 +304,55 @@ public list(search_condition_json, showLoadingModal:boolean=true) {
         
     }
 
+';
 
-//先从服务器中同步数据到本地数据库，再从本地数据库中搜索数据
-public listInDB(search_condition_json, callback, showLoadingModal:boolean=true) {
-    
-    var db = DBHelper.GetInstance();
-    if (db.isDBReady() == false) {
-        this.list(search_condition_json).then(data => {
-            callback(data);
+
+               $funcdaostr.='
+			   
+	//'.$description.'
+	public list(search_condition, showLoadingModel: boolean = true) {
+        let api: '.$fmodel.'Api = new '.$fmodel.'Api(this.http);
+        return api.list(search_condition, showLoadingModel).then(data => {
+            this.batchUpdate(data);
+            return data;
+        }).catch(e => {
+            return this.simpleQuery(search_condition);
         });
-        return;
     }
-        var ost = this;
-        this.createTable();
-
-        let loading: Loading=null;
-        if(showLoadingModal){
-          loading = ApiConfig.GetLoadingModal();
-        }
-
-        try {
-            db.getLastestUpdatedTime(this.tableName(), function (calltime) {
-                //alert(calltime);
-                var url = ApiConfig.getApiUrl() + "'.$url.'";
-                var headers = ApiConfig.GetHeader(url, {"lastupdatecalltime":calltime});
-                let options = new RequestOptions({ headers: headers });
-                let body = ApiConfig.ParamUrlencoded({"lastupdatecalltime":calltime});
-                try {
-                    var ret = ost.http.post(url, body, options).toPromise()
-                        .then(res => {
-						
-							if(ApiConfig.DataLoadedHandle("'.$url.'",search_condition_json,res)==false){
-								return;
-							}
-                            var data = res.json();
-                            try {
-                                DBHelper.GetInstance().batchUpdate(ost.tableName(), ost.tableColumns(), data, function () {
-                                  if(showLoadingModal){
-                                    ApiConfig.DimissLoadingModal();
-                                  }
-                                        
-                                    DBHelper.GetInstance().updateLastestCallTime(ost.tableName());
-                                    ost.query(search_condition_json, callback);
-                                });
-                            } catch (ex) {
-                                  if(showLoadingModal){
-                                    ApiConfig.DimissLoadingModal();
-                                  }
-                                ost.query(search_condition_json, callback);
-                            }
-                        })
-                        .catch(err => {
-                                  if(showLoadingModal){
-                                    ApiConfig.DimissLoadingModal();
-                                  }
-                            ost.query(search_condition_json, callback);
-                        });
-                } catch (err){
-                                  if(showLoadingModal){
-                                    ApiConfig.DimissLoadingModal();
-                                  }
+	
+	
+	//'.$description.'
+    public sync(search_condition = null, showLoadingModel: boolean = true) {
+        let api: '.$fmodel.'Api = new '.$fmodel.'Api(this.http);
+        return this.getLastestUpdatedTime().then((updatedate) => {
+            return api.list({ "lastupdatecalltime": updatedate }, showLoadingModel).then(data => {
+                alert(JSON.stringify(data));
+                return this.batchUpdate(data).then(() => {
+                    this.updateLatestUpdatedTime();
+                    if (search_condition == null) {
+                        return null;
+                    }
+                    return this.simpleQuery(search_condition);
+                });
+            }).catch(() => {
+                if (search_condition == null) {
+                    return null;
                 }
+                this.simpleQuery(search_condition);
             });
-        } catch (ex){
-                                  if(showLoadingModal){
-                                    ApiConfig.DimissLoadingModal();
-                                  }
-            this.query(search_condition_json, callback);
-        }
-}
-
-    public query(condition, callback) {
-		
-		var db = DBHelper.GetInstance();
-		if (db.isDBReady() == false) {
-			this.list(condition).then(data => {
-				callback(data);
-			});
-			return;
-		}
-		
-		
-        this.createTable();
-        var sql = "select * from " + this.tableName() + " where 1=1 ";
-        var searchdata = new Array();
-        for (let i in condition) {
-            var columns = this.tableColumns();
-            var coltype = columns[i];
-            if (coltype == "varchar") {
-                sql += " and " + i + " like ?";
-                searchdata.push(condition[i]);
-            } else if (coltype=="int") {
-                sql += " and " + i + " = ?";
-                searchdata.push(condition[i]);
+        }).catch(e => {
+            if (search_condition == null) {
+                return null;
             }
-        }
-        if (condition["orderby"] != null && condition["orderby"] != "") {
-            sql += " order by "+condition["orderby"];
-        }
-
-        DBHelper.GetInstance().query(sql, searchdata, callback);
+            return this.simpleQuery(search_condition);
+        });
     }
-
-    public tableName() {
-        return "'.$model.'";
-    }
-
-    public static CreateTable = false;
-    public createTable() {
-        if ('.$fmodel.'Api.CreateTable == false) {
-            DBHelper.GetInstance().createTable(this.tableName(), this.tableColumns());
-            '.$fmodel.'Api.CreateTable = true;
-        }
-    }
-
-    public tableColumns() {
-        var columns = {};';
-foreach($modelobj["fields"]["field"] as $field){
-  if($field["type"]=="number"){
-    $funcstr.='
-    columns["'.$field["key"].'"] = "int";//'.$field["name"];
-  }elseif($field["type"]=="fkey"){
-    $funcstr.='
-    columns["'.$field["key"].'"] = "int";//'.$field["name"];
-    $funcstr.='
-    columns["'.$field["key"].'_name"] = "varchar";//'.$field["name"];
-  }elseif($field["type"]=="select"){
-    $funcstr.='
-    columns["'.$field["key"].'"] = "varchar";//'.$field["name"];
-    $funcstr.='
-    columns["'.$field["key"].'_name"] = "varchar";//'.$field["name"];
-  }elseif($field["type"]=="flist"&&$field["relatetable"]!=""){
-
-  }elseif($field["type"]=="grid"){
-
-  }else{
-    $funcstr.='
-    columns["'.$field["key"].'"] = "varchar";//'.$field["name"];
-  }
-}
-
-        $funcstr.='
-        return columns;
-    }
-
-
 
 ';
+
+
+
+
                 
                 }elseif($func=="get"){
                 
@@ -491,6 +394,29 @@ public $func(id, showLoadingModal:boolean=true) {
         
     }
 ";
+
+
+$funcdaostr.='
+			   
+	//'.$description.'
+    public get(id, showLoadingModel: boolean = true) {
+        let api: '.$fmodel.'Api = new '.$fmodel.'Api(this.http);
+        return api.get(id, showLoadingModel).then(data => {
+            if (data != null) {
+                return null;
+            } 
+            var lst = Array();
+            lst.push(data);
+            this.batchUpdate(lst);
+
+            return data;
+
+        }).catch(e => {
+            return this.getOne(id);
+        });
+    }
+';
+
                 }elseif($func=="update"){
               
                $funcstr.="
@@ -577,9 +503,57 @@ public $func(idlist, showLoadingModal:boolean=true) {
                 
                 }
             }
-            copy(ROOT."\\workspace_copy\\development\\typescript\\providers\\test.ts",$modelfile);
+            copy(ROOT."\\workspace_copy\\development\\typescript\\providers\\api.ts",$modelfile);
             file_put_contents($modelfile,str_replace('{{$modelname}}',$fmodel."Api",file_get_contents($modelfile))); 
-            file_put_contents($modelfile,str_replace('{{funclist}}',$funcstr,file_get_contents($modelfile))); 
+            file_put_contents($modelfile,str_replace('{{funclist}}',$funcstr,file_get_contents($modelfile)));
+			
+			if($funcdaostr!=""){
+				$funcdaostr='
+				
+		public tableName() {
+			return "'.$model.'";
+		}
+
+		public tableColumns() {
+			var columns = {};';
+		foreach($modelobj["fields"]["field"] as $field){
+		  if($field["type"]=="number"){
+			$funcstr.='
+			columns["'.$field["key"].'"] = "int";//'.$field["name"];
+		  }elseif($field["type"]=="fkey"){
+			$funcstr.='
+			columns["'.$field["key"].'"] = "int";//'.$field["name"];
+			$funcstr.='
+			columns["'.$field["key"].'_name"] = "varchar";//'.$field["name"];
+		  }elseif($field["type"]=="select"){
+			$funcstr.='
+			columns["'.$field["key"].'"] = "varchar";//'.$field["name"];
+			$funcstr.='
+			columns["'.$field["key"].'_name"] = "varchar";//'.$field["name"];
+		  }elseif($field["type"]=="flist"&&$field["relatetable"]!=""){
+
+		  }elseif($field["type"]=="grid"){
+
+		  }else{
+			$funcstr.='
+			columns["'.$field["key"].'"] = "varchar";//'.$field["name"];
+		  }
+		}
+
+			$funcstr.='
+			return columns;
+		}
+				'.$funcdaostr;
+				
+			$modelfile=$apipath."\\$model.dao.ts";
+            copy(ROOT."\\workspace_copy\\development\\typescript\\providers\\dao.ts",$modelfile);
+            file_put_contents($modelfile,str_replace('{{fmodel}}',$fmodel,file_get_contents($modelfile))); 
+            file_put_contents($modelfile,str_replace('{{funclist}}',$funcstr,file_get_contents($funcdaostr)));
+				
+			}
+			
+			
+			
 
         }
       }
@@ -593,6 +567,8 @@ public $func(idlist, showLoadingModal:boolean=true) {
       file_put_contents($apiconfig,str_replace('{{$myapiuploadaddress}}',$CONFIG['workspace']['domain']."/$login/$alias/upload/",file_get_contents($apiconfig)));
 
       file_put_contents($apiconfig,str_replace('{{$myapifileuploadaddress}}',$CONFIG['workspace']['domain']."/$login/$alias/fileupload",file_get_contents($apiconfig)));
+	  
+      file_put_contents($apiconfig,str_replace('{{$dbname}}',$login."_".$alias,file_get_contents($apiconfig)));
 
 	  
       copy(ROOT."\\workspace_copy\\development\\typescript\\app\\app.util.ts",$path."\\app\\app.util.ts");

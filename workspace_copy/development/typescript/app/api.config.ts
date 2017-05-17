@@ -14,6 +14,9 @@ export class ApiConfig {
     public static getFileUploadAPI() {
         return "{{$myapifileuploadaddress}}";
     }
+    public static getDataBaseName() {
+        return "{{$dbname}}.db";
+    }
 	
     public static ParamUrlencoded(json) {
         var arr = new Array();
