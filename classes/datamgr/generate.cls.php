@@ -546,11 +546,11 @@ public $func(idlist, showLoadingModal:boolean=true) {
 		}
 				'.$funcdaostr;
 				
-			$modelfile=$apipath."\\$model.dao.ts";
-            copy(ROOT."\\workspace_copy\\development\\typescript\\providers\\dao.ts",$modelfile);
-            file_put_contents($modelfile,str_replace('{{fmodel}}',$fmodel,file_get_contents($modelfile))); 
-            file_put_contents($modelfile,str_replace('{{model}}',$model,file_get_contents($modelfile))); 
-            file_put_contents($modelfile,str_replace('{{funclist}}',$daostr,file_get_contents($modelfile)));
+			$daomodelfile=$apipath."\\$model.dao.ts";
+            copy(ROOT."\\workspace_copy\\development\\typescript\\providers\\dao.ts",$daomodelfile);
+            file_put_contents($daomodelfile,str_replace('{{fmodel}}',$fmodel,file_get_contents($daomodelfile))); 
+            file_put_contents($daomodelfile,str_replace('{{model}}',$model,file_get_contents($daomodelfile))); 
+            file_put_contents($daomodelfile,str_replace('{{funclist}}',$daostr,file_get_contents($daomodelfile)));
 				
 			}
 			
