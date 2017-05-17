@@ -325,6 +325,9 @@ public list(search_condition_json, showLoadingModal:boolean=true) {
     public sync(search_condition = null, showLoadingModel: boolean = true) {
         let api: '.$fmodel.'Api = new '.$fmodel.'Api(this.http);
         return this.getLastestUpdatedTime().then((updatedate) => {
+            if (updatedate == undefined) {
+                return this.list(search_condition, showLoadingModel);
+            }
             return api.list({ "lastupdatecalltime": updatedate }, showLoadingModel).then(data => {
                 alert(JSON.stringify(data));
                 return this.batchUpdate(data).then(() => {
