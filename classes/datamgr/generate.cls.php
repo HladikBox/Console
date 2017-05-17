@@ -516,7 +516,7 @@ public $func(idlist, showLoadingModal:boolean=true) {
 		}
 
 		public tableColumns(): Array<string> {
-        var columns = new Array();
+        var columns = new Array();';
 		foreach($modelobj["fields"]["field"] as $field){
 		  if($field["type"]=="number"){
 			$daostr.='
