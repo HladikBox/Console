@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
+import { SQLite } from '@ionic-native/sqlite';
 import { AbstractDao } from "./dao.abstract";
 import { Http } from '@angular/http';
 import { {{fmodel}}Api } from "./{{model}}.api";

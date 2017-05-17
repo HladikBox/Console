@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Loading} from 'ionic-angular';
 import { Http } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
 import { RequestOptions } from '@angular/http';
 import { ApiConfig } from '../app/api.config'
 
