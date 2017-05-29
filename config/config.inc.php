@@ -22,10 +22,10 @@ $CONFIG['error_handler'] ="E_ALL";
 
 #[Database]
 $CONFIG['database']['provider']	= 'mysql';  //mssql,sqlsrv
-$CONFIG['database']['host']		= "127.0.0.1";
+$CONFIG['database']['host']		= "www.helpfooter.com";
 $CONFIG['database']['database']	= 'applink';  
 $CONFIG['database']['user']		= 'root';  
-$CONFIG['database']['psw']		= 'root'; 
+$CONFIG['database']['psw']		= 'Aerith123$'; 
 
 
 #[Database]

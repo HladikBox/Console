@@ -49,6 +49,8 @@ USER_ROOT    //用户目录根目录
 以下是例子
 ***************/
 
+////starthere以下是代码开始，请勿删除此行注释
+
 $myname=parameter_filter($_REQUEST["name"]);
 $sql="select '$myname' name ";
 $query=$dbmgr->query($sql);//提交一个请求

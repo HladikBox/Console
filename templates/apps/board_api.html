@@ -175,9 +175,9 @@
                         </p>
                         <p>
                         #其它常用方法<br />
-                        $str=<b>parameter_filter($_str);</b>//将内容进行过滤<br />
+                        <b>$str=parameter_filter($_str);</b>//将内容进行过滤<br />
+                        <b>$array=outResult($code,$result,$return);</b><br />
                         <b>outputJson($array);</b>//数组转json并输出<br />
-                        <b>outResult($code,$result,$return);</b><br />
                         <b>outputJson(outResult($code,$result,$return));</b><br />标准数组结果输出，$code=标识码，$result=结果文字描述，$return=结果内容<br />
                         </p>
 
@@ -188,7 +188,7 @@
                         </p>
 
                         <p>
-                        #其它常用常量</b>
+                        #其它常用常量
                         <b>USER_ROOT</b>    //用户目录根目录<br />
                         </p>
                     </div>
@@ -197,8 +197,9 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">取消</button>
-                <span class="text-red" id="txtApiConfirm"></span>
-                <button type="button" class="btn btn-primary" id="btnApiConfirm">提交</button>
+                <input type="hidden" id="dlgApiCoding_model">
+                <input type="hidden" id="dlgApiCoding_func">
+                <button type="button" class="btn btn-primary" id="btnApiCodeSave">保存</button>
             </div>
         </div>
         <!-- /.modal-content -->

@@ -46,6 +46,37 @@
             $("#btnBatchApiTest").attr("disabled",true);
             batchApiTest();
         });
+
+
+
+        $("#btnApiCodeSave").click(function(){
+            var json={
+                action:"setapicontent",
+                app_id:"{{$appinfo.id}}",
+                model:$("#dlgApiCoding_model").val(),
+                func:$("#dlgApiCoding_func").val(),
+                content:$("#dlg_api_content").val()
+            };
+            $("#btnApiCodeSave").attr("disabled", true);
+            getJSON("{{$rootpath}}api/api", json, function (data) {
+                //alert(JSON.stringify(data));
+                if(data.code=="0"){
+
+                    $("#dlgApiCoding").modal("hide");
+
+                }else{
+
+                    error("代码保存失败，请检查并重写");
+
+                }
+
+            },function(){
+                $("#btnApiCodeSave").attr("disabled", false);
+            });
+
+
+
+        });
     });
     function openApiEditor(model,func){
         var apiID="#api_"+model+"_"+func;
@@ -188,7 +219,7 @@
                 //alert(1);
                 
                     if(data.code!=null&&data.code!="0"){
-                     dp.html('<span class="text-red">'+data.result+data.return+'</span>');
+                        dp.html('<span class="text-red">'+data.result+data.return+'</span>');
                     }else{
 
                         if(output!=null){
@@ -303,6 +334,8 @@
         
     }
     function writeApi(model,func){
+        $("#dlgApiCoding_model").val(model);
+        $("#dlgApiCoding_func").val(func);
         var json={
             action:"getapicontent",
             app_id:"{{$appinfo.id}}",
@@ -314,11 +347,9 @@
             $("#dlg_api_content").val(data);
         });
 
-
-        
-
-
     }
+
+
     $("#apiCodingDescription b").dblclick(function(){
         var linecode="\n"+$(this).text()+"\n";
 
