@@ -1,0 +1,209 @@
+
+                <div class="tab-pane" id="tab_api">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <a href="#" class="btn btn-primary margin-bottom" id="btnSaveApiList" >保存</a>
+                            <a href="#" class="btn btn-warning margin-bottom" id="btnBatchApiTest" >启动批量测试</a>
+                        </div>
+                        <div class="col-md-12">
+                            <table class="table table-condensed" id="table_apilist">
+                                <tr>
+                                        <th><input type="checkbox" name="api_checkbox" id="api_checkbox_all" /></th>
+                                        <th>链接</th>
+                                        <th>类型</th>
+                                        <th>模块</th>
+                                        <th>方法</th>
+                                        <th>描述</th>
+                                        <th>操作</th>
+                                        <th class="api_test_th hide">测试</th>
+                                </tr>
+                                {{foreach from=$apilist item=rs key=key}}
+                                <tr id="api_{{$rs.model}}_{{$rs.func}}" class="api_item">
+                                    <td><input {{if $rs.active=="1"}}checked="checked"{{/if}} type="checkbox" class="api_active" ></td>
+                                    <td><a target="_blank"  class="api_testurl"  href="{{$Config.workspace.domain}}/{{$User.login}}/{{$appinfo.alias}}/api/{{$rs.model}}/{{$rs.func}}">/api/{{$rs.model}}/{{$rs.func}}</a></td>
+                                    <td>{{if $rs.type=="model"}}数据模型{{else}}自定义{{/if}}</td>
+                                    <td  class="api_model">{{$rs.model}}</td>
+                                    <td class="api_func">{{$rs.func}}</td>
+                                    <td class="api_description">{{$rs.description}}</td>
+                                    <td>
+                                        <a href="javascript:openApiEditor('{{$rs.model}}','{{$rs.func}}');" ><i class="fa fa-cog"></i></a>
+                                        {{if $rs.type!="model"}}<a class="fa fa-pencil-square-o" href="javascript:writeApi('{{$rs.model}}','{{$rs.func}}');" target="_blank" ></a>{{/if}}
+                                        <textarea  class="api_modelinput hide">{{$rs.modelinput}}</textarea>
+                                        <textarea  class="api_input hide">{{$rs.input}}</textarea>
+                                        <textarea  class="api_output hide" >{{$rs.output}}</textarea>
+                                        <input type="hidden" value="{{$rs.type}}" class="api_type" />
+                                    </td>
+                                    <td class="api_test hide">测试结果</td>
+                                </tr>
+                                {{/foreach}}
+                            </table>
+                        </div>
+                        <div class="col-md-12">
+                            <a href="javascript:openApiEditor('','');" class="btn btn-success margin-bottom" >添加自定义接口</a>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                
+<div class="modal fade" id="dlgApiEditor">
+    <div class="modal-dialog" style="width:1000px;">
+        <div class="modal-content">
+            <div class="modal-header bg-light-blue-active">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">添加自定义接口</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group" >
+                            <label class="col-sm-4 control-label"><span style="color:red;">*</span> 模块</label>
+                            <div class="col-sm-8">
+                                <input type="text" maxlength="50" class="form-control" id="dlg_api_model" placeholder="接口URL的模块，仅支持全英文" data-toggle="tooltip" title="接口URL的模块，仅支持全英文"/>
+                            </div>
+                            <span class="help-block col-sm-offset-4"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group" >
+                            <label class="col-sm-4 control-label"><span style="color:red;">*</span> 方法</label>
+                            <div class="col-sm-8">
+                                <input type="text" maxlength="50" class="form-control" id="dlg_api_func" placeholder="接口URL的方法，仅支持全英文" data-toggle="tooltip" title="接口URL的方法，仅支持全英文" />
+                            </div>
+                            <span class="help-block col-sm-offset-4"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group" >
+                            <label class="col-sm-2 control-label"> 测试传入参数</label>
+                            <div class="col-sm-10">
+                                <textarea type="text"  class="form-control" id="dlg_api_input" placeholder="传入的测试数据，仅支持json格式" data-toggle="tooltip" title="传入的测试数据，仅支持json格式" ></textarea>
+                            </div>
+                            <span class="help-block col-sm-offset-4"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group" >
+                            <label class="col-sm-2 control-label"> 测试匹配结果</label>
+                            <div class="col-sm-10">
+                                <textarea type="text"  class="form-control" id="dlg_api_output" placeholder="匹配的输出结果，仅支持json格式，可用*号变化返回，如{id:*,name:'*'}" data-toggle="tooltip" title="匹配的输出结果，仅支持json格式，可用*号变化返回，如{id:*,name:'*'}" ></textarea>
+                            </div>
+                            <span class="help-block col-sm-offset-4"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"> 接口描述</label>
+                            <div class="col-sm-10">
+                                <textarea type="text"  class="form-control" id="dlg_api_description" placeholder="描述，防止忘记这个API做什么" ></textarea>
+                            </div>
+                            <span class="help-block col-sm-offset-4"></span>
+                        </div>
+                    </div>
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">取消</button>
+                <span class="text-red" id="txtApiConfirm"></span>
+                <button type="button" class="btn btn-primary" id="btnApiConfirm">应用</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<style type="text/css">
+    #apiCodingDescription b{
+        background-color: #cccccc;
+        cursor: pointer;
+    }
+</style>
+<div class="modal fade" id="dlgApiCoding">
+    <div class="modal-dialog" style="width:1000px;">
+        <div class="modal-content">
+            <div class="modal-header bg-light-blue-active">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">编辑API代码</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group" >
+                            <label class="col-md-12 control-label"> 代码编辑(<a href="http://www.hubwiz.com/course/559b6603a164dd0d75929cc9/" target="_blank">快速学习PHP</a>)</label>
+                            <div class="col-sm-12">
+                                <textarea type="text"  class="form-control" id="dlg_api_content" placeholder="直接在下面编辑你的PHP代码，如果不会请点击上面快速入门" rows="12" ></textarea>
+                            </div>
+                            <span class="help-block col-sm-offset-4"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12" id="apiCodingDescription">
+                        <p>#以下是常用的代码，请注意以下几点</p>
+                        <ol>
+                            <li>请不要在本页面中出现html的代码，否则你自己负责了</li>
+                            <li>最后面输出一定要outputJSON代码，否则输出的页面json为空。</li>
+                            <li>一般来说，这里用的是数据库对象最多，因此请看熟悉以下的代码</li>
+                            <li>一般都是以一种输出为准，否则你自己的代码会变得难以请求和代码复杂。不要走太多分之有多种请求。</li>
+                            <li>要写公用类或者公用的引用，请在上层的common文件夹或者datamgr文件夹中添加代码，在这个文件中引用</li>
+                            <li><color style="color:red;">双击下面加粗</color>的代码可直接插入编辑框中</li>
+                        </ol>
+                        <p>
+                        $dbmgr;//数据库请求对象<br />
+                        $sql="select now()";<br />
+                        <b>$query=$dbmgr->query($sql);</b>//提交一个请求<br />
+                        <b>$result=$dbmgr->fetch_array($query);</b>//返回一行数据<br />
+                        <b>$result=$dbmgr->fetch_array($dbmgr->query($sql));</b>//返回一行数据<br />
+                        <b>$result=$dbmgr->fetch_array_all($query);</b>//返回多行数据<br />
+                        <b>$result=$dbmgr->fetch_array_all($dbmgr->query($sql));</b>//返回多行数据<br />
+                        <b>$dbmgr->begin_trans();</b>//启动数据库事务<br />
+                        <b>$dbmgr->commit_trans();</b>//提交数据库事务<br />
+                        <b>$dbmgr->rollback_trans();</b>//回滚数据库事务，一般不写这个也可以，反正SQL语句错误就自动回滚<br /><br />
+                        #其它常用的数据库方法<br />
+                        <b>$dbmgr->checkHave("表名","where 条件");</b>//检查是否存在某一条数据<br />
+                        <b>$dbmgr->getNewId("表名");</b>//获取新的ID，表必须有id字段<br />
+                        </p>
+                        <p>
+                        #其它常用方法<br />
+                        $str=<b>parameter_filter($_str);</b>//将内容进行过滤<br />
+                        <b>outputJson($array);</b>//数组转json并输出<br />
+                        <b>outResult($code,$result,$return);</b><br />
+                        <b>outputJson(outResult($code,$result,$return));</b><br />标准数组结果输出，$code=标识码，$result=结果文字描述，$return=结果内容<br />
+                        </p>
+
+                        <p>
+                        <b>logger_mgr::logError("错误日志");</b><br />
+                        <b>logger_mgr::logInfo("常用信息日志");</b><br />
+                        <b>logger_mgr::logDebug("Debug日志");</b><br />
+                        </p>
+
+                        <p>
+                        #其它常用常量</b>
+                        <b>USER_ROOT</b>    //用户目录根目录<br />
+                        </p>
+                    </div>
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">取消</button>
+                <span class="text-red" id="txtApiConfirm"></span>
+                <button type="button" class="btn btn-primary" id="btnApiConfirm">提交</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+

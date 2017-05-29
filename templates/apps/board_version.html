@@ -1,0 +1,56 @@
+
+
+                <div class="tab-pane " id="tab_version">
+
+                    <div class="row">
+                        <div class="col-md-9">
+                            <table class="table table-condensed" >
+                                <tr id="versionTH">
+                                    <th>版本</th>
+                                    <th>签入日期</th>
+                                    <th >描述</th>
+                                    <th >操作</th>
+                                </tr>
+                                {{foreach from=$versionlist item=rs key=key}}
+                                <tr >
+                                    <td>{{if $rs.is_tag=="Y"}}<i class="fa fa-star text-warning"></i>{{/if}} {{$rs.version}}</td>
+                                    <td>{{$rs.committed_date}}</td>
+                                    <td>{{$rs.comment}}</td>
+                                    <td><a href="javascript:rollback({{$rs.version}})" >回滚</a></td>
+                                </tr>
+                                {{/foreach}}
+                            </table>
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="box box-success">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">提交版本</h3>
+                                </div>
+                                <div class="box-body ">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <textarea class="form-control" rows="5" placeholder="请输入版本提交的描述" id="version_comment"></textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <div>
+                                                    <div class="checkbox">
+                                                        <label>
+                                                            <input type="checkbox" id="version_is_tag"> 里程碑点
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="box-footer">
+                                    <button  class="btn btn-success btn-block" id="btnSubmitVersion">提交</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>

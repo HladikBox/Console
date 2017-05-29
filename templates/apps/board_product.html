@@ -1,0 +1,142 @@
+
+
+
+                <div class="tab-pane " id="tab_product">
+                    <div class="row">
+                        <div class="pad margin no-print">
+                            <div class="callout callout-info" style="margin-bottom: 0!important;">
+                                <h4><i class="fa fa-info"></i> 当你完成了你的应用程序之后，你可以在此页面中上传你的应用。请注意以下几点：</h4>
+                                <ul>
+                                    <li>上传的代码请不要基于任何绝对路径，例如必须部署到D盘之类的，请考虑能够部署到任何位置利用配置的方式来完成部署。</li>
+                                    <li>如果可以的话，请你编写部署<b>脚本</b>来协助用户完成部署。</li>
+                                    <li>请尽可能的描述你的程序功能，让以后的人能够明白你的程序有多牛B。</li>
+                                    <li>别人下载你的代码之后将不会拥有任何数据，因此，如果你有特殊的数据库语句要跑，请另外提交一个项目是数据库脚本有关。</li>
+                                    <li>完成测试之后，你可以提交审核将本应用放到应用商店，最终别的开发者可以购买你的这个应用来进行二次开发，你也可以从中获利。</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <a href="#" class="btn btn-primary margin-bottom" id="btnAddProduct"><i class="fa fa-plus"></i> 添加应用</a>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="row listproduct" >
+                                {{foreach from=$productlist.products.product item=rs}}
+                                <div class="col-lg-3 col-xs-6">
+                                    <!-- small box -->
+                                    <div class="small-box bg-aqua">
+                                        <div class="inner">
+                                            <h3 class="product_typename_txt">{{$rs.typename}}
+                                                <a href="#" class="pull-right btnDeleteProduct" ><small><small><small>删除</small></small></small></a>
+                                            </h3>
+                                            <p class="product_name_txt">{{$rs.name}}</p>
+                                            <p><small class="product_summary_txt">{{$rs.summary}}</small></p>
+                                        </div>
+                                        <a href="#" class="small-box-footer itemproduct">
+                                            编辑 <i class="fa fa-arrow-circle-right"></i>
+                                            <input class="product_type" type="hidden" value="{{$rs.type}}" />
+                                            <input class="product_name" type="hidden" value="{{$rs.name}}" />
+                                            <input class="product_summary" type="hidden" value="{{$rs.summary}}" />
+                                            <input class="product_description" type="hidden" value="{{$rs.description}}" />
+                                        </a>
+                                    </div>
+                                </div>
+                                {{/foreach}}
+                            </div>
+
+                            </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="modal fade" id="dlgAddProduct">
+    <div class="modal-dialog" style="width:1000px;">
+        <div class="modal-content">
+            <div class="modal-header bg-light-blue-active">
+                <button type="button" class="close iclose" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">添加应用</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label"><span style="color:red;">*</span> 类型</label>
+                            <div class="col-sm-8">
+                                <select class="form-control " id="pd_type">
+                                    <option value="">--请选择类型--</option>
+                                    {{foreach from=$producttype item=rs key=key}}
+                                    <option value="{{$key}}">{{$rs}}</option>
+                                    {{/foreach}}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label"><span style="color:red;">*</span> 名称</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="pd_name" placeholder="名称">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"> 简介</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="pd_summary" placeholder="简介">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"> 详情与安装</label>
+                            <div class="col-sm-10 textareareset" >
+                                <textarea id="pd_description" class="textarea" placeholder="请在此处编写你的应用详情于安装方法" style="width: 100%; height: 350px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;"></textarea>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8 col-lg-offset-4 uploadcontrol hide">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <button type="button" class="btn btn-primary btn-block" id="pd_code">上传代码</button>
+                            </div>
+                            <div class="col-md-4">
+                                <button type="button" class="btn btn-primary btn-block" id="pd_imgs">上传图片</button>
+                            </div>
+                            <div class="col-md-4">
+                                <button type="button" class="btn btn-primary btn-block" id="pd_docs">上传文档</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 uploadcontrol hide">
+                        <br />
+                        <p>请注意，上传代码直接上传根目录下开始就行。上传图片请只上传图片格式，一般浏览器能够打开。上传文档请上传一般的文档格式，PPT,PDF或者WORD都可以。</p>
+                    </div>
+                </div>
+                    </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left iclose" data-dismiss="modal">关闭</button>
+                <span class="text-red" id="txtConfirmAddProduct"></span>
+                <input type="hidden" id="pd_isnew" value="Y" />
+                <button type="button" class="btn btn-primary" id="btnConfirmAddProduct">保存</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->

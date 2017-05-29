@@ -41,6 +41,31 @@
     RedirectDownload($file_name,$zipfile);
 
     
+  }elseif ($action=="getapicontent") {
+    $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
+    $folder=$CONFIG['workspace']['path']."\\".$User["login"]."\\".$appinfo["alias"]."\\";
+    $func=$_REQUEST["func"];
+    $model=$_REQUEST["model"];
+    $filepath=$folder."api\\".$model."\\".$func.".php";
+
+    $content="";
+    $lines = @file($filepath);
+    $startcontent=false;
+    foreach($lines as $val){
+      if(trim($val)=='<?php'
+        ||trim($val)=='?>'){
+        $val="";
+      }
+      if($startcontent){
+          $content.=$val;
+      }
+      if(substr(trim($val),0,13)=="////starthere"){
+          $startcontent=true;
+      }
+    }
+
+    outputJSON($content);
+
   }
 
 

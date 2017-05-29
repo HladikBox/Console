@@ -1,0 +1,172 @@
+                <div class="tab-pane active" id="tab_model">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <a href="#" class="btn btn-primary margin-bottom" id="btnCreateModel" >创建数据对象模型</a>
+                            <a href="#" class="btn btn-warning margin-bottom" id="btnExecuteMysql" >批量更新数据库</a>
+                        </div>
+                    </div>
+                    <table class="table table-condensed" id="table_modellist">
+                        <tr>
+                          <th style="width: 10px">#</th>
+                          <th>模型名称</th>
+                          <th>名称</th>
+                          <th>数据来源</th>
+                          <th>描述</th>
+                          <th class="db_op_th hide">SQL执行</th>
+                          <th class="ut_op hide">单元测试</th>
+                        </tr>
+                        {{foreach from=$modellist item=rs key=key}}
+                        <tr id="model_{{$rs.modelname}}">
+                            <td> </td>
+                            <td><a href="/apps/model?app_id={{$appinfo.id}}&model={{$rs.modelname}}">{{$rs.modelname}}</a></td>
+                            <td><a class="modelname" href="/apps/model?app_id={{$appinfo.id}}&model={{$rs.modelname}}">{{$rs.name}}</a></td>
+                            <td><a href="/apps/model?app_id={{$appinfo.id}}&model={{$rs.modelname}}">{{$rs.tablename}}</a></td>
+                            <td>{{$rs.description}}</td>
+                            <td class="db_op hide" modelname="{{$rs.modelname}}"></td>
+                            <td class="ut_op hide"></td>
+                        </tr>
+                        {{/foreach}}
+                    </table>
+                </div>
+
+
+                
+<div class="modal fade" id="dlgRecommModelList">
+    <div class="modal-dialog" style="width:800px;">
+        <div class="modal-content">
+            <div class="modal-header bg-light-blue-active">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">推荐数据对象模型</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table">
+                            <tr>
+                                <th><input type="checkbox" id="recomm_modellist_select_all" /></th>
+                                <th>模型名称</th>
+                                <th>模型描述</th>
+                            </tr>
+                            {{foreach from=$recomm_modellist item=rs}}
+                            {{if $rs.modelname!="alias"}}
+                            <tr>
+                                <td><input type="checkbox" name="recomm_modellist" value="{{$rs.modelname}}" /></td>
+                                <td>{{$rs.name}}</td>
+                                <td>{{$rs.description}}</td>
+                            </tr>
+                            {{/if}}
+                            {{/foreach}}
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">取消</button>
+                <span class="text-red" id="txtConfirmRecommModelList"></span>
+                <button type="button" class="btn btn-primary" id="btnConfirmRecommModelList">应用</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+
+
+
+
+<div class="modal fade" id="dlgCreateModel">
+    <div class="modal-dialog" style="width:800px;">
+        <div class="modal-content">
+            <div class="modal-header bg-light-blue-active">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">创建数据对象模型</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group" >
+                            <label class="col-sm-4 control-label"><span style="color:red;">*</span> 模型标识</label>
+                            <div class="col-sm-8">
+                                <input type="text" maxlength="40" class="form-control" id="cm_modelname" placeholder="唯一标识，仅支持全英文" data-toggle="tooltip" title="唯一标识，仅支持全英文">
+                            </div>
+                            <span class="help-block col-sm-offset-4"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group" >
+                            <label class="col-sm-4 control-label"><span style="color:red;">*</span> 模型名称</label>
+                            <div class="col-sm-8">
+                                <input type="text"  class="form-control" id="cm_name" placeholder="模型名称" >
+                            </div>
+                            <span class="help-block col-sm-offset-4"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group" >
+                            <label class="col-sm-4 control-label"><span style="color:red;">*</span> 数据表名</label>
+                            <div class="col-sm-8">
+                                <input type="text" maxlength="60" class="form-control" id="cm_tablename" placeholder="数据表名" >
+                            </div>
+                            <span class="help-block col-sm-offset-4"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group" >
+                            <label class="col-sm-2 control-label"><span style="color:red;">*</span> 创建方式</label>
+                            <div class="col-sm-8">
+                                <div class="form-group ">
+                                  <div class="radio">
+                                    <label>
+                                      <input type="radio" name="optCreateModel" value="N" >
+                                      重新开始创建
+                                    </label>
+                                  </div>
+                                  <div class="radio">
+                                    <label>
+                                      <input type="radio" name="optCreateModel" value="C" checked="checked">
+                                      从推荐列表中复制&nbsp;&nbsp;&nbsp;&nbsp;
+                                      <select id="ddlRecommModelList" >
+                                          {{foreach from=$recomm_modellist item=rs}}
+                                          <option value="{{$rs.modelname}}">{{$rs.name}}</option>
+                                          {{/foreach}}
+                                      </select>
+                                    </label>
+                                  </div>
+                                  <div class="radio">
+                                    <label>
+                                      <input type="radio" name="optCreateModel" value="E">
+                                      从现有模型中复制&nbsp;&nbsp;&nbsp;&nbsp;
+                                      <select id="ddlExistModelList" >
+                                          {{foreach from=$modellist item=rs}}
+                                          <option value="{{$rs.modelname}}">{{$rs.name}}</option>
+                                          {{/foreach}}
+                                      </select>
+                                    </label>
+                                  </div>
+                                </div>
+                            </div>
+                            <span class="help-block col-sm-offset-4"></span>
+                        </div>
+                    </div>
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">取消</button>
+                <span class="text-red" id="txtConfirmCreateModel"></span>
+                <button type="button" class="btn btn-primary" id="btnConfirmCreateModel">创建</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
