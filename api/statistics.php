@@ -19,8 +19,10 @@
     $array["tables"]=$tables;
     $spaces=$statisticsMgr->getSpace($User["login"],$appinfo["alias"]);
     $array["spaces"]=$spaces;
-    $apioutput=$statisticsMgr->getApiOutputDate($User["login"],$appinfo["alias"]);
+    $apioutput=$statisticsMgr->getApiOutputDate($User["login"],$appinfo["alias"],28);
     $array["apioutput"]=$apioutput;
+    $callsummary=$statisticsMgr->getApiCallSummary($User["login"],$appinfo["alias"]);
+    $array["callsummary"]=$callsummary;
     outputJSON($array);
   }elseif($action=="downloadsourcecode"){
     

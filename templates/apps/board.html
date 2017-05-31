@@ -12,7 +12,7 @@
             应用管理
             <small>{{$appinfo.name}} <span class="badge bg-green">{{$appinfo.type_name}}</span></small>
             <a class="btn btn-primary" href="{{$Config.workspace.ftp}}/{{$appinfo.alias}}" target="_blank" style="margin-left:40px;" data-toggle="tooltip" title="请在应用配置中获取你的密码" >打开远程工作目录</a>
-            <a class="btn btn-warning" href="{{$Config.workspace.mysql}}" target="_blank" data-toggle="tooltip" title="请在应用配置中获取你的密码">连接调试数据库</a>
+            <a id="btn_open_webmysql" class="btn btn-warning" href="{{$Config.workspace.mysql}}" target="_blank" data-toggle="tooltip" title="请在应用配置中获取你的密码">连接调试数据库</a>
             <a class="btn btn-info" href="{{$Config.workspace.domain}}/{{$User.login}}/{{$appinfo.alias}}/" target="_blank" data-toggle="tooltip" title="请在应用配置中获取你的密码">进入数据中心</a>
             <a class="btn btn-success hide" id="btnSyncDataBase" href="#"  >同步到正式数据库</a>
             <a class="btn btn-info hide" id="btnSendToWorkspace" href="#"   >发布数据中心到正式环境</a>
@@ -82,6 +82,10 @@
 {{include  file="$smarty_root/footer.html" }}
 <script src="{{$rootpath}}plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
 <script src="{{$rootpath}}plugins/highcharts/highcharts.js"></script>
+<!-- DataTables -->
+<link rel="stylesheet" href="{{$rootpath}}plugins/datatables/dataTables.bootstrap.css">
+<script src="{{$rootpath}}plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="{{$rootpath}}plugins/datatables/dataTables.bootstrap.min.js"></script>
 
 {{include  file="$smarty_root/apps/board_console.js" }}
 

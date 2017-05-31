@@ -81,11 +81,10 @@
     return $size; 
   } 
 
-  function getApiOutputDate($login,$alias){
+  function getApiOutputDate($login,$alias,$days=7){
     $login=parameter_filter($login);
     $alias=parameter_filter($alias);
 
-    $days=7;
 
     $date=date('Y-m-d', strtotime("-$days days"));
     $sql="select call_date, sum(output_data_length) total_data_length from tb_app_calllog
@@ -111,6 +110,22 @@ order by call_date";
 
     return $ret;
 
+
+  }
+
+  function getApiCallSummary($login,$alias){
+    $login=parameter_filter($login);
+    $alias=parameter_filter($alias);
+    $sql="
+select url,sum(1) callcount,sum(output_data_length) total_data_length from (
+select concat(model,'/',func) url,output_data_length from tb_app_calllog 
+where login='$login' and alias='$alias'
+) a
+group by url
+    ";
+    $query = $this->dbmgr->query($sql);
+    $result = $this->dbmgr->fetch_array_all($query);
+    return $result;
 
   }
 

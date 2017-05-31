@@ -1,6 +1,67 @@
 <div class="tab-pane active" id="tab_console">
 
 <div class="row">
+    <div class="col-lg-3 col-xs-6">
+      <!-- small box -->
+      <div class="small-box bg-aqua">
+        <div class="inner">
+          <h3 id="static_modelcount" ></h3>
+          <p>模型</p>
+        </div>
+        <div class="icon">
+          <i class="ion ion-bag"></i>
+        </div>
+        <a href="javascript:$('#btn_tab_model').click();" class="small-box-footer">管理更多 <i class="fa fa-arrow-circle-right"></i></a>
+      </div>
+    </div>
+    <!-- ./col -->
+    <div class="col-lg-3 col-xs-6">
+      <!-- small box -->
+      <div class="small-box bg-green">
+        <div class="inner">
+          <h3 id="static_apicount"></h3>
+          <p>接口</p>
+        </div>
+        <div class="icon">
+          <i class="ion ion-stats-bars"></i>
+        </div>
+        <a href="javascript:$('#btn_tab_api').click();" class="small-box-footer">管理更多 <i class="fa fa-arrow-circle-right"></i></a>
+      </div>
+    </div>
+    <!-- ./col -->
+    <!-- ./col -->
+    <div class="col-lg-3 col-xs-6">
+      <!-- small box -->
+      <div class="small-box bg-yellow">
+        <div class="inner">
+          <h3 id="static_tablescount">0</h3>
+          <p>数据表</p>
+        </div>
+        <div class="icon">
+          <i class="fa fa-database"></i>
+        </div>
+        <a href="javascript:window.open('{{$Config.workspace.mysql}}');" class="small-box-footer">管理更多 <i class="fa fa-arrow-circle-right"></i></a>
+      </div>
+    </div>
+    <!-- ./col -->
+    <!-- ./col -->
+    <div class="col-lg-3 col-xs-6">
+      <!-- small box -->
+      <div class="small-box bg-red">
+        <div class="inner">
+          <h3 id="static_versioncount"></h3>
+          <p>版本</p>
+        </div>
+        <div class="icon">
+          <i class="fa fa-code-fork"></i>
+        </div>
+        <a href="javascript:$('#btn_tab_version').click();" class="small-box-footer">管理更多 <i class="fa fa-arrow-circle-right"></i></a>
+      </div>
+    </div>
+    <!-- ./col -->
+
+
+
     <div class="col-md-12 " >
         <div class="box box-success">
             <div class="box-header with-border">
@@ -40,6 +101,34 @@
         </div>
     </div>
 
+    <div class="col-md-6" >
+        <div class="box box-success">
+            <div class="box-header with-border">
+                <h3 class="box-title">接口简单统计</h3>
+                      <div class="pull-right box-tools">
+                        <button type="button" class="btn  btn-sm" data-widget="collapse" data-toggle="tooltip" title="Collapse">
+                          <i class="fa fa-minus"></i></button>
+                      </div>
+            </div>
+            <div class="box-body ">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table id="static_callsummary" class="table table-bordered table-striped">
+                            <thead>
+                            <tr>
+                              <th>接口</th>
+                              <th>总调用次数</th>
+                              <th>平均返回数据量(字节)</th>
+                            </tr>
+                            </thead>
+                            <tbody id="static_callsummary_trs">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="col-md-12" >
         <div class="box box-success">

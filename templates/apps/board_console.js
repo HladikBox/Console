@@ -1,12 +1,17 @@
 <script>
 $(document).ready(function(){
 
+    $("#static_modelcount").text($("#table_modellist tr").length-1);
+    $("#static_apicount").text($(".api_item .api_active[checked]").length);
+    $("#static_versioncount").text($(".version_item").length);
+
 	var json={"action":"getdata"
 	           ,"app_id":"{{$appinfo.id}}"};
 
 	getJSON("{{$rootpath}}api/statistics", json, function (data) {
 
                 var tablesdata=new Array();
+                $("#static_tablescount").text(data.tables.length);
                 for(var i=0;i<data.tables.length;i++){
                     var rows=Number(data.tables[i].TABLE_ROWS);
                     var tabledata={   name:data.tables[i].TABLE_NAME,y:rows };
@@ -149,6 +154,20 @@ $(document).ready(function(){
                         data: catdata
                     }]
                 });
+
+                    var trstr="";
+                for(var i in data.callsummary){
+                    trstr+="<tr><td>"+data.callsummary[i].url
+                        +"</td><td>"+data.callsummary[i].callcount
+                        +"</td><td>"+(Math.ceil(data.callsummary[i].total_data_length/data.callsummary[i].callcount)).toString()
+                        +"</td></tr>";
+                }
+                $("#static_callsummary_trs").append(trstr);
+                $("#static_callsummary").DataTable();
+
+
+
+
 
             }, function () {
 

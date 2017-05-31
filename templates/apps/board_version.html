@@ -12,7 +12,7 @@
                                     <th >操作</th>
                                 </tr>
                                 {{foreach from=$versionlist item=rs key=key}}
-                                <tr >
+                                <tr class="version_item" >
                                     <td>{{if $rs.is_tag=="Y"}}<i class="fa fa-star text-warning"></i>{{/if}} {{$rs.version}}</td>
                                     <td>{{$rs.committed_date}}</td>
                                     <td>{{$rs.comment}}</td>
