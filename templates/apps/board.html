@@ -27,7 +27,8 @@
     <section class="content">
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs ">
-                <li class="active"><a href="#tab_model" id="btn_tab_model" data-toggle="tab" >数据对象</a></li>
+                <li class="active"><a href="#tab_console" id="btn_tab_console" data-toggle="tab" >仪表盘</a></li>
+                <li><a href="#tab_model" id="btn_tab_model" data-toggle="tab" >数据对象</a></li>
                 <li><a href="#tab_menu" id="btn_tab_menu" data-toggle="tab" >数据中心菜单</a></li>
                 <li ><a href="#tab_api" id="btn_tab_api" data-toggle="tab" >数据接口</a></li>
                 <li><a href="#tab_code" id="btn_tab_code" data-toggle="tab" >接口开发</a></li>
@@ -36,6 +37,8 @@
             </ul>
             <div class="tab-content">
                 
+                {{include  file="$smarty_root/apps/board_console.html" }}
+
                 {{include  file="$smarty_root/apps/board_model.html" }}
 
                 {{include  file="$smarty_root/apps/board_menu.html" }}
@@ -47,9 +50,6 @@
                 {{include  file="$smarty_root/apps/board_product.html" }}
 
                 {{include  file="$smarty_root/apps/board_version.html" }}
-
-
-
 
 
             </div>
@@ -81,6 +81,9 @@
 
 {{include  file="$smarty_root/footer.html" }}
 <script src="{{$rootpath}}plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+<script src="{{$rootpath}}plugins/highcharts/highcharts.js"></script>
+
+{{include  file="$smarty_root/apps/board_console.js" }}
 
 {{include  file="$smarty_root/apps/board_model.js" }}
 

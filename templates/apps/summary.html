@@ -41,7 +41,6 @@
         {{foreach from=$spaces item=rs key=key}}
         spaces.push(['{{$key}}',   {{$rs}}]);
         {{/foreach}}
-
         $('#{{$id}}_space_chart').highcharts({
             chart: {
                 plotBackgroundColor: null,
@@ -126,11 +125,7 @@
 
 
 
-        $("text").each(function(){
-            if($(this).text()=="Highcharts.com"){
-                $(this).text("");
-            }
-        });
+
 
 
 
