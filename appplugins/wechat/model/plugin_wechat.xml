@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root> 
+  <name>插件-微信</name>  
+  <tablename>plugin_wechat</tablename>  
+  <searchcondition/>  
+  <description>这是一个支持微信登录、微信支付的业务模型，请根据需要配置参数。</dedication>  
+  <nolist>1</nolist> 
+  <fields>
+    <field>
+      <name>移动APPID</name>
+      <key>app_appid</key>
+      <type>text</type>
+      <description>配置微信APP的APPID，请登录http://open.wexin.qq.com创建应用，获取APP ID，这是教程https://open.weixin.qq.com/cgi-bin/frame?t=home/app_tmpl&amp;lang=zh_CN</description>
+    </field>
+    <field>
+      <name>移动APPSECRET</name>
+      <key>app_appsecret</key>
+      <type>text</type>
+      <description>配置微信APP的APPID，请登录http://open.wexin.qq.com创建应用，获取APP ID，这是教程https://open.weixin.qq.com/cgi-bin/frame?t=home/app_tmpl&amp;lang=zh_CN</description>
+    </field>
+    <field>
+      <name>移动支付APPID</name>
+      <key>apppay_appid</key>
+      <type>text</type>
+      <description>可以等同于移动APPID，配置微信APP的APPID，请登录http://open.wexin.qq.com创建应用，获取APP ID，这是教程https://open.weixin.qq.com/cgi-bin/frame?t=home/app_tmpl&amp;lang=zh_CN</description>
+    </field>
+    <field>
+      <name>移动支付商户号</name>
+      <key>apppay_mchid</key>
+      <type>text</type>
+	  <description>移动支付商户号申请https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&amp;t=resource/res_list&amp;verify=1&amp;id=open1419317780&amp;token=88ceeac113671bb365dc03fab79b96e45fc36ab9&amp;lang=zh_CN，成功后就会得到商户号。</description>
+    </field>
+    <field>
+      <name>移动支付密匙</name>
+      <key>apppay_secret</key>
+      <type>longtext</type>
+	  <description>移动支付商户号申请成功后登录微信支付获取支付密匙</description>
+    </field>
+  </fields> 
+</root>

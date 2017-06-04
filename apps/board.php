@@ -14,6 +14,7 @@
   include ROOT.'/classes/datamgr/api.cls.php';
   include ROOT.'/classes/datamgr/version.cls.php';
   include ROOT.'/classes/datamgr/product.cls.php';
+  include ROOT.'/classes/datamgr/plugin.cls.php';
 
   $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["id"]);
   $smarty->assign("appinfo",$appinfo);
@@ -33,6 +34,17 @@
   $smarty->assign("producttype",$productType);
   $productlist=$productMgr->getProductList($User["login"],$appinfo["alias"]);
   $smarty->assign("productlist",$productlist);
+
+  $pluginlist=$pluginMgr->getPluginList();
+  $appPlugInlist=$pluginMgr->getAppPluginList($User["login"],$appinfo["alias"]);
+  foreach ($appPlugInlist as $key => $value) {
+    for ($i=0; $i < count($pluginlist["plugins"]["plugin"]); $i++) { 
+      if($pluginlist["plugins"]["plugin"][$i]["id"]==$key){
+        $pluginlist["plugins"]["plugin"][$i]["installed"]=1;
+      }
+    }
+  }
+  $smarty->assign("pluginlist",$pluginlist);
 
   
   $menu=$cmsMgr->getMenu($User["login"],$appinfo["alias"]);

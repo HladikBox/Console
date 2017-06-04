@@ -1,0 +1,33 @@
+
+                <div class="tab-pane" id="tab_plugin">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-condensed" id="table_pluginlist">
+		                        <tr>
+		                          <th style="width: 10px">#</th>
+		                          <th>标识</th>
+		                          <th>名称</th>
+		                          <th>描述</th>
+		                          <th>使用说明</th>
+		                          <th>状态</th>
+		                          <th>操作</th>
+		                        </tr>
+		                        {{foreach from=$pluginlist.plugins.plugin item=rs }}
+		                        <tr id="plugin_{{$rs.id}}">
+		                        	<td></td>
+		                            <td>{{$rs.id}}</td>
+		                            <td>{{$rs.name}}</td>
+		                            <td>{{$rs.description}}</td>
+		                            <td><a class="loadPlugInReadMe" pluginid="{{$rs.id}}" href="#">点击加载</a></td>
+		                            <td class="pluginInstallStatus">{{if $rs.installed==1}}<span class="text-success"><i class="fa fa-check "></i>已安装</span>{{else}}未安装{{/if}}</td>
+		                            <td><a class="btnPluginInstall" href="#" pluginid="{{$rs.id}}">{{if $rs.installed==1}}重新安装{{else}}安装{{/if}}</a></td>
+		                        </tr>
+		                        {{/foreach}}
+		                    </table>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                
