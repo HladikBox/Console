@@ -8,8 +8,9 @@ include ROOT.'/classes/datamgr/model.cls.php';
 include_once ROOT.'/classes/datamgr/app.cls.php';
 
 $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
-$target=$CONFIG['workspace']['path']."\\".$User["login"]."\\".$appinfo["alias"]."\\model";
-recurse_copy(ROOT."/appplugins/wechat/model/",$target);
+$target=$CONFIG['workspace']['path']."\\".$User["login"]."\\".$appinfo["alias"];
+recurse_copy(ROOT."/appplugins/wechat/model/",$target."\\model");
+recurse_copy(ROOT."/appplugins/wechat/common/",$target."\\common");
 
 $modelMgr->executeSql($User["login"],$appinfo["alias"],"plugin_wechat",$appMgr->getUserDbMgr());
 
