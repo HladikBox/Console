@@ -405,7 +405,7 @@ $funcdaostr.='
     public get(id, showLoadingModel: boolean = true) {
         let api: '.$fmodel.'Api = new '.$fmodel.'Api(this.http);
         return api.get(id, showLoadingModel).then(data => {
-            if (data != null) {
+            if (data == null) {
                 return null;
             } 
             var lst = Array();
