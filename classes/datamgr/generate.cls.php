@@ -679,6 +679,9 @@ public function _list($search_param,$orderby){
                 $sql_key=" r_main.id ";
                 $sql_table=" from  ".$modelobj["tablename"]." r_main ";
                 foreach($modelobj["fields"]["field"] as $field){
+					if($field["type"]=="grid"){
+						continue;
+					}
                     $content.='
     if(isset($search_param["'.$field["key"].'"]))
     {
@@ -771,7 +774,9 @@ public function '.$func.'($id){
   $sql_key=" r_main.id ";
                 $sql_table=" from  ".$modelobj["tablename"]." r_main ";
                 foreach($modelobj["fields"]["field"] as $field){
-                   
+                   if($field["type"]=="grid"){
+						continue;
+					}
 
 
                   if($field["type"]=="flist"&&$field["relatetable"]!=""){
@@ -802,6 +807,9 @@ public function '.$func.'($id){
 
                 ';
                 foreach($modelobj["fields"]["field"] as $field){
+					if($field["type"]=="grid"){
+						continue;
+					}
                     if($field["type"]=="flist"){
 
                       $r_tablename=$field["tablename"];
@@ -854,6 +862,8 @@ public function '.$func.'($request,$id=0){
               $updatesql="update ".$modelobj["tablename"]." set updated_user=-1, updated_date=now() ";
               $otherupdatesql="";
               foreach($modelobj["fields"]["field"] as $value){
+				  
+				  
                 if($value["ismutillang"]=="1"){
                   $haveMutilLang=true;
                   continue;
@@ -1065,6 +1075,9 @@ public static DataTable list(DBInstance dbmgr,List<Param> searchParam,string ord
                 $sql_key=" r_main.id ";
                 $sql_table=" from  ".$modelobj["tablename"]." r_main ";
                 foreach($modelobj["fields"]["field"] as $field){
+					if($field["type"]=="grid"){
+						continue;
+					}
                     $content.='
     if(Param.FindContainParamKey(searchParam,"'.$field["key"].'"))
     {
@@ -1155,7 +1168,9 @@ public static Dictionary<string,object> '.$func.'(DBInstance dbmgr,int id){
   $sql_key=" r_main.id ";
                 $sql_table=" from  ".$modelobj["tablename"]." r_main ";
                 foreach($modelobj["fields"]["field"] as $field){
-                   
+                   if($field["type"]=="grid"){
+						continue;
+					}
 
 
                   if($field["type"]=="flist"&&$field["relatetable"]!=""){
@@ -1200,6 +1215,9 @@ public static Dictionary<string,object> '.$func.'(DBInstance dbmgr,int id){
 
                 ';
                 foreach($modelobj["fields"]["field"] as $field){
+					if($field["type"]=="grid"){
+						continue;
+					}
                     if($field["type"]=="flist"){
 
                       $r_tablename=$field["tablename"];
