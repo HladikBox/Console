@@ -13,5 +13,11 @@
 			<plugins>无</plugins>
 			<description>基础广告管理</description>
 		</component>
+		<component>
+			<id>citymapping</id>
+			<name>中国城市管理</name>
+			<plugins>无</plugins>
+			<description>城市管理相关</description>
+		</component>
 	</components>
 </root>
