@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<root>
+	<components>
+		<component>
+			<id>member</id>
+			<name>会员管理</name>
+			<plugins>至少需要安装一种插件，如微信、支付宝、QQ或者新浪微博</plugins>
+			<description>基础会员体系，包括登录，支付</description>
+		</component>
+		<component>
+			<id>banner</id>
+			<name>广告管理</name>
+			<plugins>无</plugins>
+			<description>基础广告管理</description>
+		</component>
+	</components>
+</root>

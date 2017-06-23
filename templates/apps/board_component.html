@@ -1,0 +1,33 @@
+
+                <div class="tab-pane" id="tab_component">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-condensed" id="table_componentlist">
+		                        <tr>
+		                          <th style="width: 10px">#</th>
+		                          <th>标识</th>
+		                          <th>名称</th>
+		                          <th>前置插件</th>
+		                          <th>描述</th>
+		                          <th>使用说明</th>
+		                          <th>操作</th>
+		                        </tr>
+		                        {{foreach from=$componentlist.components.component item=rs }}
+		                        <tr id="component_{{$rs.id}}">
+		                        	<td></td>
+		                            <td>{{$rs.id}}</td>
+		                            <td>{{$rs.name}}</td>
+		                            <td>{{$rs.plugins}}</td>
+		                            <td>{{$rs.description}}</td>
+		                            <td><a class="loadComponentReadMe" pluginid="{{$rs.id}}" href="#">点击加载</a></td>
+		                            <td><a class="btnComponentInstall" href="#" pluginid="{{$rs.id}}">添加</a></td>
+		                        </tr>
+		                        {{/foreach}}
+		                    </table>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                

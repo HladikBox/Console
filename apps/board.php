@@ -15,6 +15,7 @@
   include ROOT.'/classes/datamgr/version.cls.php';
   include ROOT.'/classes/datamgr/product.cls.php';
   include ROOT.'/classes/datamgr/plugin.cls.php';
+  include ROOT.'/classes/datamgr/component.cls.php';
 
   $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["id"]);
   $smarty->assign("appinfo",$appinfo);
@@ -45,6 +46,10 @@
     }
   }
   $smarty->assign("pluginlist",$pluginlist);
+
+
+  $componentlist=$componentMgr->getComponentList();
+  $smarty->assign("componentlist",$componentlist);
 
   
   $menu=$cmsMgr->getMenu($User["login"],$appinfo["alias"]);
