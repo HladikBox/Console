@@ -30,9 +30,9 @@ $CONFIG['database']['psw']		= 'Aerith123$';
 
 #[Database]
 $CONFIG['userdatabase']['provider']	= 'mysql';//mssql,sqlsrv
-$CONFIG['userdatabase']['host']		= "127.0.0.1";
+$CONFIG['userdatabase']['host']		= "www.helpfooter.com";
 $CONFIG['userdatabase']['user']		= 'root'; 
-$CONFIG['userdatabase']['psw']		= 'root';
+$CONFIG['userdatabase']['psw']		= 'Aerith123$';
 
 
 

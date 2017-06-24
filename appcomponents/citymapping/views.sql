@@ -1,0 +1,6 @@
+DROP VIEW IF EXISTS `tv_provinces`;
+CREATE VIEW `tv_provinces` AS select `provinces`.`id` AS `id`,`provinces`.`provinceid` AS `provinceid`,`provinces`.`province` AS `province`,`provinces`.`longitude` AS `longitude`,`provinces`.`latitude` AS `latitude`,now() AS `updated_date` from `provinces`;
+DROP VIEW IF EXISTS `tv_cities`;
+CREATE VIEW `tv_cities` AS select `cities`.`id` AS `id`,`provinces`.`provinceid` AS `provinceid`,`provinces`.`province` AS `province`,`cities`.`cityid` AS `cityid`,`cities`.`city` AS `city`,`cities`.`longitude` AS `longitude`,`cities`.`latitude` AS `latitude`,concat(`provinces`.`province`,`cities`.`city`) AS `provincecity`,now() AS `updated_date` from (`provinces` join `cities` on((`provinces`.`provinceid` = `cities`.`provinceid`)));
+DROP VIEW IF EXISTS `tv_areas`;
+CREATE VIEW `tv_areas` AS select `cities`.`id` AS `id`,`provinces`.`provinceid` AS `provinceid`,`provinces`.`province` AS `province`,`cities`.`cityid` AS `cityid`,`cities`.`city` AS `city`,`areas`.`areaid` AS `areaid`,`areas`.`area` AS `area`,`areas`.`longitude` AS `longitude`,`areas`.`latitude` AS `latitude`,concat(`provinces`.`province`,`cities`.`city`,`areas`.`area`) AS `provincecityarea`,now() AS `updated_date` from ((`provinces` join `cities` on((`provinces`.`provinceid` = `cities`.`provinceid`))) join `areas` on((`cities`.`cityid` = `areas`.`cityid`)));
