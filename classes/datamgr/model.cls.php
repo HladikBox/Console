@@ -38,11 +38,11 @@
     $this->keydbtype["text"]="varchar(255)";
     $this->keydbtype["password"]="varchar(255)";
     $this->keydbtype["check"]="char(1)";
-    $this->keydbtype["longtext"]="varchar(4000)";
+    $this->keydbtype["longtext"]="varchar(1000)";
     $this->keydbtype["select"]="varchar(15)";
     $this->keydbtype["html"]="text";
     $this->keydbtype["number"]="int";
-    $this->keydbtype["upload"]="varchar(1000)";
+    $this->keydbtype["upload"]="varchar(500)";
     $this->keydbtype["datetime"]="datetime";
     $this->keydbtype["fkey"]="int";
     $this->keydbtype["flist"]="varchar(4000)";
