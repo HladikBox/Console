@@ -1,6 +1,6 @@
 <?php
 
-$sql="select * from plugin_wechat";
+$sql="select * from tb_wxapp_config";
 $query=$dbmgr->query($sql);
 $wechatConfig=$dbmgr->fetch_array($query);
 function WechatOauth($oauthcode){
@@ -9,8 +9,8 @@ function WechatOauth($oauthcode){
 	$token=md5($oauthcode.$type.strtotime("now"));
 	//构建access token url
 
-	$appid = $wechatConfig['app_appid'];
-	$appkey = $wechatConfig['app_appsecret'];
+	$appid = $wechatConfig['appid'];
+	$appkey = $wechatConfig['secrect'];
 	$access_token_url = "https://api.weixin.qq.com/sns/oauth2/access_token?"
 	      ."appid=".$appid
 	      ."&secret=".$appkey
@@ -39,9 +39,9 @@ function WechatOauth($oauthcode){
 function WechatGenAppPaymentJSON($subject,$price,$orderno,$notify_url){
 	Global $wechatConfig;
 
-	$appid = $wechatConfig['apppay_appid'];
-	$mchid = $wechatConfig['apppay_mchid'];
-	$secret = $wechatConfig['apppay_secret'];
+	$appid = $wechatConfig['appid'];
+	$mchid = $wechatConfig['mechant_id'];
+	$secret = $wechatConfig['mechant_secrect'];
 
 	$params = array(
         'appid'            => $appid,
