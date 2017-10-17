@@ -241,7 +241,7 @@ class ".$fmodel."Api
                     method:'POST',
                     dataType:'json',
                     header: {
-                      'content-type': 'application/json'
+                      'content-type': 'application/x-www-form-urlencoded'
                     },
                     success: function (res) {
                       if(callback!=null){
@@ -267,7 +267,7 @@ class ".$fmodel."Api
                     method:'POST',
                     dataType:'json',
                     header: {
-                      'content-type': 'application/json'
+                      'content-type': 'application/x-www-form-urlencoded'
                     },
                     success: function (res) {
                       if(callback!=null){
@@ -293,7 +293,7 @@ class ".$fmodel."Api
                     method:'POST',
                     dataType:'json',
                     header: {
-                      'content-type': 'application/json'
+                      'content-type': 'application/x-www-form-urlencoded'
                     },
                     success: function (res) {
                       if(callback!=null){
@@ -318,7 +318,7 @@ class ".$fmodel."Api
                     method:'POST',
                     dataType:'json',
                     header: {
-                      'content-type': 'application/json'
+                      'content-type': 'application/x-www-form-urlencoded'
                     },
                     success: function (res) {
                       if(callback!=null){
@@ -347,7 +347,7 @@ class ".$fmodel."Api
                     method:'POST',
                     dataType:'json',
                     header: {
-                      'content-type': 'application/json'
+                      'content-type': 'application/x-www-form-urlencoded'
                     },
                     success: function (res) {
                       if(callback!=null){
