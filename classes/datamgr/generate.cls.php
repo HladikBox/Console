@@ -178,6 +178,214 @@ function ".$fmodel."Api()
       return $path;
     }
 
+public function generateMINA($login,$alias){
+    Global $CONFIG;
+      $login=parameter_filter($login);
+      $alias=parameter_filter($alias);
+      $apilist=$this->getOutApiList($login,$alias);
+
+      $urlhead="dataapi_link";
+
+      $path=$CONFIG['workspace']['path']."\\$login\\$alias\\development\\";
+      if(!file_exists($path)){
+        mkdir($path,true);
+      }
+      $path=$CONFIG['workspace']['path']."\\$login\\$alias\\development\\mina";
+      if(!file_exists($path)){
+        mkdir($path,true);
+      }else{
+        delDir($path);
+      }
+
+      $apipath=$path."\\apis";
+      if(!file_exists($apipath)){
+        mkdir($apipath,true);
+      }
+
+      $functionreplace="";
+
+
+      foreach($apilist as $model=> $funclist){
+        
+        $modelfile=$apipath."\\$model.js";
+        $modelfile = fopen($modelfile, "w");
+
+
+
+        $fmodel=ucfirst($model);
+        $jsstr="
+        //使用方法，下面两句复制到page的js文件的头部，然后你猜
+        //var ".$fmodel."Api=require('/apis/".$model.".js');
+        //var ".$model."Api=new ".$fmodel."Api();
+        var APIConfig=require('../ApiConfig.js');
+        var apiconfig = new APIConfig();
+class ".$fmodel."Api
+{
+";
+        foreach($funclist as $api){
+        $description=$api["description"];
+        $jsstr.="   //$description";
+        $func=$api["func"];
+
+        
+
+        $url="/$model/$func";
+        $repinput=true;
+
+            if($api["type"]=="self"){
+                $jsstr.="
+                $func(request_json,callback){
+                  wx.request({
+                    url: apiconfig.ServerUrl+'$url', 
+                    data:request_json,
+                    method:'POST',
+                    dataType:'json',
+                    header: {
+                      'content-type': 'application/json'
+                    },
+                    success: function (res) {
+                      if(callback!=null){
+                        callback(res.data);
+                      }
+                    },
+                    fail:function(res){
+                      console.log(res);
+                      callback(false);
+                    }
+                  })
+                };
+";
+            }else{
+
+                if($func=="list"){
+                
+                $jsstr.="
+    $func(searchcondition_json,callback){
+                  wx.request({
+                    url: apiconfig.ServerUrl+'$url', 
+                    data:searchcondition_json,
+                    method:'POST',
+                    dataType:'json',
+                    header: {
+                      'content-type': 'application/json'
+                    },
+                    success: function (res) {
+                      if(callback!=null){
+                        callback(res.data);
+                      }
+                    },
+                    fail:function(res){
+                      console.log(res);
+                      callback(false);
+                    }
+                  })
+                };
+
+";
+                }elseif($func=="get"){
+                $repinput=false;
+                $jsstr.="
+    $func(id,callback){
+      var json={id:id};
+                  wx.request({
+                    url: apiconfig.ServerUrl+'$url', 
+                    data:json,
+                    method:'POST',
+                    dataType:'json',
+                    header: {
+                      'content-type': 'application/json'
+                    },
+                    success: function (res) {
+                      if(callback!=null){
+                        callback(res.data);
+                      }
+                    },
+                    fail:function(res){
+                      console.log(res);
+                      callback(false);
+                    }
+                  })
+                };
+
+";
+                }elseif($func=="update"){
+                
+                $jsstr.="
+    $func(field_json,callback){
+                  wx.request({
+                    url: apiconfig.ServerUrl+'$url', 
+                    data:field_json,
+                    method:'POST',
+                    dataType:'json',
+                    header: {
+                      'content-type': 'application/json'
+                    },
+                    success: function (res) {
+                      if(callback!=null){
+                        callback(res.data);
+                      }
+                    },
+                    fail:function(res){
+                      console.log(res);
+                      callback(false);
+                    }
+                  })
+                };
+
+";
+                }elseif($func=="delete"){
+                
+                $repinput=false;
+                $jsstr.="
+
+    $func(id_array,callback){
+                  
+                  var json={idlist:id_array};
+                  wx.request({
+                    url: apiconfig.ServerUrl+'$url', 
+                    data:id_array,
+                    method:'POST',
+                    dataType:'json',
+                    header: {
+                      'content-type': 'application/json'
+                    },
+                    success: function (res) {
+                      if(callback!=null){
+                        callback(res.data);
+                      }
+                    },
+                    fail:function(res){
+                      console.log(res);
+                      callback(false);
+                    }
+                  })
+                };
+";
+                }
+            }
+        }
+    
+    
+        
+        $jsstr.="
+}
+module.exports = ".$fmodel."Api;
+";
+
+
+        fwrite($modelfile, $jsstr);
+    
+        fclose($modelfile);
+      }
+      recurse_copy(ROOT."\\workspace_copy\\development\\mina\\",$path);
+
+
+      $apiconfig=$path."\\apiconfig.js";
+      file_put_contents($apiconfig,str_replace('{{ServerUrl}}',$CONFIG['workspace']['domain']."/$login/$alias/api",file_get_contents($apiconfig)));
+      file_put_contents($apiconfig,str_replace('{{UploadUrl}}',$CONFIG['workspace']['domain']."/$login/$alias/upload",file_get_contents($apiconfig)));
+      file_put_contents($apiconfig,str_replace('{{FileUploadUrl}}',$CONFIG['workspace']['domain']."/$login/$alias/fileupload",file_get_contents($apiconfig)));
+      return $path;
+    }
 
     
     

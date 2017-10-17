@@ -28,6 +28,8 @@
         $folder=$generateMgr->generatePHP($User["login"],$appinfo["alias"],$modellist);
     }elseif($_REQUEST["type"]=="csharp"){
         $folder=$generateMgr->generateCSharp($User["login"],$appinfo["alias"],$modellist);
+    }elseif($_REQUEST["type"]=="mina"){
+        $folder=$generateMgr->generateMINA($User["login"],$appinfo["alias"]);
     }
     $zip=new ZipArchive();
     $zipfile=$CONFIG['workspace']['path']."\\".$User["login"]."\\".$appinfo["alias"]."\\logs\\sourcecode_".$_REQUEST["type"].".zip";
