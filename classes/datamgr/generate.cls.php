@@ -381,9 +381,10 @@ module.exports = ".$fmodel."Api;
 
 
       $apiconfig=$path."\\apiconfig.js";
-      file_put_contents($apiconfig,str_replace('{{ServerUrl}}',$CONFIG['workspace']['domain']."/$login/$alias/api",file_get_contents($apiconfig)));
-      file_put_contents($apiconfig,str_replace('{{UploadUrl}}',$CONFIG['workspace']['domain']."/$login/$alias/upload",file_get_contents($apiconfig)));
-      file_put_contents($apiconfig,str_replace('{{FileUploadUrl}}',$CONFIG['workspace']['domain']."/$login/$alias/fileupload",file_get_contents($apiconfig)));
+      $domain=str_replace("http://","https://",$CONFIG['workspace']['domain']);
+      file_put_contents($apiconfig,str_replace('{{ServerUrl}}',$domain."/$login/$alias/api",file_get_contents($apiconfig)));
+      file_put_contents($apiconfig,str_replace('{{UploadUrl}}',$domain."/$login/$alias/upload",file_get_contents($apiconfig)));
+      file_put_contents($apiconfig,str_replace('{{FileUploadUrl}}',$domain."/$login/$alias/fileupload",file_get_contents($apiconfig)));
       return $path;
     }
 
