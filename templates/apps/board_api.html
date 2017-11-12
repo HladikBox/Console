@@ -124,6 +124,12 @@
         background-color: #cccccc;
         cursor: pointer;
     }
+    .ace_editor {
+        height:300px;
+    }
+    .ace_content{
+        height:290px;
+    }
 </style>
 <div class="modal fade" id="dlgApiCoding">
     <div class="modal-dialog" style="width:1000px;">
@@ -140,8 +146,8 @@
                     <div class="col-md-12">
                         <div class="form-group" >
                             <label class="col-md-12 control-label"> 代码编辑(<a href="http://www.hubwiz.com/course/559b6603a164dd0d75929cc9/" target="_blank">快速学习PHP</a>)</label>
-                            <div class="col-sm-12">
-                                <textarea type="text"  class="form-control" id="dlg_api_content" placeholder="直接在下面编辑你的PHP代码，如果不会请点击上面快速入门" rows="12" ></textarea>
+                            <div class="col-sm-12" style="height:300px;">
+                                <textarea type="text"  class="form-control" id="dlg_api_content" placeholder="直接在下面编辑你的PHP代码，如果不会请点击上面快速入门"  rows="20" cols="100"  style="height:300px;"></textarea>
                             </div>
                             <span class="help-block col-sm-offset-4"></span>
                         </div>
@@ -156,7 +162,7 @@
                             <li>一般来说，这里用的是数据库对象最多，因此请看熟悉以下的代码</li>
                             <li>一般都是以一种输出为准，否则你自己的代码会变得难以请求和代码复杂。不要走太多分之有多种请求。</li>
                             <li>要写公用类或者公用的引用，请在上层的common文件夹或者datamgr文件夹中添加代码，在这个文件中引用</li>
-                            <li><color style="color:red;">双击下面加粗</color>的代码可直接插入编辑框中</li>
+                            <li><color style="color:red;">复制</color>的常用代码插入编辑框中</li>
                         </ol>
                         <p>
                         $dbmgr;//数据库请求对象<br />

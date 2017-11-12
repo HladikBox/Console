@@ -1,5 +1,17 @@
+<script src="/plugins/ace-builds/src/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="/plugins/ace-builds/src/ext-language_tools.js"></script>
+
+
+
 
 <script type="text/javascript">
+    
+    phpeditor=null;
+
+
+
+
+
     $(document).ready(function () {
         $("#btnSaveApiList").click(function () {
             var apis = Array();
@@ -50,12 +62,14 @@
 
 
         $("#btnApiCodeSave").click(function(){
+            var content=phpeditor.getValue();
+            content=content.substring(5,content.length-2);
             var json={
                 action:"setapicontent",
                 app_id:"{{$appinfo.id}}",
                 model:$("#dlgApiCoding_model").val(),
                 func:$("#dlgApiCoding_func").val(),
-                content:$("#dlg_api_content").val()
+                content:content
             };
             $("#btnApiCodeSave").attr("disabled", true);
             getJSON("{{$rootpath}}api/api", json, function (data) {
@@ -344,13 +358,21 @@
         };
         getJSON("{{$rootpath}}api/api", json, function (data) {
             $("#dlgApiCoding").modal("show");
-            $("#dlg_api_content").val(data);
+            $("#dlg_api_content").val("<?php \r"+data+"\r?>");
+            if(phpeditor==null){
+                phpeditor = ace.edit("dlg_api_content");
+                phpeditor.setTheme("ace/theme/monokai");
+                phpeditor.session.setMode("ace/mode/php");
+            }else{
+                phpeditor.setValue("<?php \r" + data + "\r?>", -1);
+            }
+            
         });
 
     }
 
 
-    $("#apiCodingDescription b").dblclick(function(){
+    $("#apiCodingDescription b nousenow because of php editor").dblclick(function(){
         var linecode="\n"+$(this).text()+"\n";
 
         var el = $("#dlg_api_content").get(0);
