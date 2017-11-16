@@ -9,7 +9,7 @@
     phpeditor=null;
 
 
-
+	
 
 
     $(document).ready(function () {
@@ -60,7 +60,6 @@
         });
 
 
-
         $(".btnApiCodeSave").click(function(){
             var content=phpeditor.getValue();
             content=content.substring(5,content.length-2);
@@ -76,7 +75,7 @@
                 //alert(JSON.stringify(data));
                 if(data.code=="0"){
 
-                    $("#dlgApiCoding").modal("hide");
+                    //$("#dlgApiCoding").modal("hide");
 
                 }else{
 
