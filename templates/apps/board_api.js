@@ -61,7 +61,7 @@
 
 
 
-        $("#btnApiCodeSave").click(function(){
+        $(".btnApiCodeSave").click(function(){
             var content=phpeditor.getValue();
             content=content.substring(5,content.length-2);
             var json={
@@ -71,7 +71,7 @@
                 func:$("#dlgApiCoding_func").val(),
                 content:content
             };
-            $("#btnApiCodeSave").attr("disabled", true);
+            $(".btnApiCodeSave").attr("disabled", true);
             getJSON("{{$rootpath}}api/api", json, function (data) {
                 //alert(JSON.stringify(data));
                 if(data.code=="0"){
@@ -85,7 +85,7 @@
                 }
 
             },function(){
-                $("#btnApiCodeSave").attr("disabled", false);
+                $(".btnApiCodeSave").attr("disabled", false);
             });
 
 
@@ -361,6 +361,11 @@
             $("#dlg_api_content").val("<?php \r"+data+"\r?>");
             if(phpeditor==null){
                 phpeditor = ace.edit("dlg_api_content");
+                phpeditor.setOptions({
+                    enableBasicAutocompletion: true,
+                    enableSnippets: true,
+                    enableLiveAutocompletion: true
+                });
                 phpeditor.setTheme("ace/theme/monokai");
                 phpeditor.session.setMode("ace/mode/php");
             }else{
