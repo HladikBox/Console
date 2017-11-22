@@ -246,8 +246,7 @@ class ".$fmodel."Api
                     },
                     success: function (res) {
                       if(callback!=null){
-						var data=JSON.parse(res.data);
-                        callback(data);
+                        callback(res.data);
                       }
                     },
                     fail:function(res){
@@ -278,8 +277,7 @@ class ".$fmodel."Api
                     },
                     success: function (res) {
                       if(callback!=null){
-						var data=JSON.parse(res.data);
-                        callback(data);
+                        callback(res.data);
                       }
                     },
                     fail:function(res){
@@ -310,8 +308,7 @@ class ".$fmodel."Api
                     },
                     success: function (res) {
                       if(callback!=null){
-						var data=JSON.parse(res.data);
-                        callback(data);
+                        callback(res.data);
                       }
                     },
                     fail:function(res){
@@ -341,8 +338,7 @@ class ".$fmodel."Api
                     },
                     success: function (res) {
                       if(callback!=null){
-						var data=JSON.parse(res.data);
-                        callback(data);
+                        callback(res.data);
                       }
                     },
                     fail:function(res){
@@ -375,8 +371,7 @@ class ".$fmodel."Api
                     },
                     success: function (res) {
                       if(callback!=null){
-						var data=JSON.parse(res.data);
-                        callback(data);
+                        callback(res.data);
                       }
                     },
                     fail:function(res){
