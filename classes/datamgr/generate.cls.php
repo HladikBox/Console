@@ -85,8 +85,19 @@ function ".$fmodel."Api()
 
             if($api["type"]=="self"){
                 $jsstr.="
+				
     this.$func = function(request_json,callback){
-        $.post($urlhead+'$url',request_json,callback);
+        $.ajax($urlhead+'$url',{
+					//提交数据的类型 POST GET
+					type:'POST',
+					async:true,
+					data:request_json,
+					crossDomain:true,
+					datatype: 'json',//xml, html, script, json, jsonp, text
+					xhrFields: {  withCredentials: true  },
+					//成功返回之后调用的函数             
+					success:callback
+				 });
     };
 
 ";
@@ -96,7 +107,17 @@ function ".$fmodel."Api()
                 
                 $jsstr.="
     this.$func = function(search_json,callback){
-        $.post($urlhead+'$url',search_json,callback);
+        $.ajax($urlhead+'$url',{
+					//提交数据的类型 POST GET
+					type:'POST',
+					async:true,
+					data:search_json,
+					crossDomain:true,
+					datatype: 'json',//xml, html, script, json, jsonp, text
+					xhrFields: {  withCredentials: true  },
+					//成功返回之后调用的函数             
+					success:callback
+				 });
     };
 
 ";
@@ -105,7 +126,17 @@ function ".$fmodel."Api()
                 $jsstr.="
     this.$func = function(id,callback){
         var json={id:id};
-        $.post($urlhead+'$url',json,callback);
+        $.ajax($urlhead+'$url',{
+					//提交数据的类型 POST GET
+					type:'POST',
+					async:true,
+					data:json,
+					crossDomain:true,
+					datatype: 'json',//xml, html, script, json, jsonp, text
+					xhrFields: {  withCredentials: true  },
+					//成功返回之后调用的函数             
+					success:callback
+				 });
     };
 
 ";
@@ -114,7 +145,17 @@ function ".$fmodel."Api()
                 $jsstr.="
     this.$func = function(field_json,callback){
         field_json.primary_id=field_json.id;
-        $.post($urlhead+'$url',field_json,callback);
+        $.ajax($urlhead+'$url',{
+					//提交数据的类型 POST GET
+					type:'POST',
+					async:true,
+					data:field_json,
+					crossDomain:true,
+					datatype: 'json',//xml, html, script, json, jsonp, text
+					xhrFields: {  withCredentials: true  },
+					//成功返回之后调用的函数             
+					success:callback
+				 });
     };
 
 ";
@@ -124,7 +165,17 @@ function ".$fmodel."Api()
                 $jsstr.="
     this.$func = function(id_array,callback){
         var json={idlist:id_array};
-        $.post($urlhead+'$url',json,callback);
+        $.ajax($urlhead+'$url',{
+					//提交数据的类型 POST GET
+					type:'POST',
+					async:true,
+					data:json,
+					crossDomain:true,
+					datatype: 'json',//xml, html, script, json, jsonp, text
+					xhrFields: {  withCredentials: true  },
+					//成功返回之后调用的函数             
+					success:callback
+				 });
     };
 
 ";
