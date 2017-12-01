@@ -285,7 +285,8 @@ class ".$fmodel."Api
 
             if($api["type"]=="self"){
                 $jsstr.="
-                $func(request_json,callback){
+                $func(request_json,callback, showLoading = true){
+					apiconfig.ShowLoading();
                   wx.request({
                     url: apiconfig.ServerUrl+'$url', 
                     data:request_json,
@@ -302,6 +303,10 @@ class ".$fmodel."Api
                     fail:function(res){
                       console.log(res);
                       callback(false);
+                    },
+                    complete:function(res){
+                      console.log(res);
+                      apiconfig.CloseLoading();
                     }
                   })
                 };
@@ -311,7 +316,8 @@ class ".$fmodel."Api
                 if($func=="list"){
                 
                 $jsstr.="
-    $func(searchcondition_json,callback){
+    $func(searchcondition_json,callback, showLoading = true){
+		apiconfig.ShowLoading();
                   wx.request({
                     url: apiconfig.ServerUrl+'$url', 
                     data:searchcondition_json,
@@ -328,6 +334,10 @@ class ".$fmodel."Api
                     fail:function(res){
                       console.log(res);
                       callback(false);
+                    },
+                    complete:function(res){
+                      console.log(res);
+                      apiconfig.CloseLoading();
                     }
                   })
                 };
@@ -336,7 +346,8 @@ class ".$fmodel."Api
                 }elseif($func=="get"){
                 $repinput=false;
                 $jsstr.="
-    $func(id,callback){
+    $func(id,callback, showLoading = true){
+		apiconfig.ShowLoading();
       var json={id:id};
                   wx.request({
                     url: apiconfig.ServerUrl+'$url', 
@@ -354,6 +365,10 @@ class ".$fmodel."Api
                     fail:function(res){
                       console.log(res);
                       callback(false);
+                    },
+                    complete:function(res){
+                      console.log(res);
+                      apiconfig.CloseLoading();
                     }
                   })
                 };
@@ -362,7 +377,8 @@ class ".$fmodel."Api
                 }elseif($func=="update"){
                 
                 $jsstr.="
-    $func(field_json,callback){
+    $func(field_json,callback, showLoading = true){
+					apiconfig.ShowLoading();
                   wx.request({
                     url: apiconfig.ServerUrl+'$url', 
                     data:field_json,
@@ -379,6 +395,10 @@ class ".$fmodel."Api
                     fail:function(res){
                       console.log(res);
                       callback(false);
+                    },
+                    complete:function(res){
+                      console.log(res);
+                      apiconfig.CloseLoading();
                     }
                   })
                 };
@@ -389,8 +409,8 @@ class ".$fmodel."Api
                 $repinput=false;
                 $jsstr.="
 
-    $func(id_array,callback){
-                  
+    $func(id_array,callback, showLoading = true){
+                  apiconfig.ShowLoading();
                   var json={idlist:id_array};
                   wx.request({
                     url: apiconfig.ServerUrl+'$url', 
@@ -408,6 +428,10 @@ class ".$fmodel."Api
                     fail:function(res){
                       console.log(res);
                       callback(false);
+                    },
+                    complete:function(res){
+                      console.log(res);
+                      apiconfig.CloseLoading();
                     }
                   })
                 };
