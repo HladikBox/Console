@@ -25,14 +25,14 @@ $CONFIG['database']['provider']	= 'mysql';  //mssql,sqlsrv
 $CONFIG['database']['host']		= "www.helpfooter.com";
 $CONFIG['database']['database']	= 'applink';  
 $CONFIG['database']['user']		= 'root';  
-$CONFIG['database']['psw']		= 'Aerith123$'; 
+$CONFIG['database']['psw']		= 'root'; 
 
 
 #[Database]
 $CONFIG['userdatabase']['provider']	= 'mysql';//mssql,sqlsrv
 $CONFIG['userdatabase']['host']		= "www.helpfooter.com";
 $CONFIG['userdatabase']['user']		= 'root'; 
-$CONFIG['userdatabase']['psw']		= 'Aerith123$';
+$CONFIG['userdatabase']['psw']		= 'root';
 
 
 

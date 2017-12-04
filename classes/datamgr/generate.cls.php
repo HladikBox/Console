@@ -92,6 +92,8 @@ function ".$fmodel."Api()
 					type:'POST',
 					async:true,
 					data:request_json,
+					beforeSend:apiconfig_beforeSend, //发送请求
+					complete:apiconfig_complete,//请求完成
 					crossDomain:true,
 					datatype: 'json',//xml, html, script, json, jsonp, text
 					xhrFields: {  withCredentials: true  },
@@ -112,6 +114,8 @@ function ".$fmodel."Api()
 					type:'POST',
 					async:true,
 					data:search_json,
+					beforeSend:apiconfig_beforeSend, //发送请求
+					complete:apiconfig_complete,//请求完成
 					crossDomain:true,
 					datatype: 'json',//xml, html, script, json, jsonp, text
 					xhrFields: {  withCredentials: true  },
@@ -131,6 +135,8 @@ function ".$fmodel."Api()
 					type:'POST',
 					async:true,
 					data:json,
+					beforeSend:apiconfig_beforeSend, //发送请求
+					complete:apiconfig_complete,//请求完成
 					crossDomain:true,
 					datatype: 'json',//xml, html, script, json, jsonp, text
 					xhrFields: {  withCredentials: true  },
@@ -150,6 +156,8 @@ function ".$fmodel."Api()
 					type:'POST',
 					async:true,
 					data:field_json,
+					beforeSend:apiconfig_beforeSend, //发送请求
+					complete:apiconfig_complete,//请求完成
 					crossDomain:true,
 					datatype: 'json',//xml, html, script, json, jsonp, text
 					xhrFields: {  withCredentials: true  },
@@ -170,6 +178,8 @@ function ".$fmodel."Api()
 					type:'POST',
 					async:true,
 					data:json,
+					beforeSend:apiconfig_beforeSend, //发送请求
+					complete:apiconfig_complete,//请求完成
 					crossDomain:true,
 					datatype: 'json',//xml, html, script, json, jsonp, text
 					xhrFields: {  withCredentials: true  },
