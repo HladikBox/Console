@@ -296,7 +296,9 @@ class ".$fmodel."Api
             if($api["type"]=="self"){
                 $jsstr.="
                 $func(request_json,callback, showLoading = true){
-					apiconfig.ShowLoading();
+					if(showLoading){
+						apiconfig.ShowLoading();
+					}
                   wx.request({
                     url: apiconfig.ServerUrl+'$url', 
                     data:request_json,
@@ -316,7 +318,10 @@ class ".$fmodel."Api
                     },
                     complete:function(res){
                       console.log(res);
-                      apiconfig.CloseLoading();
+					  
+						if(showLoading){
+							apiconfig.CloseLoading();
+						}
                     }
                   })
                 };
@@ -327,7 +332,9 @@ class ".$fmodel."Api
                 
                 $jsstr.="
     $func(searchcondition_json,callback, showLoading = true){
-		apiconfig.ShowLoading();
+					if(showLoading){
+						apiconfig.ShowLoading();
+					}
                   wx.request({
                     url: apiconfig.ServerUrl+'$url', 
                     data:searchcondition_json,
@@ -347,7 +354,10 @@ class ".$fmodel."Api
                     },
                     complete:function(res){
                       console.log(res);
-                      apiconfig.CloseLoading();
+					  
+						if(showLoading){
+							apiconfig.CloseLoading();
+						}
                     }
                   })
                 };
@@ -357,7 +367,10 @@ class ".$fmodel."Api
                 $repinput=false;
                 $jsstr.="
     $func(id,callback, showLoading = true){
-		apiconfig.ShowLoading();
+		
+					if(showLoading){
+						apiconfig.ShowLoading();
+					}
       var json={id:id};
                   wx.request({
                     url: apiconfig.ServerUrl+'$url', 
@@ -378,7 +391,10 @@ class ".$fmodel."Api
                     },
                     complete:function(res){
                       console.log(res);
-                      apiconfig.CloseLoading();
+					  
+						if(showLoading){
+							apiconfig.CloseLoading();
+						}
                     }
                   })
                 };
@@ -388,7 +404,10 @@ class ".$fmodel."Api
                 
                 $jsstr.="
     $func(field_json,callback, showLoading = true){
-					apiconfig.ShowLoading();
+					
+					if(showLoading){
+						apiconfig.ShowLoading();
+					}
                   wx.request({
                     url: apiconfig.ServerUrl+'$url', 
                     data:field_json,
@@ -408,7 +427,10 @@ class ".$fmodel."Api
                     },
                     complete:function(res){
                       console.log(res);
-                      apiconfig.CloseLoading();
+					  
+						if(showLoading){
+							apiconfig.CloseLoading();
+						}
                     }
                   })
                 };
@@ -420,7 +442,10 @@ class ".$fmodel."Api
                 $jsstr.="
 
     $func(id_array,callback, showLoading = true){
-                  apiconfig.ShowLoading();
+                  
+					if(showLoading){
+						apiconfig.ShowLoading();
+					}
                   var json={idlist:id_array};
                   wx.request({
                     url: apiconfig.ServerUrl+'$url', 
@@ -441,7 +466,11 @@ class ".$fmodel."Api
                     },
                     complete:function(res){
                       console.log(res);
-                      apiconfig.CloseLoading();
+					  
+						if(showLoading){
+							apiconfig.CloseLoading();
+						}
+                      
                     }
                   })
                 };
