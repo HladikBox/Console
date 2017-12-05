@@ -8,7 +8,7 @@
                         <div class="col-md-12">
                             <table class="table table-condensed" id="table_apicreatorlist">
                                 <tr>
-                                        <th><input type="checkbox" name="apicreator_checkbox" id="apicreator_checkbox_all" />启用</th>
+                                        <th><input type="checkbox" name="apicreator_checkbox" id="apicreator_checkbox_all" /> 启用</th>
                                         <th>链接</th>
                                         <th>模块</th>
                                         <th>方法</th>
@@ -55,7 +55,7 @@
                         <div class="form-group" >
                             <label class="col-sm-4 control-label"><span style="color:red;">*</span> 模块</label>
                             <div class="col-sm-8">
-                                <input type="text" maxlength="50" class="form-control" id="dlg_api_model" placeholder="接口URL的模块，仅支持全英文" data-toggle="tooltip" title="接口URL的模块，仅支持全英文"/>
+                                <input type="text" maxlength="50" class="form-control" id="dlg_apicreator_model" placeholder="接口URL的模块，仅支持全英文" data-toggle="tooltip" title="接口URL的模块，仅支持全英文"/>
                             </div>
                             <span class="help-block col-sm-offset-4"></span>
                         </div>
@@ -64,7 +64,7 @@
                         <div class="form-group" >
                             <label class="col-sm-4 control-label"><span style="color:red;">*</span> 方法</label>
                             <div class="col-sm-8">
-                                <input type="text" maxlength="50" class="form-control" id="dlg_api_func" placeholder="接口URL的方法，仅支持全英文" data-toggle="tooltip" title="接口URL的方法，仅支持全英文" />
+                                <input type="text" maxlength="50" class="form-control" id="dlg_apicreator_func" placeholder="接口URL的方法，仅支持全英文" data-toggle="tooltip" title="接口URL的方法，仅支持全英文" />
                             </div>
                             <span class="help-block col-sm-offset-4"></span>
                         </div>
@@ -73,7 +73,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label"><span style="color:red;">*</span> 接口描述</label>
                             <div class="col-sm-10">
-                                <textarea type="text"  class="form-control" id="dlg_api_description" placeholder="描述，防止忘记这个API做什么" ></textarea>
+                                <textarea type="text"  class="form-control" id="dlg_apicreator_description" placeholder="描述，防止忘记这个API做什么" ></textarea>
                             </div>
                             <span class="help-block col-sm-offset-4"></span>
                         </div>
@@ -92,10 +92,11 @@
                         </div>
                     </div>
                     <div class="col-md-12"  style="text-align:right">
+                        <span style="color:red;">此保存不会关闭窗口</span>
                         <button type="button" class="btn btn-primary btnApiCreatorCodeSave" >保存</button>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row" style="margin-top:10px;">
                     <div class="col-md-12" id="apiCodingDescription">
                         <div class="box box-default collapsed-box">
                         <div class="box-header with-border">
@@ -162,7 +163,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">取消</button>
-                <span class="text-red" id="txtApiConfirm"></span>
+                <span class="text-red" id="txtApiCreatorConfirm"></span>
                 <button type="button" class="btn btn-primary" id="btnApiCreatorConfirm">应用</button>
             </div>
         </div>

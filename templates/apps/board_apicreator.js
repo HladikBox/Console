@@ -98,47 +98,52 @@
         $("#dlgApiCreatorEditor").modal("show");
         if(isnew){
 
-            $("#dlg_api_model").prop("disabled",false);
-            $("#dlg_api_func").prop("disabled",false);
-            $("#dlg_api_model").val("");
-            $("#dlg_api_func").val("");
-            $("#dlg_api_description").val("");
-            //apieditor.setValue("<?php \r" + "" + "\r?>", -1);
+            $("#dlg_apicreator_model").prop("disabled",false);
+            $("#dlg_apicreator_func").prop("disabled",false);
+            $("#dlg_apicreator_model").val("");
+            $("#dlg_apicreator_func").val("");
+            $("#dlg_apicreator_description").val("");
+            apieditor.setValue("<?php \r" + "" + "\r?>", -1);
         }else{
-            $("#dlg_api_model").prop("disabled",true);
-            $("#dlg_api_func").prop("disabled", true);
-            $("#dlg_api_model").val(model);
-            $("#dlg_api_func").val(func);
-            $("#dlg_api_description").val(api.find(".api_description").text());
-            $("#dlg_api_code").val(api.find(".api_code").text());
+            $("#dlg_apicreator_model").prop("disabled",true);
+            $("#dlg_apicreator_func").prop("disabled", true);
+            $("#dlg_apicreator_model").val(model);
+            $("#dlg_apicreator_func").val(func);
+            $("#dlg_apicreator_description").val(api.find(".api_description").text());
+            getJSON("{{$rootpath}}api/api", 
+            {
+                action:"getapicontent",
+                app_id:"{{$appinfo.id}}",
+                model:model,
+                func:func
+            }, function (data) {
+                apieditor.setValue("<?php \r" + data + "\r?>", -1);
+            });
+
+
             //apieditor.setValue("<?php \r" + $("#dlg_api_code").text() + "\r?>", -1);
         }
 
         $("#btnApiCreatorConfirm").unbind("click");
         $("#btnApiCreatorConfirm").click(function(){
             if(isnew){
-                model=$.trim($("#dlg_api_model").val().toLowerCase());
-                func=$.trim($("#dlg_api_func").val().toLowerCase());
-
+                model=$.trim($("#dlg_apicreator_model").val().toLowerCase());
+                func=$.trim($("#dlg_apicreator_func").val().toLowerCase());
 
                 var pattern =  /^[A-Za-z]+$/;
                 if($.trim(model)==""||!pattern.test(model)){
-                    $("#txtApiConfirm").text("模块仅能使用英文且不能为空");
+                    $("#txtApiCreatorConfirm").text("模块仅能使用英文且不能为空");
                     return;
                 }
                 if($.trim(func)==""||!pattern.test(func)){
-                    $("#txtApiConfirm").text("方法仅能使用英文且不能为空");
-                    return;
-                }
-                if(func=="list"||func=="get"||func=="update"||func=="delete"){
-                    $("#txtApiConfirm").text("方法不能使用list,get,update,delete，已经被数据模型预先使用");
+                    $("#txtApiCreatorConfirm").text("方法仅能使用英文且不能为空");
                     return;
                 }
             }
-            var description=$.trim($("#dlg_api_description").val());
+            var description=$.trim($("#dlg_apicreator_description").val());
             if (isnew) {
 
-                var newrow = $('<tr id="api_' + model + '_' + func + '"  class="api_item">' +
+                var newrow = $('<tr id="apicreator_' + model + '_' + func + '"  class="api_item">' +
                 '<td><input type="checkbox" class="api_active" ></td>' +
                 '<td><a target="_blank" class="api_testurl" href="{{$Config.workspace.domain}}/{{$User.login}}/{{$appinfo.alias}}/api/' + model + '/' + func + '">/api/' + model + '/' + func + '</a></td>' +
                 '<td class="api_model">' + model + '</td>' +
@@ -147,7 +152,6 @@
                 '<td>' +
                 '<a href="javascript:openApiCreatorEditor(\'' + model + '\',\'' + func + '\');" ><i class="fa fa-cog"></i></a>' +
                 '</td>' +
-                '<td class="api_test hide">测试结果</td>' +
                 '</tr>');
 
                 $("#table_apilist").append(newrow);
