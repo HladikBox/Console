@@ -40,55 +40,21 @@
 	      $aplconfig["apis"]["api"]=array();
 	      $aplconfig["apis"]["api"][]=$temp;
 	    }
-
+	    print_r($aplconfig);
 	    foreach ($aplconfig["apis"]["api"] as $key => $value) {
-	    	$type=$value["type"];
 	    	$model=$value["model"];
-	    	$func=$value["func"];
-	    	$active=$value["active"];
-	    	$output=$value["output"];
-	    	$input=$value["input"];
-            if($active=="1"){
-                $ret[$model][]=$value;
-            }
+	    	$ret[$model][]=$value;
 	    }
         $ret=setArrayNoNull($ret);
-        $ret=bubbleSort($ret,"type");
         $ret=bubbleSort($ret,"func");
         $ret=bubbleSort($ret,"model");
 		return $ret;
 	}
 	public function getApiList($login,$alias,$modellist){
 		Global $CONFIG;
-      $login=parameter_filter($login);
-      $alias=parameter_filter($alias);
+        $login=parameter_filter($login);
+        $alias=parameter_filter($alias);
 		$ret=array();
-		foreach ($modellist as $key => $model) {
-			if($model["nolist"]){
-				$api=$this->setApi("model",$model["modelname"],"update","<b style='color:blue'>更新".$model["name"]."</b>");
-				$ret["model_".$model["modelname"]."_"."update"]=$api;
-
-                
-				$api=$this->setApi("model",$model["modelname"],"get","获取<b style='color:blue'>".$model["name"]."详情</b>");
-				$ret["model_".$model["modelname"]."_"."get"]=$api;
-
-			}else{
-				$api=$this->setApi("model",$model["modelname"],"list","获取<b style='color:blue'>".$model["name"]."列表</b>，传入对应的搜索条件");
-				$ret["model_".$model["modelname"]."_"."list"]=$api;
-
-				$api=$this->setApi("model",$model["modelname"],"get","获取<b style='color:blue'>".$model["name"]."详情</b>, 传入对应的id");
-				$var["id"]="1";
-				$api["modelinput"]=json_encode($var);
-				$ret["model_".$model["modelname"]."_"."get"]=$api;
-
-
-				$api=$this->setApi("model",$model["modelname"],"update","<b style='color:blue'>更新".$model["name"]."</b>，传入对应的表字段");
-				$ret["model_".$model["modelname"]."_"."update"]=$api;
-
-				$api=$this->setApi("model",$model["modelname"],"delete","<b style='color:blue'>删除".$model["name"]."</b>的条目，传入idlist=1,2,3,4,5");
-				$ret["model_".$model["modelname"]."_"."delete"]=$api;
-			}
-		}
 
 		$folder=$CONFIG['workspace']['path']."\\$login\\$alias\\api\\";
 		$modelfolder=scandir($folder);
@@ -105,8 +71,8 @@
 							$desc=file_get_contents($funcmd);
 							$desc = str_replace("\r\n","<br />",$desc);
 						}
-						$api=$this->setApi("self",$model,$func,$desc);
-						$ret["self_".$model."_".$func]=$api;
+						$api=$this->setApi($model,$func,$desc);
+						$ret[$model."_".$func]=$api;
 					}
 				}
 			}
@@ -126,26 +92,19 @@
 	    }
 
 	    foreach ($aplconfig["apis"]["api"] as $key => $value) {
-	    	$type=$value["type"];
 	    	$model=$value["model"];
 	    	$func=$value["func"];
-	    	$active=$value["active"];
-	    	$output=$value["output"];
-	    	$input=$value["input"];
-        echo "a".$ret["$model"."_"."$func"]."a";
 	    	if(isset($ret["$model"."_"."$func"])){
-	    		$ret["$model"."_"."$func"]["active"]=$active;
-	    		$ret["$model"."_"."$func"]["output"]=$output;
-	    		$ret["$model"."_"."$func"]["input"]=$input;
+	    		$ret["$model"."_"."$func"]["active"]=1;
 	    	}
 	    }
-      print_r($ret);
         $ret=setArrayNoNull($ret);
+
+	    	//print_r($ret);
 		return $ret;
 	}
 	
-	public function setApi($type,$model,$func,$desc=""){
-		$ret["type"]=$type;
+	public function setApi($model,$func,$desc=""){
 		$ret["model"]=$model;
 		$ret["func"]=$func;
 		$ret["description"]=$desc;
@@ -165,23 +124,22 @@
       $xml_data = new SimpleXMLElement('<?xml version="1.0"?><root></root>');
 
 
-$optionsnode = $xml_data->addChild("apis");
-foreach ($apis as $option) {
-$optionnode = $optionsnode ->addChild("api");
-$type=$option["type"]==""?"self":$option["type"];
-$model=$option["model"];
-$func=$option["func"];
+		$optionsnode = $xml_data->addChild("apis");
+		foreach ($apis as $option) {
+			$optionnode = $optionsnode ->addChild("api");
+			$model=$option["model"];
+			$func=$option["func"];
 
 
-foreach ($option as $fkey => $fvalue) {
-$optionnode->addChild($fkey,htmlspecialchars($fvalue));
-}
-}
+			foreach ($option as $fkey => $fvalue) {
+				$optionnode->addChild($fkey,htmlspecialchars($fvalue));
+			}
+		}
 
 //saving generated xml file;
 //echo $path;
 $result = $xml_data->asXML($path);
-return outResult(0,"保存成功","");
+	return outResult(0,"保存成功","");
 }
 
 function addChild(&$node,$key,$value){

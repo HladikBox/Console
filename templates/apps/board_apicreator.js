@@ -1,4 +1,5 @@
-
+<script src="/plugins/ace-builds/src/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="/plugins/ace-builds/src/ext-language_tools.js"></script>
 
 
 
@@ -16,12 +17,13 @@
             var apis = Array();
             $("#table_apicreatorlist .api_item").each(function () {
                 var active = $(this).find(".api_active").prop("checked")?"1":"0";
-                var api = {
-                    active: active,
-                    "model": $.trim($(this).find(".api_model").text().toLowerCase()),
-                    "func": $.trim($(this).find(".api_func").text().toLowerCase())
-                };
-                apis.push(api);
+                if(active=="1"){
+                    var api = {
+                        "model": $.trim($(this).find(".api_model").text().toLowerCase()),
+                        "func": $.trim($(this).find(".api_func").text().toLowerCase())
+                    };
+                    apis.push(api);
+                }
             });
             var json = { "action": "save", app_id: "{{$appinfo.id}}", apis: apis };
             $(".btnSaveApiList").attr("disabled", true);
@@ -56,8 +58,8 @@
         var json={
             action:"setapicontent",
             app_id:"{{$appinfo.id}}",
-            model:$("#dlgApiCoding_model").val(),
-            func:$("#dlgApiCoding_func").val(),
+            model:$("#dlg_apicreator_model").val(),
+            func:$("#dlg_apicreator_func").val(),
             content:content
         };
         $(".btnApiCreatorCodeSave").attr("disabled", true);

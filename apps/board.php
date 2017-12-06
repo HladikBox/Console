@@ -25,19 +25,9 @@
   $recomm_modellist=$modelMgr->getRecommandModelList();
   $smarty->assign("recomm_modellist",$recomm_modellist);
 
-  $apilist=$apiMgr->getApiList($User["login"],$appinfo["alias"],$modellist);
-  $smarty->assign("apilist",$apilist);
-
-
-  $apicreatorlist=Array();
-  foreach($apilist as $v){
-    if($v["type"]=="self"){
-      $apicreatorlist[]=$v;
-    }
-  }
-  //print_r($apicreatorlist);
+  $apicreatorlist=$apiMgr->getApiList($User["login"],$appinfo["alias"],$modellist);
   $smarty->assign("apicreatorlist",$apicreatorlist);
-  
+
   $versionlist=$versionMgr->getVersionList($_REQUEST["id"]);
   $smarty->assign("versionlist",$versionlist);
 

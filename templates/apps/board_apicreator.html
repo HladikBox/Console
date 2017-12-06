@@ -36,7 +36,18 @@
                     </div>
                 </div>
 
-
+<style type="text/css">
+    #apiCodingDescription b{
+        background-color: #cccccc;
+        cursor: pointer;
+    }
+    .ace_editor {
+        height:500px;
+    }
+    .ace_content{
+        height:590px;
+    }
+</style>
 
                 
 <div class="modal fade" id="dlgApiCreatorEditor">
@@ -96,6 +107,24 @@
                     </div>
                     <div class="col-md-6"  style="text-align:right">
                         <button type="button" class="btn btn-primary btnApiCreatorCodeSave">保存</button>
+                    </div>
+                    <div class="col-md-4" style="margin-top:10px;">  
+                          <select class="form-control" id=""ddlQuickCopy>
+                            {{foreach from=$modellist item=rs key=key}}
+                            {{if $rs.nolist=="1"}}
+                            <option model="{{$rs.model}}" func="update">{{$rs.name}}的值更新</option>
+                            <option model="{{$rs.model}}" func="get">{{$rs.name}}的字段获取</option>
+                            {{else}}
+                            <option model="{{$rs.model}}" func="list">{{$rs.name}}的列表数据获取</option>
+                            <option model="{{$rs.model}}" func="get">{{$rs.name}}的详情数据获取</option>
+                            <option model="{{$rs.model}}" func="update">{{$rs.name}}的值更新</option>
+                            <option model="{{$rs.model}}" func="delete">{{$rs.name}}的数据删除</option>
+                            {{/if}}
+                            {{/foreach}}
+                          </select>
+                    </div>
+                    <div class="col-md-6"  style="margin-top:10px;">
+                        <button type="button" class="btn btn-primary " id="btnApiCreatorCodeCopy">快速生成</button>
                     </div>
                 </div>
                 <div class="row" style="margin-top:10px;">
