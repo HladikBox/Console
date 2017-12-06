@@ -82,10 +82,26 @@
     file_put_contents($filepath,str_replace('////starthere',"////starthere"."\n".$content."\n",file_get_contents($filepath))); 
     
     outputJSON(outResult(0,"success","success"));
+  }elseif ($action=="saveapi"){
+
+	$appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
+    $folder=$CONFIG['workspace']['path']."\\".$User["login"]."\\".$appinfo["alias"]."\\";
+    $func=$_REQUEST["func"];
+    $model=$_REQUEST["model"];
+    $description=$_REQUEST["description"];
+    $filepath=$folder."api\\".$model."\\".$func.".php";
+
+	mkdir($folder."api\\".$model."\\");
+
+    copy(ROOT."\\workspace_copy\\api.php",$filepath);
+
+    $filepath=$folder."api\\".$model."\\".$func.".md";
+	file_put_contents($filepath,$description);
+
+    outputJSON(outResult(0,"success","success"));
   }
 
 
 outputJSON(outResult("-1","找不到你要调用的请求","找不到你要调用的请求"));
-
-  
+	
 ?>

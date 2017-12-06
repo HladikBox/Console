@@ -12,23 +12,19 @@
 
 
 
-        $("#btnSaveApiList").click(function () {
+        $(".btnSaveApiList").click(function () {
             var apis = Array();
-            $(".api_item").each(function () {
+            $("#table_apicreatorlist .api_item").each(function () {
                 var active = $(this).find(".api_active").prop("checked")?"1":"0";
                 var api = {
                     active: active,
-                    "type": $.trim($(this).find(".api_type").val().toLowerCase()),
                     "model": $.trim($(this).find(".api_model").text().toLowerCase()),
-                    "func": $.trim($(this).find(".api_func").text().toLowerCase()),
-                    "input": $(this).find(".api_input").val(),
-                    "output": $(this).find(".api_output").val()
+                    "func": $.trim($(this).find(".api_func").text().toLowerCase())
                 };
-                api.description = $(this).find(".api_description").text();
                 apis.push(api);
             });
             var json = { "action": "save", app_id: "{{$appinfo.id}}", apis: apis };
-            $("#btnSaveApiList").attr("disabled", true);
+            $(".btnSaveApiList").attr("disabled", true);
             getJSON("{{$rootpath}}api/api", json, function (data) {
                 if (data.code == 0) {
 
@@ -38,7 +34,7 @@
                     warning(data.result);
                 }
             }, function () {
-                $("#btnSaveApiList").attr("disabled", false);
+                $(".btnSaveApiList").attr("disabled", false);
             });
         });
         $("#apicreator_checkbox_all").change(function () {
@@ -46,38 +42,60 @@
         });
 
         $(".btnApiCreatorCodeSave").click(function(){
-            var content=apieditor.getValue();
-            content=content.substring(5,content.length-2);
-            var json={
-                action:"setapicontent",
-                app_id:"{{$appinfo.id}}",
-                model:$("#dlgApiCoding_model").val(),
-                func:$("#dlgApiCoding_func").val(),
-                content:content
-            };
-            $(".btnApiCreatorCodeSave").attr("disabled", true);
-            getJSON("{{$rootpath}}api/api", json, function (data) {
-                //alert(JSON.stringify(data));
-                if(data.code=="0"){
-
-                    //$("#dlgApiCoding").modal("hide");
-
-                }else{
-
-                    error("代码保存失败，请检查并重写");
-
-                }
-
-            },function(){
-                $(".btnApiCreatorCodeSave").attr("disabled", false);
-            });
+            saveCode();
+        });
+        $("#btnApiCreatorCodeReset").click(function(){
+            var model=$("#dlg_apicreator_model").val();
+            var func=$("#dlg_apicreator_func").val();
+            codeReset(model,func);
         });
     });
+    function saveCode(){
+        var content=apieditor.getValue();
+        content=content.substring(5,content.length-2);
+        var json={
+            action:"setapicontent",
+            app_id:"{{$appinfo.id}}",
+            model:$("#dlgApiCoding_model").val(),
+            func:$("#dlgApiCoding_func").val(),
+            content:content
+        };
+        $(".btnApiCreatorCodeSave").attr("disabled", true);
+        getJSON("{{$rootpath}}api/api", json, function (data) {
+            //alert(JSON.stringify(data));
+            if(data.code=="0"){
+
+                //$("#dlgApiCoding").modal("hide");
+
+            }else{
+                error("代码保存失败，请检查并重写");
+            }
+
+        },function(){
+            $(".btnApiCreatorCodeSave").attr("disabled", false);
+        });
+    }
+    function codeReset(model,func){
+        if(model==""&&func==""){
+            apieditor.setValue("<?php \r" +"" + "\r?>", -1);
+        }else{
+            getJSON("{{$rootpath}}api/api", 
+                {
+                    action:"getapicontent",
+                    app_id:"{{$appinfo.id}}",
+                    model:model,
+                    func:func
+                }, function (data) {
+                    apieditor.setValue("<?php \r" + data + "\r?>", -1);
+                });
+        }
+
+    }
     function openApiCreatorEditor(model,func){
         var apiID="#apicreator_"+model+"_"+func;
         var api=$(apiID);
         var isnew=(model==""||func=="");
-        $("#txtApiConfirm").text("");
+        $("#txtApiCreatorConfirm").text("");
         $("#dlg_api_description").prop("disabled", false);
 
 
@@ -97,32 +115,22 @@
 
         $("#dlgApiCreatorEditor").modal("show");
         if(isnew){
-
+            $(".btnApiCreatorCodeSave").hide();
             $("#dlg_apicreator_model").prop("disabled",false);
             $("#dlg_apicreator_func").prop("disabled",false);
             $("#dlg_apicreator_model").val("");
             $("#dlg_apicreator_func").val("");
             $("#dlg_apicreator_description").val("");
-            apieditor.setValue("<?php \r" + "" + "\r?>", -1);
         }else{
+            $(".btnApiCreatorCodeSave").show();
             $("#dlg_apicreator_model").prop("disabled",true);
             $("#dlg_apicreator_func").prop("disabled", true);
             $("#dlg_apicreator_model").val(model);
             $("#dlg_apicreator_func").val(func);
             $("#dlg_apicreator_description").val(api.find(".api_description").text());
-            getJSON("{{$rootpath}}api/api", 
-            {
-                action:"getapicontent",
-                app_id:"{{$appinfo.id}}",
-                model:model,
-                func:func
-            }, function (data) {
-                apieditor.setValue("<?php \r" + data + "\r?>", -1);
-            });
-
-
             //apieditor.setValue("<?php \r" + $("#dlg_api_code").text() + "\r?>", -1);
         }
+        codeReset(model,func);
 
         $("#btnApiCreatorConfirm").unbind("click");
         $("#btnApiCreatorConfirm").click(function(){
@@ -141,24 +149,49 @@
                 }
             }
             var description=$.trim($("#dlg_apicreator_description").val());
-            if (isnew) {
-
-                var newrow = $('<tr id="apicreator_' + model + '_' + func + '"  class="api_item">' +
-                '<td><input type="checkbox" class="api_active" ></td>' +
-                '<td><a target="_blank" class="api_testurl" href="{{$Config.workspace.domain}}/{{$User.login}}/{{$appinfo.alias}}/api/' + model + '/' + func + '">/api/' + model + '/' + func + '</a></td>' +
-                '<td class="api_model">' + model + '</td>' +
-                '<td class="api_func">' + func + '</td>' +
-                '<td class="api_description">' + description + '</td>' +
-                '<td>' +
-                '<a href="javascript:openApiCreatorEditor(\'' + model + '\',\'' + func + '\');" ><i class="fa fa-cog"></i></a>' +
-                '</td>' +
-                '</tr>');
-
-                $("#table_apilist").append(newrow);
-            } else {
-                api.find(".api_description").text(description);
+            if(description.length<5){
+                $("#txtApiCreatorConfirm").text("请填写不少于5个字的接口用途描述");
+                return;
             }
-            $("#dlgApiCreatorEditor").modal("hide");
+
+            getJSON("{{$rootpath}}api/api", 
+                {
+                    action:"saveapi",
+                    app_id:"{{$appinfo.id}}",
+                    model:model,
+                    func:func,
+                    description:description
+                }, function (data) {
+                    
+                    if(data.code=="0"){
+                       
+                        if (isnew) {
+
+                            var newrow = $('<tr id="apicreator_' + model + '_' + func + '"  class="api_item">' +
+                            '<td><input type="checkbox" class="api_active" ></td>' +
+                            '<td><a target="_blank" class="api_testurl" href="{{$Config.workspace.domain}}/{{$User.login}}/{{$appinfo.alias}}/api/' + model + '/' + func + '">/api/' + model + '/' + func + '</a></td>' +
+                            '<td class="api_model">' + model + '</td>' +
+                            '<td class="api_func">' + func + '</td>' +
+                            '<td class="api_description">' + description + '</td>' +
+                            '<td>' +
+                            '<a href="javascript:openApiCreatorEditor(\'' + model + '\',\'' + func + '\');" ><i class="fa fa-pencil-square-o"></i></a>' +
+                            '</td>' +
+                            '</tr>');
+
+                            $("#table_apicreatorlist").append(newrow);
+                        } else {
+                            api.find(".api_description").text(description);
+                        }
+                        saveCode();
+                        $("#dlgApiCreatorEditor").modal("hide");
+
+                    }else{
+
+                        alert(data);
+
+                    }
+
+                });
         });
 
 

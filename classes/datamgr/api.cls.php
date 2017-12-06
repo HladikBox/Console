@@ -132,12 +132,14 @@
 	    	$active=$value["active"];
 	    	$output=$value["output"];
 	    	$input=$value["input"];
-	    	if(isset($ret["$type"."_"."$model"."_"."$func"])){
-	    		$ret["$type"."_"."$model"."_"."$func"]["active"]=$active;
-	    		$ret["$type"."_"."$model"."_"."$func"]["output"]=$output;
-	    		$ret["$type"."_"."$model"."_"."$func"]["input"]=$input;
+        echo "a".$ret["$model"."_"."$func"]."a";
+	    	if(isset($ret["$model"."_"."$func"])){
+	    		$ret["$model"."_"."$func"]["active"]=$active;
+	    		$ret["$model"."_"."$func"]["output"]=$output;
+	    		$ret["$model"."_"."$func"]["input"]=$input;
 	    	}
 	    }
+      print_r($ret);
         $ret=setArrayNoNull($ret);
 		return $ret;
 	}
@@ -162,42 +164,27 @@
       // creating object of SimpleXMLElement
       $xml_data = new SimpleXMLElement('<?xml version="1.0"?><root></root>');
 
-      
-      $optionsnode = $xml_data->addChild("apis");
-      foreach ($apis as $option) {
-      $optionnode = $optionsnode ->addChild("api");
-            $type=$option["type"];
-            $model=$option["model"];
-            $func=$option["func"];
-            $description=$option["description"];
-            if($type=="self"){
-                $apipath=$CONFIG['workspace']['path']."\\$login\\$alias\\api\\$model\\";
-                $apifile=$apipath.$func.".php";
-                $md=$apipath.$func.".md";
-                if(!file_exists($apipath)){
-                    mkdir($apipath,0777,true);
-                }
-                if(!file_exists($apifile)){
-                    copy(ROOT."\\workspace_copy\\api.php",$apifile);
-                }
 
-                $mdf = fopen($md, "w+");
-                fwrite($mdf, $description);
-                fclose($mdf);
-            }
+$optionsnode = $xml_data->addChild("apis");
+foreach ($apis as $option) {
+$optionnode = $optionsnode ->addChild("api");
+$type=$option["type"]==""?"self":$option["type"];
+$model=$option["model"];
+$func=$option["func"];
 
-          foreach ($option as $fkey => $fvalue) {
-            $optionnode->addChild($fkey,htmlspecialchars($fvalue));
-          }
-      }
 
-      //saving generated xml file; 
-      //echo $path;
-      $result = $xml_data->asXML($path);
-      return outResult(0,"保存成功","");
-  }
+foreach ($option as $fkey => $fvalue) {
+$optionnode->addChild($fkey,htmlspecialchars($fvalue));
+}
+}
 
-  function addChild(&$node,$key,$value){
+//saving generated xml file;
+//echo $path;
+$result = $xml_data->asXML($path);
+return outResult(0,"保存成功","");
+}
+
+function addChild(&$node,$key,$value){
             if(trim($value)==""){
                 $node->addChild($key);
             }else{

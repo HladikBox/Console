@@ -35,6 +35,7 @@
       $apicreatorlist[]=$v;
     }
   }
+  //print_r($apicreatorlist);
   $smarty->assign("apicreatorlist",$apicreatorlist);
   
   $versionlist=$versionMgr->getVersionList($_REQUEST["id"]);
