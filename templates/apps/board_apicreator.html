@@ -372,7 +372,7 @@
         比如：$dbmgr->query("update tb_example set public time=now() where id=$id ");
         ****************/
 
-        $result=outResult(0,"Deleted Success"d);
+        $result=outResult(0,"Deleted Success");
         $dbmgr->commit_trans();
     }else{
         $result=outResult(-1,"Deleted fail",$result);
