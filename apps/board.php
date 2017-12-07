@@ -21,6 +21,7 @@
   $smarty->assign("appinfo",$appinfo);
 
   $modellist=$modelMgr->getModelList($User["login"],$appinfo["alias"]);
+  //print_r($modellist);
   $smarty->assign("modellist",$modellist);
   $recomm_modellist=$modelMgr->getRecommandModelList();
   $smarty->assign("recomm_modellist",$recomm_modellist);

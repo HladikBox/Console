@@ -51,6 +51,17 @@
             var func=$("#dlg_apicreator_func").val();
             codeReset(model,func);
         });
+
+        $("#btnApiCreatorCodeCopy").click(function(){
+            var model=$("#ddlQuickCopy").find("option:selected").attr("model");
+            var func=$("#ddlQuickCopy").find("option:selected").attr("func");
+            var id="func_"+func;
+            var codestr=$("#"+id).val();
+            codestr=codestr.replace("{MODEL}",model);
+            apieditor.setValue("<?php \r" +codestr + "\r?>", -1);
+        });
+
+
     });
     function saveCode(){
         var content=apieditor.getValue();

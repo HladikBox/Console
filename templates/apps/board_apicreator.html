@@ -108,25 +108,29 @@
                     <div class="col-md-6"  style="text-align:right">
                         <button type="button" class="btn btn-primary btnApiCreatorCodeSave">保存</button>
                     </div>
-                    <div class="col-md-4" style="margin-top:10px;">  
-                          <select class="form-control" id=""ddlQuickCopy>
-                            {{foreach from=$modellist item=rs key=key}}
-                            {{if $rs.nolist=="1"}}
-                            <option model="{{$rs.model}}" func="update">{{$rs.name}}的值更新</option>
-                            <option model="{{$rs.model}}" func="get">{{$rs.name}}的字段获取</option>
-                            {{else}}
-                            <option model="{{$rs.model}}" func="list">{{$rs.name}}的列表数据获取</option>
-                            <option model="{{$rs.model}}" func="get">{{$rs.name}}的详情数据获取</option>
-                            <option model="{{$rs.model}}" func="update">{{$rs.name}}的值更新</option>
-                            <option model="{{$rs.model}}" func="delete">{{$rs.name}}的数据删除</option>
-                            {{/if}}
-                            {{/foreach}}
-                          </select>
-                    </div>
-                    <div class="col-md-6"  style="margin-top:10px;">
-                        <button type="button" class="btn btn-primary " id="btnApiCreatorCodeCopy">快速生成</button>
-                    </div>
                 </div>
+                    <div class="row" style="margin-top:10px;">
+
+                        <div class="col-md-4">
+                            <select class="form-control" id="ddlQuickCopy" >
+                                {{foreach from=$modellist item=rs key=key}}
+                                {{if $rs.nolist=="1"}}
+                                <option model="{{$rs.modelname}}" func="update">{{$rs.name}}的值更新</option>
+                                <option model="{{$rs.modelname}}" func="get">{{$rs.name}}的字段获取</option>
+                                {{else}}
+                                <option model="{{$rs.modelname}}" func="list">{{$rs.name}}的列表数据获取</option>
+                                <option model="{{$rs.modelname}}" func="get">{{$rs.name}}的详情数据获取</option>
+                                <option model="{{$rs.modelname}}" func="update">{{$rs.name}}的值更新</option>
+                                <option model="{{$rs.modelname}}" func="delete">{{$rs.name}}的数据删除</option>
+                                {{/if}}
+                                {{/foreach}}
+                            </select>
+                        </div>
+                        <div class="col-md-6" >
+                            <button type="button" class="btn btn-primary " id="btnApiCreatorCodeCopy">快速生成</button>
+                        </div>
+
+                    </div>
                 <div class="row" style="margin-top:10px;">
                     <div class="col-md-12" id="apiCodingDescription">
                         <div class="box box-default collapsed-box">
@@ -205,3 +209,176 @@
 <!-- /.modal -->
 
 
+<textarea id="func_list" class="hidden">
+
+    /**************
+    请在此处编写请求的数据正确性，请求合法性的判断
+    比如:
+    if($_REQUEST["mobile"]=="")//手机号码为空
+    {
+        outputJSON(Array());
+    }    
+    ****************/
+
+    //1. （请勿改动的代码）获取数据模型对象
+    $modelname="{MODEL}";
+    $modelmgrpath=USER_ROOT."modelmgr/$modelname.model.php";
+    $model=new XmlModel($modelname,CURRENT_PATH);    
+    //修正$model的字段默认值，for($model->XmlData["fields"]["field"] as $field)
+
+    /**************
+    请在此处编写你对请求值的修正
+    如$request["request_time"]=date('Y-m-d H:i:s');
+    ****************/
+    $request=$_REQUEST;
+    
+    //2. （请勿改动的代码）获取自动生成的搜索sql语句
+    $sql=$model->GetSearchSql($request);
+    //echo $sql;  
+    //$sql=str_replace("select","select distinct",$sql);
+
+    $query = $dbmgr->query($sql);
+    $result = $dbmgr->fetch_array_all($query); 
+
+    /**************
+    请在此处编写你对最终返回数据的修正
+    如
+    for($i=0;$i&lt;count($result);$i++){
+        $result[$i]["mobile"]=substr($result[$i]["mobile"],0,2)."******".substr($result[$i]["mobile"],8,3);
+    }
+    ****************/
+
+    outputJSON($result);
+
+
+</textarea>
+
+<textarea id="func_update" class="hidden">
+
+    //传入primary_id是更新，为空则是新增    
+    //传入primary_id是更新，为空则是新增    
+    //传入primary_id是更新，为空则是新增
+
+    //1. （请勿改动的代码）获取数据模型对象
+    $modelname="{MODEL}";
+    $modelmgrpath=USER_ROOT."modelmgr/$modelname.model.php";
+    $model=new XmlModel($modelname,CURRENT_PATH);
+    //修正$model的字段默认值，for($model->XmlData["fields"]["field"] as $field)
+
+
+
+    //修正请求的数据
+    $request=$_REQUEST;//print_r($request);//你可以比较fix前后的区别
+    $request=$model->beforeSaveDataFix($request);//print_r($request);//你可以比较fix前后的区别
+
+    /**************
+    请在此处编写你对请求值的修正，例如默认值在这里传递
+    如$request["request_time"]=date('Y-m-d H:i:s');
+    ****************/
+
+    //校验请求的数据正确性
+    $error=$model->saveValidate($dbmgr,$request);
+    if($error!=""){
+        outputJSON(outResult(-1,$error,null));
+    }
+
+    //2. （请勿改动的代码）获取自动生成的搜索sql语句
+    $return=$dbmgr->begin_trans();
+    $result=$model->Save($dbmgr,$request);
+    if(substr($result,0,5)=="right"){
+        $id=substr($result,5);
+
+        /**************
+        请在此处编写你对在数据保存完成后相关的更新语句
+        比如：$dbmgr->query("update tb_example set public time=now() where id=$id ");
+        ****************/
+
+        $result=outResult(0,"Save Success",$id);    
+        $dbmgr->commit_trans();
+    }else{
+        $result=outResult(-1,"Save fail",$result);    
+        $dbmgr->rollback_trans();
+    }
+
+    outputJSON($result);
+
+</textarea>
+
+<textarea id="func_get" class="hidden">
+
+    /**************
+    请在此处编写请求的数据正确性，请求合法性的判断
+    比如:
+    if($_REQUEST["unicode"]=="")//编码
+    {
+        outputJSON(Array());
+    }
+    ****************/
+
+    //1. （请勿改动的代码）获取数据模型对象
+    $modelname="{MODEL}";
+    $modelmgrpath=USER_ROOT."modelmgr/$modelname.model.php";
+    $model=new XmlModel($modelname,CURRENT_PATH);
+    //修正$model的字段默认值，for($model->XmlData["fields"]["field"] as $field)
+
+    /**************
+    请在此处编写你对请求值的修正
+    $unicode=parameter_filter($_REQUEST["unicode"]);
+    $query=$dbmgr->query("select id from tb_context where unicode='$unicode'");
+    $result=$dbmgr->fetch_array($query);
+    $id=$result["id"]+0;
+    ****************/
+    $id=$_REQUEST["id"]+0;
+
+    //2. （请勿改动的代码）获取生成的sql语句
+    $sql="select * from ".$model->XmlData["tablename"]." where id=$id";    
+    
+    $query = $dbmgr->query($sql);
+    $result = $dbmgr->fetch_array($query);
+
+    /**************
+    请在此处编写你对最终返回数据的修正
+    如
+    $result["mobile"]=substr($result[$i]["mobile"],0,2)."******".substr($result[$i]["mobile"],8,3);
+    ****************/
+    outputJSON($result);
+</textarea>
+
+<textarea id="func_delete" class="hidden">
+
+    /**************
+    请在此处编写请求的数据正确性，请求合法性的判断
+    比如:
+    if($_REQUEST["unicode"]=="")//编码
+    {
+    outputJSON(Array());
+    }
+    ****************/
+
+    //1. （请勿改动的代码）获取数据模型对象
+    $modelname="{MODEL}";
+    $modelmgrpath=USER_ROOT."modelmgr/$modelname.model.php";
+    $model=new XmlModel($modelname,CURRENT_PATH);
+    //修正$model的字段默认值，for($model->XmlData["fields"]["field"] as $field)
+
+    $request=$_REQUEST;
+    $return=$dbmgr->begin_trans();
+
+    //默认的delete方式是update table set status='D' where id in (ids)
+    $result=$model->Delete($dbmgr,$request["idlist"],-1);
+    if(substr($result,0,7)=="success"){
+        /**************
+        请在此处编写你对在数据保存完成后相关的更新语句
+        比如：$dbmgr->query("update tb_example set public time=now() where id=$id ");
+        ****************/
+
+        $result=outResult(0,"Deleted Success"d);
+        $dbmgr->commit_trans();
+    }else{
+        $result=outResult(-1,"Deleted fail",$result);
+        $dbmgr->rollback_trans();
+    }
+
+    outputJSON($result);
+    
+</textarea>
