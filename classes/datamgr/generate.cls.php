@@ -1776,20 +1776,16 @@ namespace AppLink.api
       }
 
       foreach ($aplconfig["apis"]["api"] as $key => $value) {
-        $type=$value["type"];
+        //$type=$value["type"];
         $model=$value["model"];
-        $func=$value["func"];
-        $active=$value["active"];
-        $output=$value["output"];
-        $input=$value["input"];
-            if($active=="1"){
-                $ret[$model][]=$value;
-            }
+        $ret[$model][]=$value;
       }
         $ret=setArrayNoNull($ret);
         $ret=bubbleSort($ret,"type");
         $ret=bubbleSort($ret,"func");
         $ret=bubbleSort($ret,"model");
+		//print_r($ret);
+		//exit;
     return $ret;
   }
  }
