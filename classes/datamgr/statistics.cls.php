@@ -26,10 +26,15 @@
 
   public function getTables($login,$alias){
 
+      Global $CONFIG;
       $login=parameter_filter($login);
       $alias=parameter_filter($alias);
-
-      $sql="select * from information_schema.TABLES where table_schema='".$login."_".$alias."'
+	  $configfile=$CONFIG['workspace']['path']."\\$login\\$alias\\config.inc.php";
+	  
+	  include $configfile;
+	  $dbschema=$CONFIG['database']['database'];
+	  
+      $sql="select * from information_schema.TABLES where table_schema='$dbschema'
       and table_type like '%TABLE%'";
       $query = $this->dbmgr->query($sql);
       $result = $this->dbmgr->fetch_array_all($query);

@@ -19,9 +19,9 @@
                         {{foreach from=$modellist item=rs key=key}}
                         <tr id="model_{{$rs.modelname}}">
                             <td> </td>
-                            <td><a href="/apps/model?app_id={{$appinfo.id}}&model={{$rs.modelname}}">{{$rs.modelname}}</a></td>
-                            <td><a class="modelname" href="/apps/model?app_id={{$appinfo.id}}&model={{$rs.modelname}}">{{$rs.name}}</a></td>
-                            <td><a href="/apps/model?app_id={{$appinfo.id}}&model={{$rs.modelname}}">{{$rs.tablename}}</a></td>
+                            <td><a target="_blank" href="/apps/model?app_id={{$appinfo.id}}&model={{$rs.modelname}}">{{$rs.modelname}}</a></td>
+                            <td><a target="_blank" class="modelname" href="/apps/model?app_id={{$appinfo.id}}&model={{$rs.modelname}}">{{$rs.name}}</a></td>
+                            <td><a target="_blank" href="/apps/model?app_id={{$appinfo.id}}&model={{$rs.modelname}}">{{$rs.tablename}}</a></td>
                             <td>{{$rs.description}}</td>
                             <td class="db_op hide" modelname="{{$rs.modelname}}"></td>
                             <td class="ut_op hide"></td>

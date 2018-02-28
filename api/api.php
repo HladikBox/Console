@@ -20,6 +20,8 @@
   }elseif($action=="downloadsourcecode"){
     $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
     $modellist=$modelMgr->getModelList($User["login"],$appinfo["alias"]);
+	//print_r($modellist);
+	//exit;
     if($_REQUEST["type"]=="ajax"){
         $folder=$generateMgr->generateAjax($User["login"],$appinfo["alias"]);
     }elseif($_REQUEST["type"]=="typescript"){

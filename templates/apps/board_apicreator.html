@@ -331,7 +331,7 @@
     $id=$_REQUEST["id"]+0;
 
     //2. （请勿改动的代码）获取生成的sql语句
-    $sql="select * from ".$model->XmlData["tablename"]." where id=$id";    
+    $sql=$model->GetSearchSqlField($request,true)." where r_main.id=$id";    
     
     $query = $dbmgr->query($sql);
     $result = $dbmgr->fetch_array($query);

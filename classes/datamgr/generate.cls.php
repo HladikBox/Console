@@ -509,7 +509,8 @@ module.exports = ".$fmodel."Api;
       $login=parameter_filter($login);
       $alias=parameter_filter($alias);
       $apilist=$this->getOutApiList($login,$alias);
-
+	 // print_r($apilist);
+	  //exit;
       $urlhead=$CONFIG['workspace']['domain']."/$login/$alias/api/";
 
       $path=$CONFIG['workspace']['path']."\\$login\\$alias\\development\\";
@@ -1774,10 +1775,12 @@ namespace AppLink.api
         $aplconfig["apis"]["api"]=array();
         $aplconfig["apis"]["api"][]=$temp;
       }
-
       foreach ($aplconfig["apis"]["api"] as $key => $value) {
-        //$type=$value["type"];
+        $type=$value["type"];
         $model=$value["model"];
+		if($type==""){
+			$value["type"]="self";
+		}
         $ret[$model][]=$value;
       }
         $ret=setArrayNoNull($ret);
