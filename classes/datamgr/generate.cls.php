@@ -1778,10 +1778,9 @@ namespace AppLink.api
       foreach ($aplconfig["apis"]["api"] as $key => $value) {
         $type=$value["type"];
         $model=$value["model"];
-		if($type==""){
-			$value["type"]="self";
-		}
+        $func=$value["func"];
         $ret[$model][]=$value;
+        
       }
         $ret=setArrayNoNull($ret);
         $ret=bubbleSort($ret,"type");
