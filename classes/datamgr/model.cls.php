@@ -38,7 +38,7 @@
     $this->keydbtype["text"]="varchar(255)";
     $this->keydbtype["password"]="varchar(255)";
     $this->keydbtype["check"]="char(1)";
-    $this->keydbtype["longtext"]="varchar(4000)";
+    $this->keydbtype["longtext"]="varchar(2000)";
     $this->keydbtype["select"]="varchar(15)";
     $this->keydbtype["html"]="text";
     $this->keydbtype["number"]="int";
@@ -329,6 +329,14 @@
         if($field_type=="number"&&$field["isdecimal"]==1){
           $column_type="decimal(12,2)";
         }
+		
+		$defaultvalue="";
+		 if($field_type=="number"){
+			 $defaultvalue=" 0 ";
+		 }else{
+			 $defaultvalue="";
+		 }
+		
         if($field_type=="flist"&&!(empty($field["relatetable"]))){
           $column_type="";
           $field_relatetable=parameter_filter($field["relatetable"]);
@@ -347,7 +355,7 @@
           }
         }
         if(!empty($column_type)){
-          $sql[]=$this->getFieldUpdateStr($dbname,$tablename,$field_key,$column_type,$field_description);
+          $sql[]=$this->getFieldUpdateStr($dbname,$tablename,$field_key,$column_type,$field_description,$defaultvalue);
         }
 
 
@@ -357,7 +365,7 @@
 
     }
 
-    function getFieldUpdateStr($dbname,$tablename,$column,$column_type,$comment){
+    function getFieldUpdateStr($dbname,$tablename,$column,$column_type,$comment,$defaultvalue){
 
         $dbname=parameter_filter($dbname);
         $tablename=parameter_filter($tablename);
@@ -365,11 +373,15 @@
         $column_type=parameter_filter($column_type);
         $comment=parameter_filter($comment);
         //return "TABLE_SCHEMA='$dbname' and TABLE_NAME='$tablename' and COLUMN_NAME='$field_key'";
-
+		$default="";
+		  if($defaultvalue!=''){
+			  $default=" default $defaultvalue";
+		  }
+		  
       if(!$this->dbmgr->checkHave("information_schema.COLUMNS", "TABLE_SCHEMA='$dbname' and TABLE_NAME='$tablename' and COLUMN_NAME='$column'")){
-              $sql="ALTER TABLE `$tablename` ADD `$column` $column_type COMMENT '$comment';";
+              $sql="ALTER TABLE `$tablename` ADD `$column` $column_type $default COMMENT '$comment';";
           }else{
-              $sql="ALTER TABLE `$tablename` MODIFY COLUMN `$column`  $column_type COMMENT '$comment' ;";
+              $sql="ALTER TABLE `$tablename` MODIFY COLUMN `$column`  $column_type $default COMMENT '$comment' ;";
           }
           return $sql;
     }

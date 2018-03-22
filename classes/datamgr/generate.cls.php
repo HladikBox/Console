@@ -1779,6 +1779,9 @@ namespace AppLink.api
         $type=$value["type"];
         $model=$value["model"];
         $func=$value["func"];
+		if($type==""){
+			$value["type"]="self";
+		}
         $ret[$model][]=$value;
         
       }

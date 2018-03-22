@@ -4,17 +4,17 @@
                         <div class="col-md-12">
                             <a href="#" class="btn btn-warning margin-bottom" id="btnSubmitMenu">提交并更新应用菜单</a>
                         </div>
-                        <div class="col-md-9">
-                            <table class="table table-bordered">
+                        <div class="col-md-12">
+                            <table class="table table-bordered" style="width:100%">
                                 <tr>
-                                    <th style="width:100px;"><span class="text-muted">菜单分类</span></th>
+                                    <th ><span class="text-muted">菜单分类</span></th>
                                     <th ><a ><span >系统管理</span></a></th>
                                     {{foreach from=$menu.mainmenus.mainmenu item=rs}}
                                     <th  class="can-select mainmenu" main="1" module="{{$rs.module}}" onlyadmin="{{$rs.onlyadmin}}"><a href="#"><span class="text-success">{{$rs.name}}</span></a>
                                     <a href="#" class="pull-right deletemenu"><i class="fa fa-times "></i></a>
                                     </th>
                                     {{/foreach}}
-                                    <th  style="width:100px;" id="lastMainMenu" >
+                                    <th   id="lastMainMenu" >
                                         <button class="btn btn-success btn-block" id="btnAddMainMenu"><i class="fa fa-plus"></i> 分类</button>
                                     </th>
                                 </tr>
