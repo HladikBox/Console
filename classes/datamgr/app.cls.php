@@ -278,6 +278,25 @@
 (2,'editor','21232f297a57a5a743894a0e4a801fc3','数据编辑员','邮箱','N','遇到问题，请联系QQ359304951','A',now(),1,now(),1);";
             $this->getUserDbMgr()->query($sql);
 
+			if(!$this->getUserDbMgr()->checkHave("information_schema.TABLES","TABLE_SCHEMA='$dbname' and TABLE_NAME='tb_userrole'")){
+            $sql="CREATE TABLE `$dbname`.`tb_userrole` (
+  `id` int(11) NOT NULL,
+  `name` varchar(4000) NOT NULL,
+  `accessright` varchar(50) NOT NULL,
+  `status` varchar(1) NOT NULL,
+  `created_date` datetime NOT NULL,
+  `created_user` int(11) NOT NULL,
+  `updated_date` datetime NOT NULL,
+  `updated_user` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;";   
+            $this->getUserDbMgr()->query($sql);
+            
+            $sql="INSERT INTO `$dbname`.`tb_userrole` VALUES 
+(1,'销售员','[]','A',now(),1,now(),1),
+(2,'编辑员','[]','A',now(),1,now(),1);";
+            $this->getUserDbMgr()->query($sql);
+			}
             return outResult(0,"保存成功","");
 
         }else{
@@ -290,6 +309,7 @@
       }
       return outResult(0,"保存成功","");
     }
+    
 
     function setDBAccount($app_id){
       Global $UID,$User;
