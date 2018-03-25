@@ -135,10 +135,10 @@
       $model["options"]["option"]=array();
       $model["options"]["option"][]=$temp;
     }
-    if($model["reports"]["report"][0]==""&&$model["reports"]["report"]["name"]!=""){
-      $temp=$model["reports"]["report"];
-      $model["reports"]["report"]=array();
-      $model["reports"]["report"][]=$temp;
+    if($model["charts"]["chart"][0]==""&&$model["charts"]["chart"]["name"]!=""){
+      $temp=$model["charts"]["chart"];
+      $model["charts"]["chart"]=array();
+      $model["charts"]["chart"][]=$temp;
     }
     if($model["fields"]["field"][0]==""&&$model["fields"]["field"]["name"]!=""){
       $temp=$model["fields"]["field"];
@@ -167,8 +167,8 @@
       $model["options"]["option"][$i]["json"]=json_encode($model["options"]["option"][$i]);
     }
 
-    for ($i=0; $i < count($model["reports"]["report"]); $i++) { 
-      $model["reports"]["report"][$i]["json"]=json_encode($model["reports"]["report"][$i]);
+    for ($i=0; $i < count($model["charts"]["chart"]); $i++) { 
+      $model["charts"]["chart"][$i]["json"]=json_encode($model["charts"]["chart"][$i]);
     }
 
     $model=setArrayNoNull($model);
@@ -264,11 +264,11 @@
                 $optionnode->addChild($fkey,htmlspecialchars($fvalue));
               }
             }
-          }elseif ($key=="reports") {
-            $options=$model["reports"]["report"];
-            $optionsnode = $xml_data->addChild("reports");
+          }elseif ($key=="charts") {
+            $options=$model["charts"]["chart"];
+            $optionsnode = $xml_data->addChild("charts");
             foreach ($options as $option) {
-              $optionnode = $optionsnode ->addChild("report");
+              $optionnode = $optionsnode ->addChild("chart");
               foreach ($option as $fkey => $fvalue) {
                 $optionnode->addChild($fkey,htmlspecialchars($fvalue));
               }

@@ -160,11 +160,11 @@
             <div class="col-md-4">
                 <div class="box box-success">
                     <div class="box-header with-border">
-                        <h3 class="box-title">数据报表</h3>
+                        <h3 class="box-title">数据图表</h3>
                         <!-- tools box -->
                         <div class="pull-right box-tools">
-                            <button type="button" class="btn btn-primary btn-sm" id="btnAddReport">
-                                添加报表
+                            <button type="button" class="btn btn-primary btn-sm" id="btnAddChart">
+                                添加图表
                             </button>
                             <button type="button" class="btn  btn-sm" data-widget="collapse" data-toggle="tooltip" title="Collapse">
                                 <i class="fa fa-minus"></i>
@@ -173,21 +173,21 @@
                         <!-- /.box-tools -->
                     </div>
                     <div class="box-body no-padding">
-                        <table class="table table-hover" id="report_table">
+                        <table class="table table-hover" id="chart_table">
                             <tr class="th">
                                 <th>名称</th>
                                 <th>类型</th>
                             </tr>
-                          {{foreach from=$model.reports.report item=rs}}
+                          {{foreach from=$model.charts.chart item=rs}}
                           <tr>
                             <td class="option_name">{{$rs.name}}</td>
                             <td class="option_typename">{{if $rs.type=="timeline"}}时间数值折线图报表{{elseif $rs.type=="column"}}柱状比较图分析报表{{elseif $rs.type=="pie"}}饼状图分析报表{{/if}}</td>
                             <td>
                                 <a href="#" class="tr_up"><i class="fa fa-arrow-up"></i></a>
                                 <a href="#" class="tr_down"><i class="fa fa-arrow-down"></i></a>
-                                <a href="#" class="btnReportEditor"><i class="fa fa-pencil-square-o"></i></a>
+                                <a href="#" class="btnChartEditor"><i class="fa fa-pencil-square-o"></i></a>
                                 <a href="#" class="tr_del"><i class="fa fa-times"></i></a>
-                                <textarea class="report_json hide">{{$rs.json}}</textarea></td>
+                                <textarea class="chart_json hide">{{$rs.json}}</textarea></td>
                           </tr>
                           {{/foreach}}
                         </table>
@@ -659,7 +659,7 @@
 
 
 
-<div class="modal fade" id="dlgReportEditor">
+<div class="modal fade" id="dlgChartEditor">
     <div class="modal-dialog" style="width:1000px;">
         <div class="modal-content">
             <div class="modal-header bg-light-blue-active">
@@ -702,7 +702,7 @@
                                         <div class="form-group" >
                                             <label class="col-sm-4 control-label"><span style="color:red;">*</span> 统计字段设置</label>
                                             <div class="col-sm-8">
-                                                <div class="row" id="report_datetimefield">
+                                                <div class="row" id="chart_datetimefield">
                                                     <div class="col-md-12">
                                                         <div class="form-group">
                                                             <label class="col-sm-4 control-label">时间日期</label>
@@ -715,7 +715,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="row" id="report_statusfield">
+                                                <div class="row" id="chart_statusfield">
                                                     <div class="col-md-12">
                                                         <div class="form-group">
                                                             <label class="col-sm-4 control-label">隔离字段</label>
@@ -728,7 +728,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="row" id="report_numberfield">
+                                                <div class="row" id="chart_numberfield">
                                                     <div class="col-md-12">
                                                         <div class="form-group">
                                                             <label class="col-sm-4 control-label">数值</label>
@@ -762,8 +762,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary" id="btnConfirmReportNext">保存并新增</button>
-                <button type="button" class="btn btn-primary" id="btnConfirmReport">保存</button>
+                <button type="button" class="btn btn-primary" id="btnConfirmChartNext">保存并新增</button>
+                <button type="button" class="btn btn-primary" id="btnConfirmChart">保存</button>
             </div>
         </div>
         <!-- /.modal-content -->
@@ -821,13 +821,13 @@
         $("#btnAddOption").click(function () {
             OpenOptionEditor(null, null);
         });
-        $("#btnAddReport").click(function () {
-            OpenReportEditor(null, null);
+        $("#btnAddChart").click(function () {
+            OpenChartEditor(null, null);
         });
-        $("#report_table").on("click", ".btnReportEditor", function () {
-            var jsonobj = $(this).parent().children(".report_json");
+        $("#chart_table").on("click", ".btnChartEditor", function () {
+            var jsonobj = $(this).parent().children(".chart_json");
             //alert(jsonobj.val());
-            OpenReportEditor(jsonobj.val(), jsonobj);
+            OpenChartEditor(jsonobj.val(), jsonobj);
         });
         $("#f_type").change(function(){
             $(".type_section").addClass("hide");
@@ -888,27 +888,27 @@
 
             
             if ($("#r_type").val() == "timeline") {
-                $("#report_datetimefield").show();
-                $("#report_statusfield").show();
-                $("#report_numberfield").show();
+                $("#chart_datetimefield").show();
+                $("#chart_statusfield").show();
+                $("#chart_numberfield").show();
                 
             }
             else if ($("#o_type").val() == "column") {
 
-                $("#report_datetimefield").show();
-                $("#report_statusfield").show();
-                $("#report_numberfield").show();
+                $("#chart_datetimefield").show();
+                $("#chart_statusfield").show();
+                $("#chart_numberfield").show();
             }
             else if ($("#o_type").val() == "pie") {
 
-                $("#report_datetimefield").show();
-                $("#report_statusfield").show();
-                $("#report_numberfield").show();
+                $("#chart_datetimefield").show();
+                $("#chart_statusfield").show();
+                $("#chart_numberfield").show();
             } else {
 
-                $("#report_datetimefield").hide();
-                $("#report_statusfield").hide();
-                $("#report_numberfield").hide();
+                $("#chart_datetimefield").hide();
+                $("#chart_statusfield").hide();
+                $("#chart_numberfield").hide();
             }
         });
         
@@ -950,20 +950,20 @@
               }
             });
 
-            var reports = Array();
-            $("#report_table .report_json").each(function () {
-                var report_jsonstr = $(this).val();
+            var charts = Array();
+            $("#chart_table .chart_json").each(function () {
+                var chart_jsonstr = $(this).val();
                 try {
-                    var report_json = JSON.parse(report_jsonstr);
-                    reports.push(report_json);
+                    var chart_json = JSON.parse(chart_jsonstr);
+                    charts.push(chart_json);
                 } catch (e) {
 
                 }
             });
 
             json.options = { option: options };
-            json.reports = { report: reports };
-            alert(json.reports.report.length);
+            json.charts = { chart: charts };
+            //alert(json.charts.chart.length);
             $("#txtConsole").val(JSON.stringify(json));
             //alert("保存成功");
             datachanged = false;
@@ -1166,18 +1166,18 @@
     }
 
 
-    function OpenReportEditor(json, returnobj) {
+    function OpenChartEditor(json, returnobj) {
         if (json != null) {
             json = JSON.parse(json);
         }
-        $("#dlgReportEditor .modal-title").text(json == null ? "新增报表" : "编辑报表");
+        $("#dlgChartEditor .modal-title").text(json == null ? "新增报表" : "编辑报表");
         if (json != null) {
-            $("#btnConfirmReportNext").hide();
+            $("#btnConfirmChartNext").hide();
         } else {
-            $("#btnConfirmReportNext").show();
+            $("#btnConfirmChartNext").show();
         }
 
-        ReloadReportField();
+        ReloadChartField();
 
         if (json != null) {
             $("#r_name").val(json.name);
@@ -1199,27 +1199,27 @@
         $("#r_type").change();
 
 
-        $("#btnConfirmReport").unbind("click");
-        $("#btnConfirmReport").click(function () {
+        $("#btnConfirmChart").unbind("click");
+        $("#btnConfirmChart").click(function () {
 
-            if (SaveReport(returnobj)) {
-                $("#dlgReportEditor").modal("hide");
+            if (SaveChart(returnobj)) {
+                $("#dlgChartEditor").modal("hide");
             }
         });
 
 
-        $("#btnConfirmReportNext").unbind("click");
-        $("#btnConfirmReportNext").click(function () {
+        $("#btnConfirmChartNext").unbind("click");
+        $("#btnConfirmChartNext").click(function () {
 
-            if (SaveReport(returnobj)) {
-                OpenReportEditor(null, null);
+            if (SaveChart(returnobj)) {
+                OpenChartEditor(null, null);
             }
         });
 
-        $("#dlgReportEditor").modal("show");
+        $("#dlgChartEditor").modal("show");
 
     }
-    function ReloadReportField() {
+    function ReloadChartField() {
 
         $("#r_datetimefield").html("<option value=''>请选择日期字段</option>");
         $("#r_statusfield").html("<option value=''>请选择选项字段</option>");
@@ -1241,7 +1241,7 @@
         });
     }
 
-    function SaveReport(returnobj) {
+    function SaveChart(returnobj) {
         var newjson = {
             name: $("#r_name").val(),
             type: $("#r_type").val(),
@@ -1255,23 +1255,23 @@
         //alert(newjonstr);
         if (returnobj != null) {
             returnobj.val(newjonstr);
-            returnobj.parent().parent().children(".report_name").text(newjson.name);
-            returnobj.parent().parent().children(".report_typename").text($("#r_type option:checked").text());
+            returnobj.parent().parent().children(".chart_name").text(newjson.name);
+            returnobj.parent().parent().children(".chart_typename").text($("#r_type option:checked").text());
         } else {
 
-            var cobj = $('<tr class="report_row">'
-                + '<td class="report_name">' + newjson.name + '</td>'
-                + '<td class="report_typename">' + ($("#r_type option:checked").text()) + '</td>'
+            var cobj = $('<tr class="chart_row">'
+                + '<td class="chart_name">' + newjson.name + '</td>'
+                + '<td class="chart_typename">' + ($("#r_type option:checked").text()) + '</td>'
                 + '<td>'
                 + '<a href="#" class="tr_up"><i class="fa fa-arrow-up"></i></a> '
                 + '<a href="#" class="tr_down"><i class="fa fa-arrow-down"></i></a> '
-                + '<a href="#" class="btnReportEditor"><i class="fa fa-pencil-square-o"></i></a> '
+                + '<a href="#" class="btnChartEditor"><i class="fa fa-pencil-square-o"></i></a> '
                 + '<a href="#" class="tr_del"><i class="fa fa-times"></i></a> '
-                + '<textarea class="report_json hide"></textarea> '
+                + '<textarea class="chart_json hide"></textarea> '
                 + '</td>'
                 + '</tr>');
-            cobj.children("td").children(".report_json").val(newjonstr);
-            $("#report_table").append(cobj);
+            cobj.children("td").children(".chart_json").val(newjonstr);
+            $("#chart_table").append(cobj);
         }
         return true;
 
