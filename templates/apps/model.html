@@ -106,6 +106,7 @@
                               <td class="field_key">{{$rs.key}}</td>
                             <td class="field_typename">{{$rs.typename}}</td>
                             <td class="field_description"  style="max-width: 200px;">{{$rs.description}}</td>
+                              <input type="hidden" value="{{$rs.type}}" class="field_type" />
                             <td>
                                 <a href="#" class="tr_up"><i class="fa fa-arrow-up"></i></a>
                                 <a href="#" class="tr_down"><i class="fa fa-arrow-down"></i></a>
@@ -153,6 +154,43 @@
                           </tr>
                           {{/foreach}}
                       </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="box box-success">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">数据报表</h3>
+                        <!-- tools box -->
+                        <div class="pull-right box-tools">
+                            <button type="button" class="btn btn-primary btn-sm" id="btnAddReport">
+                                添加报表
+                            </button>
+                            <button type="button" class="btn  btn-sm" data-widget="collapse" data-toggle="tooltip" title="Collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                        </div>
+                        <!-- /.box-tools -->
+                    </div>
+                    <div class="box-body no-padding">
+                        <table class="table table-hover" id="report_table">
+                            <tr class="th">
+                                <th>名称</th>
+                                <th>类型</th>
+                            </tr>
+                          {{foreach from=$model.reports.report item=rs}}
+                          <tr>
+                            <td class="option_name">{{$rs.name}}</td>
+                            <td class="option_typename">{{if $rs.type=="timeline"}}时间数值折线图报表{{elseif $rs.type=="column"}}柱状比较图分析报表{{elseif $rs.type=="pie"}}饼状图分析报表{{/if}}</td>
+                            <td>
+                                <a href="#" class="tr_up"><i class="fa fa-arrow-up"></i></a>
+                                <a href="#" class="tr_down"><i class="fa fa-arrow-down"></i></a>
+                                <a href="#" class="btnReportEditor"><i class="fa fa-pencil-square-o"></i></a>
+                                <a href="#" class="tr_del"><i class="fa fa-times"></i></a>
+                                <textarea class="report_json hide">{{$rs.json}}</textarea></td>
+                          </tr>
+                          {{/foreach}}
+                        </table>
                     </div>
                 </div>
             </div>
@@ -621,14 +659,14 @@
 
 
 
-<div class="modal fade" id="dlgOptionEditor">
+<div class="modal fade" id="dlgReportEditor">
     <div class="modal-dialog" style="width:1000px;">
         <div class="modal-content">
             <div class="modal-header bg-light-blue-active">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title">编辑服务</h4>
+                <h4 class="modal-title">编辑报表</h4>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -641,7 +679,7 @@
                                         <div class="form-group" >
                                             <label class="col-sm-4 control-label"><span style="color:red;">*</span> 服务名称</label>
                                             <div class="col-sm-8">
-                                                <input type="text" maxlength="15" class="form-control" id="o_name" placeholder="服务的名称，请不要太长">
+                                                <input type="text" maxlength="15" class="form-control" id="r_name" placeholder="服务的名称，请不要太长">
                                             </div>
                                             <span class="help-block col-sm-offset-4"></span>
                                         </div>
@@ -650,12 +688,11 @@
                                         <div class="form-group" >
                                             <label class="col-sm-4 control-label"><span style="color:red;">*</span> 服务类型</label>
                                             <div class="col-sm-8">
-                                                <select class="form-control" id="o_type">
-                                                    <option value="">请选择字段类型</option>
-                                                    <option value="addnew">新增</option>
-                                                    <option value="delete">删除</option>
-                                                    <option value="function">自定义JS方法</option>
-                                                    <option value="link">自定义超链接</option>
+                                                <select class="form-control" id="r_type">
+                                                    <option value="">请选择报表类型</option>
+                                                    <option value="timeline">时间数值折线图报表</option>
+                                                    <option value="column">柱状比较图报表</option>
+                                                    <option value="pie">饼状分析报表</option>
                                                 </select>
                                             </div>
                                             <span class="help-block col-sm-offset-4"></span>
@@ -663,34 +700,56 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group" >
-                                            <label class="col-sm-4 control-label"><span style="color:red;">*</span> 自定义内容</label>
+                                            <label class="col-sm-4 control-label"><span style="color:red;">*</span> 统计字段设置</label>
                                             <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="o_function" placeholder="自定义内容，例如alert()或者http://www.baidu.com">
+                                                <div class="row" id="report_datetimefield">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-4 control-label">时间日期</label>
+                                                            <div class="col-sm-8">
+                                                                <select class="form-control" id="r_datetimefield">
+                                                                    <option value="">请选择字段</option>
+                                                                </select>
+                                                            </div>
+                                                            <span class="help-block col-sm-offset-4"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row" id="report_statusfield">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-4 control-label">隔离字段</label>
+                                                            <div class="col-sm-8">
+                                                                <select class="form-control" id="r_statusfield">
+                                                                    <option value="">请选择字段</option>
+                                                                </select>
+                                                            </div>
+                                                            <span class="help-block col-sm-offset-4"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row" id="report_numberfield">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-4 control-label">数值</label>
+                                                            <div class="col-sm-8">
+                                                                <select class="form-control" id="r_numberfield">
+                                                                    <option value="">请选择字段</option>
+                                                                </select>
+                                                            </div>
+                                                            <span class="help-block col-sm-offset-4"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                             <span class="help-block col-sm-offset-4"></span>
                                         </div>
-                                    </div>
-                                    <div class="col-md-2 col-md-offset-1" data-toggle="tooltip" title="详情页显示">
-                                          <div class="checkbox">
-                                              <label>
-                                                  <input type="checkbox" id="o_detail">
-                                                  <b>详情页显示</b>
-                                              </label>
-                                          </div>
-                                    </div>
-                                    <div class="col-md-2 " data-toggle="tooltip" title="列表页显示">
-                                          <div class="checkbox">
-                                              <label>
-                                                  <input type="checkbox" id="o_search">
-                                                  <b>列表页显示</b>
-                                              </label>
-                                          </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group" >
                                             <label class="col-sm-2 control-label"> 服务描述描述</label>
                                             <div class="col-sm-10">
-                                                <input type="text" maxlength="15" class="form-control" id="o_description" placeholder="本字段的相关描述，防止以后忘记这个字段干嘛用">
+                                                <input type="text" maxlength="15" class="form-control" id="r_description" placeholder="本字段的相关描述，防止以后忘记这个字段干嘛用">
                                             </div>
                                             <span class="help-block col-sm-offset-4"></span>
                                         </div>
@@ -703,8 +762,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary" id="btnConfirmOptionNext">保存并新增</button>
-                <button type="button" class="btn btn-primary" id="btnConfirmOption">保存</button>
+                <button type="button" class="btn btn-primary" id="btnConfirmReportNext">保存并新增</button>
+                <button type="button" class="btn btn-primary" id="btnConfirmReport">保存</button>
             </div>
         </div>
         <!-- /.modal-content -->
@@ -762,6 +821,14 @@
         $("#btnAddOption").click(function () {
             OpenOptionEditor(null, null);
         });
+        $("#btnAddReport").click(function () {
+            OpenReportEditor(null, null);
+        });
+        $("#report_table").on("click", ".btnReportEditor", function () {
+            var jsonobj = $(this).parent().children(".report_json");
+            //alert(jsonobj.val());
+            OpenReportEditor(jsonobj.val(), jsonobj);
+        });
         $("#f_type").change(function(){
             $(".type_section").addClass("hide");
             $("."+$("#f_type").val()+"_class").removeClass("hide");
@@ -817,6 +884,33 @@
               $("#o_name").prop("disabled",false);
             }
         });
+        $("#r_type").change(function () {
+
+            
+            if ($("#r_type").val() == "timeline") {
+                $("#report_datetimefield").show();
+                $("#report_statusfield").show();
+                $("#report_numberfield").show();
+                
+            }
+            else if ($("#o_type").val() == "column") {
+
+                $("#report_datetimefield").show();
+                $("#report_statusfield").show();
+                $("#report_numberfield").show();
+            }
+            else if ($("#o_type").val() == "pie") {
+
+                $("#report_datetimefield").show();
+                $("#report_statusfield").show();
+                $("#report_numberfield").show();
+            } else {
+
+                $("#report_datetimefield").hide();
+                $("#report_statusfield").hide();
+                $("#report_numberfield").hide();
+            }
+        });
         
         $("#btnSave").click(function(){
             var json={name:$("#m_name").val(),tablename:$("#m_tablename").val(),searchcondition:$("#m_searchcondition").val(),description:$("#m_description").val(),nolist:$("#m_nolist").prop("checked")?"1":"0",import:$("#m_import").prop("checked")?"1":"0",nosave:$("#m_nosave").prop("checked")?"1":"0"};
@@ -856,7 +950,20 @@
               }
             });
 
-            json.options={option:options};
+            var reports = Array();
+            $("#report_table .report_json").each(function () {
+                var report_jsonstr = $(this).val();
+                try {
+                    var report_json = JSON.parse(report_jsonstr);
+                    reports.push(report_json);
+                } catch (e) {
+
+                }
+            });
+
+            json.options = { option: options };
+            json.reports = { report: reports };
+            alert(json.reports.report.length);
             $("#txtConsole").val(JSON.stringify(json));
             //alert("保存成功");
             datachanged = false;
@@ -1055,6 +1162,118 @@
                 $("#option_table").append(cobj);
             }
             return true;
+
+    }
+
+
+    function OpenReportEditor(json, returnobj) {
+        if (json != null) {
+            json = JSON.parse(json);
+        }
+        $("#dlgReportEditor .modal-title").text(json == null ? "新增报表" : "编辑报表");
+        if (json != null) {
+            $("#btnConfirmReportNext").hide();
+        } else {
+            $("#btnConfirmReportNext").show();
+        }
+
+        ReloadReportField();
+
+        if (json != null) {
+            $("#r_name").val(json.name);
+            $("#r_type").val(json.type);
+            $("#r_description").val(json.description);
+            $("#r_datetimefield").val(json.datetimefield);
+            $("#r_statusfield").val(json.statusfield);
+            $("#r_numberfield").val(json.numberfield);
+            
+        } else {
+            $("#r_name").val("");
+            $("#r_type").val("");
+            $("#r_description").val("");
+            $("#r_datetimefield").val("");
+            $("#r_statusfield").val("");
+            $("#r_numberfield").val("");
+        }
+
+        $("#r_type").change();
+
+
+        $("#btnConfirmReport").unbind("click");
+        $("#btnConfirmReport").click(function () {
+
+            if (SaveReport(returnobj)) {
+                $("#dlgReportEditor").modal("hide");
+            }
+        });
+
+
+        $("#btnConfirmReportNext").unbind("click");
+        $("#btnConfirmReportNext").click(function () {
+
+            if (SaveReport(returnobj)) {
+                OpenReportEditor(null, null);
+            }
+        });
+
+        $("#dlgReportEditor").modal("show");
+
+    }
+    function ReloadReportField() {
+
+        $("#r_datetimefield").html("<option value=''>请选择日期字段</option>");
+        $("#r_statusfield").html("<option value=''>请选择选项字段</option>");
+        $("#r_numberfield").html("<option value=''>请选择数值字段</option>");
+
+        $(".field_row").each(function () {
+            var name = $(this).children(".field_name").text();
+            var type = $(this).children(".field_type").val();
+            var key = $(this).children(".field_key").text();
+            if (type == "datetime" ) {
+                $("#r_datetimefield").append("<option value='"+key+"'>"+name+"</option>")
+            }
+            if (type == "status" || type=='fkey') {
+                $("#r_statusfield").append("<option value='" + key + "'>" + name + "</option>")
+            }
+            if (type == "number" ) {
+                $("#r_numberfield").append("<option value='" + key + "'>" + name + "</option>")
+            }
+        });
+    }
+
+    function SaveReport(returnobj) {
+        var newjson = {
+            name: $("#r_name").val(),
+            type: $("#r_type").val(),
+            description: $("#r_description").val(),
+            datetimefield: $("#r_datetimefield").val(),
+            statusfield: $("#r_statusfield").val(),
+            numberfield: $("#r_numberfield").val()
+        };
+
+        var newjonstr = JSON.stringify(newjson);
+        //alert(newjonstr);
+        if (returnobj != null) {
+            returnobj.val(newjonstr);
+            returnobj.parent().parent().children(".report_name").text(newjson.name);
+            returnobj.parent().parent().children(".report_typename").text($("#r_type option:checked").text());
+        } else {
+
+            var cobj = $('<tr class="report_row">'
+                + '<td class="report_name">' + newjson.name + '</td>'
+                + '<td class="report_typename">' + ($("#r_type option:checked").text()) + '</td>'
+                + '<td>'
+                + '<a href="#" class="tr_up"><i class="fa fa-arrow-up"></i></a> '
+                + '<a href="#" class="tr_down"><i class="fa fa-arrow-down"></i></a> '
+                + '<a href="#" class="btnReportEditor"><i class="fa fa-pencil-square-o"></i></a> '
+                + '<a href="#" class="tr_del"><i class="fa fa-times"></i></a> '
+                + '<textarea class="report_json hide"></textarea> '
+                + '</td>'
+                + '</tr>');
+            cobj.children("td").children(".report_json").val(newjonstr);
+            $("#report_table").append(cobj);
+        }
+        return true;
 
     }
 
@@ -1386,13 +1605,14 @@
                 + '<td class="field_name">' + newjson.name + '</td>'
                 + '<td class="field_key">' + newjson.key + '</td>'
                 + '<td class="field_typename">' + $("#f_type option:checked").text() +'</td>'
-                + '<td class="field_description">' + newjson.description + '</td>'
+                    + '<td class="field_description">' + newjson.description + '</td>'
+                    + '< input type= "hidden" value= "' + newjson.type + '" class="field_type" />'
                 + '<td>'
                 + '<a href="#" class="tr_up"><i class="fa fa-arrow-up"></i></a> '
                 + '<a href="#" class="tr_down"><i class="fa fa-arrow-down"></i></a> '
                 + '<a href="#" class="btnFieldEditor"><i class="fa fa-pencil-square-o"></i></a> '
                 + '<a href="#" class="tr_del"><i class="fa fa-times"></i></a> '
-                + '<textarea class="field_json hide"></textarea> '
+                    + '<textarea class="field_json hide"></textarea> '
                 + '</td>'
                 + '</tr>');
                 cobj.children("td").children(".field_json").val(newjonstr);

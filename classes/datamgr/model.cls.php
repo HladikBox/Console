@@ -135,6 +135,11 @@
       $model["options"]["option"]=array();
       $model["options"]["option"][]=$temp;
     }
+    if($model["reports"]["report"][0]==""&&$model["reports"]["report"]["name"]!=""){
+      $temp=$model["reports"]["report"];
+      $model["reports"]["report"]=array();
+      $model["reports"]["report"][]=$temp;
+    }
     if($model["fields"]["field"][0]==""&&$model["fields"]["field"]["name"]!=""){
       $temp=$model["fields"]["field"];
       $model["fields"]["field"]=array();
@@ -160,6 +165,10 @@
 
     for ($i=0; $i < count($model["options"]["option"]); $i++) { 
       $model["options"]["option"][$i]["json"]=json_encode($model["options"]["option"][$i]);
+    }
+
+    for ($i=0; $i < count($model["reports"]["report"]); $i++) { 
+      $model["reports"]["report"][$i]["json"]=json_encode($model["reports"]["report"][$i]);
     }
 
     $model=setArrayNoNull($model);
@@ -251,6 +260,15 @@
             $optionsnode = $xml_data->addChild("options");
             foreach ($options as $option) {
               $optionnode = $optionsnode ->addChild("option");
+              foreach ($option as $fkey => $fvalue) {
+                $optionnode->addChild($fkey,htmlspecialchars($fvalue));
+              }
+            }
+          }elseif ($key=="reports") {
+            $options=$model["reports"]["report"];
+            $optionsnode = $xml_data->addChild("reports");
+            foreach ($options as $option) {
+              $optionnode = $optionsnode ->addChild("report");
               foreach ($option as $fkey => $fvalue) {
                 $optionnode->addChild($fkey,htmlspecialchars($fvalue));
               }
