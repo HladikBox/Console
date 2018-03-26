@@ -347,6 +347,9 @@
         if($field_type=="number"&&$field["isdecimal"]==1){
           $column_type="decimal(12,2)";
         }
+        if($field_type=="datetime"&&$field["onlydate"]==1){
+          $column_type="date";
+        }
 		
 		$defaultvalue="";
 		 if($field_type=="number"){
