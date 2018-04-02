@@ -275,17 +275,19 @@ public function generateMINA($login,$alias){
 
         $fmodel=ucfirst($model);
         $jsstr="
-        //使用方法，下面两句复制到page的js文件的头部，然后你猜
-        //var ".$fmodel."Api=require('/apis/".$model.".js');
-        //var ".$model."Api=new ".$fmodel."Api();
-        var APIConfig=require('../ApiConfig.js');
-        var apiconfig = new APIConfig();
+        /****使用方法，下面两句复制到page的js文件的头部
+		
+import { ApiConfig } from '../../apis/apiconfig';
+import { ".$fmodel."Api } from '../../apis/".$model.".api';
+
+var ".$model."Api=new ".$fmodel."Api();
+        *******/
 class ".$fmodel."Api
 {
 ";
         foreach($funclist as $api){
         $description=$api["description"];
-        $jsstr.="   //$description";
+        $jsstr.="			//$description";
         $func=$api["func"];
 
         
@@ -295,187 +297,39 @@ class ".$fmodel."Api
 
             if($api["type"]=="self"){
                 $jsstr.="
-                $func(request_json,callback, showLoading = true){
-					if(showLoading){
-						apiconfig.ShowLoading();
-					}
-                  wx.request({
-                    url: apiconfig.ServerUrl+'$url', 
-                    data:request_json,
-                    method:'POST',
-                    dataType:'json',
-                    header: {
-                      'content-type': 'application/x-www-form-urlencoded'
-                    },
-                    success: function (res) {
-                      if(callback!=null){
-                        callback(res.data);
-                      }
-                    },
-                    fail:function(res){
-                      console.log(res);
-                      callback(false);
-                    },
-                    complete:function(res){
-                      console.log(res);
-					  
-						if(showLoading){
-							apiconfig.CloseLoading();
-						}
-                    }
-                  })
-                };
-";
-            }else{
+				$func(json, callback, showLoading = true) {
 
-                if($func=="list"){
+					if (showLoading)
+					ApiConfig.ShowLoading();
+    
+					var header=ApiConfig.GetHeader();
+					console.log(header);
+					wx.request({
+					  url: ApiConfig.GetApiUrl() + '$model/$func',
+					  data: json,
+					  method: 'POST',
+					  dataType: 'json',
+					  header: header,
+					  success: function (res) {
+						if (callback != null) {
+						  callback(res.data);
+						}
+					  },
+					  fail: function (res) {
+						console.log(res);
+						callback(false);
+					  },
+					  complete: function (res) {
+						console.log(res);
+
+						if (showLoading)
+						ApiConfig.CloseLoading();
+					  }
+					})
+				  }
                 
-                $jsstr.="
-    $func(searchcondition_json,callback, showLoading = true){
-					if(showLoading){
-						apiconfig.ShowLoading();
-					}
-                  wx.request({
-                    url: apiconfig.ServerUrl+'$url', 
-                    data:searchcondition_json,
-                    method:'POST',
-                    dataType:'json',
-                    header: {
-                      'content-type': 'application/x-www-form-urlencoded'
-                    },
-                    success: function (res) {
-                      if(callback!=null){
-                        callback(res.data);
-                      }
-                    },
-                    fail:function(res){
-                      console.log(res);
-                      callback(false);
-                    },
-                    complete:function(res){
-                      console.log(res);
-					  
-						if(showLoading){
-							apiconfig.CloseLoading();
-						}
-                    }
-                  })
-                };
-
 ";
-                }elseif($func=="get"){
-                $repinput=false;
-                $jsstr.="
-    $func(id,callback, showLoading = true){
-		
-					if(showLoading){
-						apiconfig.ShowLoading();
-					}
-      var json={id:id};
-                  wx.request({
-                    url: apiconfig.ServerUrl+'$url', 
-                    data:json,
-                    method:'POST',
-                    dataType:'json',
-                    header: {
-                      'content-type': 'application/x-www-form-urlencoded'
-                    },
-                    success: function (res) {
-                      if(callback!=null){
-                        callback(res.data);
-                      }
-                    },
-                    fail:function(res){
-                      console.log(res);
-                      callback(false);
-                    },
-                    complete:function(res){
-                      console.log(res);
-					  
-						if(showLoading){
-							apiconfig.CloseLoading();
-						}
-                    }
-                  })
-                };
-
-";
-                }elseif($func=="update"){
-                
-                $jsstr.="
-    $func(field_json,callback, showLoading = true){
-					
-					if(showLoading){
-						apiconfig.ShowLoading();
-					}
-                  wx.request({
-                    url: apiconfig.ServerUrl+'$url', 
-                    data:field_json,
-                    method:'POST',
-                    dataType:'json',
-                    header: {
-                      'content-type': 'application/x-www-form-urlencoded'
-                    },
-                    success: function (res) {
-                      if(callback!=null){
-                        callback(res.data);
-                      }
-                    },
-                    fail:function(res){
-                      console.log(res);
-                      callback(false);
-                    },
-                    complete:function(res){
-                      console.log(res);
-					  
-						if(showLoading){
-							apiconfig.CloseLoading();
-						}
-                    }
-                  })
-                };
-
-";
-                }elseif($func=="delete"){
-                
-                $repinput=false;
-                $jsstr.="
-
-    $func(id_array,callback, showLoading = true){
-                  
-					if(showLoading){
-						apiconfig.ShowLoading();
-					}
-                  var json={idlist:id_array};
-                  wx.request({
-                    url: apiconfig.ServerUrl+'$url', 
-                    data:id_array,
-                    method:'POST',
-                    dataType:'json',
-                    header: {
-                      'content-type': 'application/x-www-form-urlencoded'
-                    },
-                    success: function (res) {
-                      if(callback!=null){
-                        callback(res.data);
-                      }
-                    },
-                    fail:function(res){
-                      console.log(res);
-                      callback(false);
-                    },
-                    complete:function(res){
-                      console.log(res);
-					  
-						if(showLoading){
-							apiconfig.CloseLoading();
-						}
-                      
-                    }
-                  })
-                };
-";
-                }
+            
             }
         }
     
@@ -483,7 +337,7 @@ class ".$fmodel."Api
         
         $jsstr.="
 }
-module.exports = ".$fmodel."Api;
+
 ";
 
 
@@ -494,11 +348,16 @@ module.exports = ".$fmodel."Api;
       recurse_copy(ROOT."\\workspace_copy\\development\\mina\\",$path);
 
 
-      $apiconfig=$path."\\apiconfig.js";
+      $apiconfig=$path."\\apis\apiconfig.js";
       $domain=str_replace("http://","https://",$CONFIG['workspace']['domain']);
       file_put_contents($apiconfig,str_replace('{{ServerUrl}}',$domain."/$login/$alias/api",file_get_contents($apiconfig)));
       file_put_contents($apiconfig,str_replace('{{UploadUrl}}',$domain."/$login/$alias/upload",file_get_contents($apiconfig)));
       file_put_contents($apiconfig,str_replace('{{FileUploadUrl}}',$domain."/$login/$alias/fileupload",file_get_contents($apiconfig)));
+
+
+      $util=$path."\\apis\\apiutil.js";
+      file_put_contents($util,str_replace('{{aliaslogin}}',"/$login/$alias",file_get_contents($util)));
+
       return $path;
     }
 
@@ -1782,6 +1641,10 @@ namespace AppLink.api
 		if($type==""){
 			$value["type"]="self";
 		}
+		$mdpath=$CONFIG['workspace']['path']."\\$login\\$alias\\api\\$model\\$func".".md";
+		$fp = fopen($mdpath,"r");
+		$str = fread($fp,filesize($path));
+		$value["description"]=$str;
         $ret[$model][]=$value;
         
       }
