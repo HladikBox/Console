@@ -268,7 +268,7 @@ public function generateMINA($login,$alias){
 
       foreach($apilist as $model=> $funclist){
         
-        $modelfile=$apipath."\\$model.js";
+        $modelfile=$apipath."\\$model.api.js";
         $modelfile = fopen($modelfile, "w");
 
 
@@ -277,12 +277,13 @@ public function generateMINA($login,$alias){
         $jsstr="
         /****使用方法，下面两句复制到page的js文件的头部
 		
-import { ApiConfig } from '../../apis/apiconfig';
+import { ApiConfig } from '../../apis/ApiConfig';
 import { ".$fmodel."Api } from '../../apis/".$model.".api';
 
 var ".$model."Api=new ".$fmodel."Api();
         *******/
-class ".$fmodel."Api
+import { ApiConfig } from 'ApiConfig';
+export class ".$fmodel."Api
 {
 ";
         foreach($funclist as $api){
@@ -350,9 +351,9 @@ class ".$fmodel."Api
 
       $apiconfig=$path."\\apis\apiconfig.js";
       $domain=str_replace("http://","https://",$CONFIG['workspace']['domain']);
-      file_put_contents($apiconfig,str_replace('{{ServerUrl}}',$domain."/$login/$alias/api",file_get_contents($apiconfig)));
-      file_put_contents($apiconfig,str_replace('{{UploadUrl}}',$domain."/$login/$alias/upload",file_get_contents($apiconfig)));
-      file_put_contents($apiconfig,str_replace('{{FileUploadUrl}}',$domain."/$login/$alias/fileupload",file_get_contents($apiconfig)));
+      file_put_contents($apiconfig,str_replace('{{ServerUrl}}',$domain."/$login/$alias/api/",file_get_contents($apiconfig)));
+      file_put_contents($apiconfig,str_replace('{{UploadUrl}}',$domain."/$login/$alias/upload/",file_get_contents($apiconfig)));
+      file_put_contents($apiconfig,str_replace('{{FileUploadUrl}}',$domain."/$login/$alias/fileupload/",file_get_contents($apiconfig)));
 
 
       $util=$path."\\apis\\apiutil.js";
