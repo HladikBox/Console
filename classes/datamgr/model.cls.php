@@ -42,7 +42,7 @@
     $this->keydbtype["select"]="varchar(15)";
     $this->keydbtype["html"]="text";
     $this->keydbtype["number"]="int";
-    $this->keydbtype["upload"]="varchar(500)";
+    $this->keydbtype["upload"]="varchar(100)";
     $this->keydbtype["datetime"]="datetime";
     $this->keydbtype["fkey"]="int";
     $this->keydbtype["flist"]="varchar(4000)";

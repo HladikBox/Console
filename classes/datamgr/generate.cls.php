@@ -277,12 +277,12 @@ public function generateMINA($login,$alias){
         $jsstr="
         /****使用方法，下面两句复制到page的js文件的头部
 		
-import { ApiConfig } from '../../apis/ApiConfig';
+import { ApiConfig } from '../../apis/apiconfig';
 import { ".$fmodel."Api } from '../../apis/".$model.".api';
 
 var ".$model."Api=new ".$fmodel."Api();
         *******/
-import { ApiConfig } from 'ApiConfig';
+import { ApiConfig } from 'apiconfig';
 export class ".$fmodel."Api
 {
 ";
