@@ -12,10 +12,11 @@ function encode($str)
 }
 function parameter_filter($param,$htmlchange=true)
 {
+	Global $dbmgr;
 	$arr=array("'"=>"''");
       $param = trim($param);
 	$param = strtr($param,$arr);
-	$param = mysql_escape_string($param);
+	$param = mysqli_real_escape_string($dbmgr->conn,$param);
       if($htmlchange){
          $param = htmlspecialchars($param);
       }
@@ -103,7 +104,10 @@ function ResetNameWithLang($arr,$lang){
 }
 
 function outputJson($result){
-    die( json_encode($result));
+	//print_r($result);
+	//$ar["aa"]="cc";
+    echo json_encode($result);
+	exit;
 }
 function recurse_copy($src,$dst) {  // 原目录，复制到的目录
        

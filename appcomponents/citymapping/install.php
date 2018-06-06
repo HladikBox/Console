@@ -21,8 +21,7 @@ $files[]=ROOT."/appcomponents/citymapping/areas.sql";
 $files[]=ROOT."/appcomponents/citymapping/cities.sql";
 $files[]=ROOT."/appcomponents/citymapping/views.sql";
 
-$userdbmgr=$appMgr->getUserDbMgr();
-$userdbmgr->select_db($User["login"]."_".$appinfo["alias"]);
+$userdbmgr=$appMgr->getUserDbMgr($User["login"]."_".$appinfo["alias"]);
 foreach ($files as $value) {
 	$file = fopen($value, "r");
 	//输出文本中所有的行，直到文件结束为止。
@@ -36,29 +35,7 @@ foreach ($files as $value) {
 
 
 
- $menu=$cmsMgr->getMenu($User["login"],$appinfo["alias"]);
 
-$m=array();
-$m["module"]="citymappingmgr";
-$m["name"]="省份城市地区";
-$m["submenus"]["submenu"]=array();
-$m["submenus"]["submenu"][]=array("model"=>"provinces","name"=>"省份");
-$m["submenus"]["submenu"][]=array("model"=>"cities","name"=>"城市");
-$m["submenus"]["submenu"][]=array("model"=>"areas","name"=>"区县");
-
-$havemenu=false;
-for($i=0;$i<count($menu["mainmenus"]["mainmenu"]);$i++){
-	if($menu["mainmenus"]["mainmenu"][$i]["module"]==$m["module"]){
-		$menu["mainmenus"]["mainmenu"][$i]=$m;
-		$havemenu=true;
-	}
-}
-if($havemenu==false){
-	$menu["mainmenus"]["mainmenu"][]=$m;
-}
-
-$cmsMgr->submitMenu($User["login"],$appinfo["alias"],$menu);
-
-outputJSON(outResult("0"));
+outputJSON(outResult("0","SUCCESS"));
 
 ?>

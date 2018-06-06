@@ -94,8 +94,9 @@
 
       //saving generated xml file; 
       //echo $path;
+
       $result = $xml_data->asXML($path);
-      return outResult(0,"±£´æ³É¹¦","");
+      return outResult(0,"SAVE SUCCESS","");
   }
 
   function addChild(&$node,$key,$value){

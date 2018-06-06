@@ -23,11 +23,18 @@
 		
 	}
 
-    function getUserDbMgr(){
+    function getUserDbMgr($dbname=""){
       Global $CONFIG;
-      if($this->userdbmgr==null){
-        $this->userdbmgr = new DbMysql($CONFIG['userdatabase']['host'], $CONFIG['userdatabase']['user'], $CONFIG['userdatabase']['psw']);
-      }
+	  if($dbname!=""){
+		  
+		  if($this->userdbmgr==null){
+			$this->userdbmgr = new DbMysql($CONFIG['userdatabase']['host'], $CONFIG['userdatabase']['user'], $CONFIG['userdatabase']['psw'],$dbname);
+		  }
+	  }else{ 
+		  if($this->userdbmgr==null){
+			$this->userdbmgr = new DbMysql($CONFIG['userdatabase']['host'], $CONFIG['userdatabase']['user'], $CONFIG['userdatabase']['psw']);
+		  }
+	  }
       return $this->userdbmgr;
     }
 

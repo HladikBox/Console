@@ -23,6 +23,8 @@ unset($HTTP_ENV_VARS, $HTTP_POST_VARS, $HTTP_GET_VARS, $HTTP_POST_FILES, $HTTP_C
 session_start();
 
 
+header("Content-type:text/html;charset=utf-8");
+
 //log start
 require ROOT.'/classes/mgr/logger_mgr.cls.php';
 define('LOGGER_INFO_FILE', ROOT."/".$CONFIG['logsavedir'] . "info/log_%y%m%d.txt");

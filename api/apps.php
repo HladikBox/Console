@@ -55,7 +55,10 @@
   }elseif($action=="submitmenu"){
     
     $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
-    outputJSON($cmsMgr->submitMenu($User["login"],$appinfo["alias"],$_REQUEST["menu"]));
+	
+	$res=$cmsMgr->submitMenu($User["login"],$appinfo["alias"],$_REQUEST["menu"]);
+	//print_r($res);
+    outputJSON($res);
   }
 
 outputJSON(outResult("-1","找不到你要调用的请求","找不到你要调用的请求"));

@@ -45,6 +45,8 @@
       if(!file_exists($apipath)){
         mkdir($apipath,true);
       }
+      recurse_copy(ROOT."\\workspace_copy\\development\\ajax\\",$path);
+		
 
       
       $jsreplace="<script src=\"api/api.config.js\"></script>\r\n";
@@ -83,7 +85,7 @@ function ".$fmodel."Api()
         $url="/$model/$func";
         $repinput=true;
 
-            if($api["type"]=="self"){
+            if(1==1||$api["type"]=="self"){
                 $jsstr.="
 				
     this.$func = function(request_json,callback){
@@ -226,8 +228,8 @@ function ".$fmodel."Api()
     
         fclose($modelfile);
       }
-      recurse_copy(ROOT."\\workspace_copy\\development\\ajax\\",$path);
 
+	 
       
       $apitester=$path."\\apitester.html";
       file_put_contents($apitester,str_replace('{{jsreplace}}',$jsreplace,file_get_contents($apitester))); 
@@ -252,12 +254,12 @@ public function generateMINA($login,$alias){
         mkdir($path,true);
       }
       $path=$CONFIG['workspace']['path']."\\$login\\$alias\\development\\mina";
+	 
       if(!file_exists($path)){
         mkdir($path,true);
       }else{
         delDir($path);
       }
-
       $apipath=$path."\\apis";
       if(!file_exists($apipath)){
         mkdir($apipath,true);
@@ -358,7 +360,7 @@ export class ".$fmodel."Api
 
       $util=$path."\\apis\\apiutil.js";
       file_put_contents($util,str_replace('{{aliaslogin}}',"/$login/$alias",file_get_contents($util)));
-
+		
       return $path;
     }
 
