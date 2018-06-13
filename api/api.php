@@ -101,8 +101,33 @@
 	file_put_contents($filepath,$description);
 
     outputJSON(outResult(0,"success","success"));
+  }elseif ($action=="downloaddocument"){
+  
+    $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
+	$filename=$appinfo["name"];
+	$apis=$apiMgr->getOutApiList($User["login"],$appinfo["alias"]);
+	
+	$ret=$apiMgr->generateDoc($appinfo,$apis);
+	echo $ret;
+	
+	ob_start(); //打开缓冲区  
+	header("Cache-Control: public");  
+	Header("Content-type: application/octet-stream");  
+	Header("Accept-Ranges: bytes");  
+	if (strpos($_SERVER["HTTP_USER_AGENT"],'MSIE')) {  
+	header('Content-Disposition: attachment; filename='.$filename.'.doc');  
+	}else if (strpos($_SERVER["HTTP_USER_AGENT"],'Firefox')) {  
+	Header('Content-Disposition: attachment; filename='.$filename.'.doc');  
+	} else {  
+	header('Content-Disposition: attachment; filename='.$filename.'.doc');  
+	}  
+	header("Pragma:no-cache");  
+	header("Expires:0");  
+	ob_end_flush();
+	exit;
+    //outputJSON($apis);
   }
-
+  
 
 outputJSON(outResult("-1","找不到你要调用的请求","找不到你要调用的请求"));
 	
