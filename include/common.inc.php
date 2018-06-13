@@ -22,6 +22,7 @@ unset($HTTP_ENV_VARS, $HTTP_POST_VARS, $HTTP_GET_VARS, $HTTP_POST_FILES, $HTTP_C
 //~ session start
 session_start();
 
+header("Content-type:text/html;charset=utf-8");
 
 header("Content-type:text/html;charset=utf-8");
 

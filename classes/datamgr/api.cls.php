@@ -40,7 +40,7 @@
 	      $aplconfig["apis"]["api"]=array();
 	      $aplconfig["apis"]["api"][]=$temp;
 	    }
-	    print_r($aplconfig);
+	    //print_r($aplconfig);
 	    foreach ($aplconfig["apis"]["api"] as $key => $value) {
 	    	$model=$value["model"];
 	    	$ret[$model][]=$value;
@@ -161,7 +161,36 @@ function addChild(&$node,$key,$value){
       values ('$login','$alias','$model','$func',$output_data_length,now(),current_date())";
         $query = $this->dbmgr->query($sql);
     }
+
+	function generateDoc($appinfo,$apis){
+	
+		$ret="";
+		$ret.="<h2>".$appinfo["name"]."数据交互接口使用说明书</h2>";
+		$ret.="<br />";
+		$ret.="<br />";
+		foreach($apis as $model => $apifuncs){
+			$ret.="<h3>".$model."模块</h2>";
+			foreach($apifuncs as  $api){
+				
+				$ret.="<p><table>
+				<tr>
+					<th>接口路径</th>
+					<td>/$model/".$api["func"]."</td>
+				</tr>
+				<tr>
+					<th>接口说明</th>
+					<td>".$api["description"]."</td>
+				</tr>
+				</table></p>";
+			}
+		}
+
+
+		return $ret;
+	}
  }
+
+ 
  
  $apiMgr=ApiMgr::getInstance();
  $apiMgr->dbmgr=$dbmgr;

@@ -9,7 +9,7 @@
 
     $(document).ready(function () {
 
-        $("#btnGroupBottomApiCreator").hide($(".apicreator_item").length<20);
+        //$("#btnGroupBottomApiCreator").hide($(".apicreator_item").length<20);
 
 
 
