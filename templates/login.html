@@ -26,8 +26,12 @@
 </head>
 <body class="hold-transition login-page">
     <div class="login-box">
-        <div class="login-logo">
+        <div class="login-logo" >
+			{{if $SERVER_NAME=="zzl.app-link.org"}}
+            <a href="#"><b>中咨联</b>小程序开发平台</a>
+			{{else}}
             <a href="#"><b>App</b>Link</a>
+			{{/if}}
         </div>
         <!-- /.login-logo -->
         <div class="login-box-body">

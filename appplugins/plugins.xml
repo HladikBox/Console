@@ -7,6 +7,11 @@
 			<description>支持微信的相关功能，如微信登录，微信支付或者分享到朋友圈等。</description>
 		</plugin>
 		<plugin>
+			<id>miniwechat</id>
+			<name>微信小程序</name>
+			<description>微信小程序的开发组件，支持多商户，支付，登陆等。请下载demo直接进行开发</description>
+		</plugin>
+		<plugin>
 			<id>alipay</id>
 			<name>支付宝</name>
 		</plugin>

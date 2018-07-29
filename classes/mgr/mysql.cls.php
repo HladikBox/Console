@@ -120,7 +120,7 @@ class DbMysql
 			
 			return $query;
 		}else{
-			
+			//echo $sql;
 			logger_mgr::logError("sql error :$sql");
 			if($this->in_trans>0)
 			{

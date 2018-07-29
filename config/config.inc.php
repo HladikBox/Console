@@ -3,7 +3,7 @@
 //$CONFIG['charset']		= 'utf-8'; 
 $CONFIG['URL']="http://console.app-link.org";
 $CONFIG["SessionName"]="AppLinkConsole";
-$CONFIG["Title"]="APP链结";
+$CONFIG["Title"]="易创云";
 
 $CONFIG['smarty']['rootpath']		= '/'; 
 $CONFIG['solution_configuration']='debug';

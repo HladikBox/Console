@@ -354,6 +354,8 @@
 		$defaultvalue="";
 		 if($field_type=="number"){
 			 $defaultvalue=" 0 ";
+		 }elseif($field_type=="text"||$field_type=="longtext"){
+			 $defaultvalue=" '' ";
 		 }else{
 			 $defaultvalue="";
 		 }

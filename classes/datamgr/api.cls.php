@@ -149,16 +149,18 @@ function addChild(&$node,$key,$value){
                 $node->addChild($key,htmlspecialchars($value));
             }
     }
-    function apiCallLog($login,$alias,$model,$func,$output_data_length){
+    function apiCallLog($login,$alias,$model,$func,$output_data_length,$inputdata,$outputdata){
       $login=parameter_filter($login);
       $alias=parameter_filter($alias);
       $model=parameter_filter($model);
       $func=parameter_filter($func);
+      $inputdata=parameter_filter($inputdata);
+      $outputdata=parameter_filter($outputdata);
       $output_data_length=$output_data_length+0;
 
 
-      $sql="insert into tb_app_calllog (login,alias,model,func,output_data_length,call_time,call_date) 
-      values ('$login','$alias','$model','$func',$output_data_length,now(),current_date())";
+      $sql="insert into tb_app_calllog (login,alias,model,func,output_data_length,call_time,call_date,input_data,output_data) 
+      values ('$login','$alias','$model','$func',$output_data_length,now(),current_date(),'$inputdata','$outputdata')";
         $query = $this->dbmgr->query($sql);
     }
 

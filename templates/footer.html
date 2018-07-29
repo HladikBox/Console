@@ -1,11 +1,20 @@
     
 
 <footer class="main-footer">
+	{{if $SERVER_NAME=="zzl.app-link.org"}}
+    <div class="pull-right hidden-xs">
+        <b>Version</b> 1.0.1
+    </div>
+    <strong>Copyright &copy;  <a >中咨联教育科技（深圳）有限公司</a>.</strong> 版权所有
+    reserved.
+	<img sty src="{{$rootpath}}img/zzllogo.png" style="height:50px;" />
+	{{else}}
     <div class="pull-right hidden-xs">
         <b>Version</b> 1.0.1
     </div>
     <strong>Copyright &copy; 2013-2017 <a href="http://www.helpfooter.com">HelpFooter</a>.</strong> All rights
     reserved.
+	{{/if}}
 </footer>
 
 {{include  file="$smarty_root/nav-right.html" }}

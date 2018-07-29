@@ -303,7 +303,7 @@
                                             </label>
                                         </div>
                                     </div>
-                                    <div class="col-md-2 " data-toggle="tooltip" title="作为结果显示后，可以点击本字段进入详情页，列表搜索结果显示勾选后本字段才有效">
+                                    <div class="col-md-2 hidden" data-toggle="tooltip" title="作为结果显示后，可以点击本字段进入详情页，列表搜索结果显示勾选后本字段才有效">
                                         <div class="checkbox">
                                             <label>
                                                 <input type="checkbox" id="f_gotodetail">
@@ -311,6 +311,7 @@
                                             </label>
                                         </div>
                                     </div>
+									
                                     <div class="col-md-2 " data-toggle="tooltip" title="本字段可作为列表页的搜索字段">
                                         <div class="checkbox">
                                             <label>
@@ -335,7 +336,7 @@
                                             </label>
                                         </div>
                                     </div>
-                                    <div class="col-md-2  col-md-offset-1" data-toggle="tooltip" title="在保存操作中，会跳过该字段的保存动作">
+                                    <div class="col-md-2 " data-toggle="tooltip" title="在保存操作中，会跳过该字段的保存动作">
                                         <div class="checkbox">
                                             <label>
                                                 <input type="checkbox" id="f_nosave">
@@ -343,7 +344,7 @@
                                             </label>
                                         </div>
                                     </div>
-                                    <div class="col-md-2 " data-toggle="tooltip" title="不会在管理后台中显示">
+                                    <div class="col-md-2  col-md-offset-1" data-toggle="tooltip" title="不会在管理后台中显示">
                                         <div class="checkbox">
                                             <label>
                                                 <input type="checkbox" id="f_hidden">
@@ -541,6 +542,8 @@
                                             <div class="col-sm-8">
                                                 <select class="form-control" id="f_upload_filetype">
                                                     <option value="image">图片</option>
+                                                    <option value="video">视频</option>
+                                                    <option value="audio">音频</option>
                                                     <option>普通文件</option>
                                                 </select>
                                             </div>

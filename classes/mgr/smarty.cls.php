@@ -19,6 +19,7 @@ function smarty_getDateStr($arg){
 
 $smarty->register_function("getDateStr","smarty_getDateStr");  
 
+
  $smarty->assign('rootpath',$CONFIG['smarty']['rootpath']);
  $smarty->assign('smarty_root',ROOT."/templates");
  $smarty->assign('file_url',$_SERVER["PHP_SELF"]);
@@ -32,5 +33,6 @@ $smarty->register_function("getDateStr","smarty_getDateStr");
  $smarty->assign('uploadpath',$CONFIG['smarty']['rootpath']."/".$CONFIG['fileupload']['upload_path']);
  $smarty->assign('request_url_encode',base64_encode($_SERVER["REQUEST_URI"]));
  $smarty->assign('Config',$CONFIG);
+ $smarty->assign('SERVER_NAME',$_SERVER["SERVER_NAME"]);
 
 ?>

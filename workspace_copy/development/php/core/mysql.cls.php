@@ -40,15 +40,12 @@ class DbMysql
 	{
 		//echo $dbhost.' '.$dbuser.' '.$dbpass.' '.$dbname;exit;
 		
-		if(!$this->conn = mysql_connect($dbhost,$dbuser,$dbpass))
+		if(!$this->conn = mysqli_connect($dbhost,$dbuser,$dbpass,$dbname))
 		{
 			$this->halt('service unavailable');
 		}
-		else
-		{	mysql_set_charset("utf8");
-			$this->select_db($dbname);
-		}
 		
+		mysqli_set_charset($this->conn,"utf8");
 		$this->conn;
 	}
 
@@ -63,14 +60,13 @@ class DbMysql
 		if(empty($dbname)){
 			return;
 		}
-		return @mysql_select_db($dbname , $this->conn);
+		return @mysqli_select_db($dbname , $this->conn);
 	}
 	
 	function begin_trans()
 	{
-		$this->select_db($dbname);
 		if($this->in_trans==0){
-			if (mysql_query("BEGIN", $this->conn) == false)
+			if (mysqli_query($this->conn,"BEGIN") == false)
 			{
 			     echo "Could not begin transaction.\n";
 			     die( print_r( sqlsrv_errors(), true ));
@@ -88,14 +84,12 @@ class DbMysql
 			return;
 		}
 		//echo "ready commit ".$this->in_trans."<br />";
-		$this->select_db($dbname);
-		mysql_query("COMMIT", $this->conn);
+		mysqli_query($this->conn,"COMMIT" );
 		$this->in_trans=0;
 	}
 	function rollback_trans()
 	{
-		$this->select_db($dbname);
-		mysql_query("ROOLBACK", $this->conn);
+		mysqli_query($this->conn,"ROOLBACK" );
 		$this->in_trans=0;
 	}
 
@@ -109,27 +103,26 @@ class DbMysql
 	*/
 	function query($sql) 
 	{
-		$this->select_db($dbname);
-		if(!($query = @mysql_query($sql, $this->conn)))
+		$query = mysqli_query($this->conn,$sql );
+		if($query==null)
 		{
-			//logger_mgr::logError("sql error :$sql");
+			
 			if($this->in_trans>0)
 			{
 				$this->rollback_trans();
 			}
 			$this->halt($sql.'Sqlsrv Query Error', $sql);
 		}
-		//logger_mgr::logDebug("sql :$sql");
 		$this->querynum++;
 		
 		return $query;
 	}
 	
 	function getNewId($tablename){
-		$sql="select ifnull(max(id),0)+1 from ".$tablename;
+		$sql="select ifnull(max(id),0)+1 id from ".$tablename;
 		$query = $this->query($sql);
 		$result = $this->fetch_array($query); 
-		$id=$result[0];
+		$id=$result["id"];
 		return $id;
 	}
 	
@@ -168,7 +161,8 @@ class DbMysql
 	*/
 	function fetch_array($query) 
 	{
-		return mysql_fetch_array($query);
+		$ret= mysqli_fetch_array($query,MYSQLI_ASSOC);
+		return $ret;
 	}
 	
 	/**
@@ -179,7 +173,7 @@ class DbMysql
 	*/
 	function fetch_array_all($query) 
 	{
-		while($row=mysql_fetch_array($query))
+		while($row=mysqli_fetch_array($query,MYSQLI_ASSOC))
 			$rows[] = $row;
 		//return $rows;
 		return !is_array($rows)? array() : $rows ;
@@ -219,7 +213,7 @@ class DbMysql
 	*/
 	function affected_rows() 
 	{
-		return mysql_affected_rows();
+		return mysqli_affected_rows();
 	}
 
 	/**
@@ -228,7 +222,7 @@ class DbMysql
 	*/
 	function num_rows($query) 
 	{
-		return mysql_num_rows($query);
+		return mysqli_num_rows($query);
 	}
 
 	/**
@@ -237,7 +231,7 @@ class DbMysql
 	*/
 	function num_fields($query) 
 	{
-		return mysql_num_fields($query);
+		return mysqli_num_fields($query);
 	}
 
     /**
@@ -246,7 +240,7 @@ class DbMysql
      */
 	function result($query, $row) 
 	{
-		return @mysql_result($query, $row);
+		return @mysqli_result($query, $row);
 	}
 
 	
@@ -256,7 +250,7 @@ class DbMysql
 	 */
 	function free_result($query) 
 	{
-		return mysql_free_result($query);
+		return mysqli_free_result($query);
 	}
 
 
@@ -266,7 +260,7 @@ class DbMysql
 	 */
 	function fetch_row($query) 
 	{
-		return mysql_fetch_row($query);
+		return mysqli_fetch_row($query);
 	}
 
 
@@ -276,7 +270,7 @@ class DbMysql
 	 */
 	function close() 
 	{
-		return mysql_close($this->conn);
+		return mysqli_close($this->conn);
 	}
 
 	/**
@@ -303,5 +297,8 @@ class DbMysql
 }
 
 $dbmgr = new DbMysql($CONFIG['database']['host'], $CONFIG['database']['user'], $CONFIG['database']['psw'], $CONFIG['database']['database']);
-
+//$query=$dbmgr->query("select * from tb_user");
+//$rs=$dbmgr->fetch_array_all($query);
+//print_r($rs);
+//exit;
 ?>

@@ -781,6 +781,7 @@ public $func(idlist, showLoadingModal:boolean=true) {
       $urlhead=$CONFIG['workspace']['domain']."/$login/$alias/api/";
 
       $path=$CONFIG['workspace']['path']."\\$login\\$alias\\development\\";
+      $modelpath=$CONFIG['workspace']['path']."\\$login\\$alias\\model\\";
       if(!file_exists($path)){
         mkdir($path,true);
       }
@@ -831,8 +832,9 @@ public function '.$func.'($param){';
                         $l=str_replace("<?php","",$l);
                         $l=str_replace("?>","",$l);
                         $l=str_replace('$dbmgr','$this->dbmgr',$l);
-                        if(strstr($l,"outputJson(")){
-                            $l=str_replace("outputJson(","return ",$l);
+                        $l=str_replace('$_REQUEST','$param',$l);
+                        if(strstr($l,"outputJSON(")){
+                            $l=str_replace("outputJSON(","return ",$l);
                             $lastkh=strrpos($l, ')', -1);
                             $l=substr($l,0,$lastkh).substr($l,$lastkh+1);
                         }
@@ -1165,6 +1167,7 @@ $content
       }
 
       recurse_copy(ROOT."\\workspace_copy\\development\\php\\",$path);
+      recurse_copy($modelpath,$path."\\model");
 
 
 

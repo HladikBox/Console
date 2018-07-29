@@ -22,7 +22,9 @@
     $apilist=$apiMgr->getOutApiList($_REQUEST["login"],$_REQUEST["alias"]);
     outputJSON($apilist);
   }elseif($action=="apicalllog"){
-    $apilist=$apiMgr->apiCallLog($_REQUEST["login"],$_REQUEST["alias"],$_REQUEST["model"],$_REQUEST["func"],$_REQUEST["output_data_length"]);
+	  //print_r($_REQUEST);
+    $apilist=$apiMgr->apiCallLog($_REQUEST["login"],$_REQUEST["alias"],$_REQUEST["model"],$_REQUEST["func"],$_REQUEST["output_data_length"],$_REQUEST["input_data"],$_REQUEST["output_data"]);
+	outputJSON($_REQUEST);
   }elseif($action=="getsubmitcode"){
     $folder=$marketMgr->getSubmitCode($_REQUEST["id"]);
 
