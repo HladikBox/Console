@@ -394,6 +394,7 @@
 	            recurse_copy($srcpath."js",$path."\\js");
 	            recurse_copy($srcpath."model",$path."\\model");
 	            recurse_copy($srcpath."modelmgr",$path."\\modelmgr");
+	            recurse_copy($srcpath."common",$path."\\common");
 		        copy($srcpath."api.xml",$path."\\api.xml");
 		        copy($srcpath."menu.xml",$path."\\menu.xml");
 		        copy($srcpath."product.xml",$path."\\product.xml");

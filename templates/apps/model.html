@@ -393,6 +393,34 @@
                                         </div>
                                     </div>
                                 </div>
+                            </section><section class="type_section url_class hide">
+                                <h4 class="page-header">网络链接类型字段专属</h4>
+                                <div class="row">
+                                    <div class="col-md-3 col-md-offset-1">
+                                        <div class="form-group" >
+                                            <label class="col-sm-4 control-label">默认值</label>
+                                            <div class="col-sm-8">
+                                                <input type="text"  class="form-control" id="f_url_defaultvalue" placeholder="自动填充的默认值，PRIMARY_ID是替换符" data-toggle="tooltip" title="新增时的默认值">
+                                            </div>
+                                            <span class="help-block col-sm-offset-4"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group" id="fdiv_type">
+                                            <label class="col-sm-4 control-label"><span style="color:red;">*</span> 字段类型</label>
+                                            <div class="col-sm-8">
+                                                <select class="form-control" id="f_url_filetype">
+                                                    <option value="image">图片</option>
+                                                    <option value="video">视频</option>
+                                                    <option value="audio">音频</option>
+                                                    <option value="file">下载文件</option>
+                                                    <option value="web">网页</option>
+                                                </select>
+                                            </div>
+                                            <span class="help-block col-sm-offset-4"></span>
+                                        </div>
+                                    </div>
+                                </div>
                             </section>
                             <section class="type_section check_class hide">
                                 <h4 class="page-header">选中框类型字段专属</h4>
@@ -1461,6 +1489,9 @@
             } else if (field_type == "upload") {
                 $("#f_" + field_type + "_uploadmodule").val(json.uploadmodule);
                 $("#f_" + field_type + "_filetype").val(json.filetype);
+            } else if (field_type == "url") {
+                $("#f_" + field_type + "_defaultvalue").val(json.defaultvalue);
+                $("#f_" + field_type + "_filetype").val(json.filetype);
             } else if (field_type == "grid") {
                 $("#f_" + field_type + "_fkey").val(json.model + "-" + json.modelkey);
             } else if (field_type == "fkey") {
@@ -1520,6 +1551,10 @@
 
             field_type = "upload";
             $("#f_" + field_type + "_uploadmodule").val("{{$model.modelname}}");
+            $("#f_" + field_type + "_filetype").val("image");
+			
+            field_type = "url";
+            $("#f_" + field_type + "_defaultvalue").val("{{$model.defaultvalue}}");
             $("#f_" + field_type + "_filetype").val("image");
 
             field_type = "grid";
@@ -1611,6 +1646,15 @@
                 newjson.nosave = $("#f_nosave").prop("checked") ? "1" : "0";
 				newjson.hidden = $("#f_hidden").prop("checked") ? "1" : "0";
 
+            } else if (field_type == "url") {
+
+                newjson.displayinlist = $("#f_displayinlist").prop("checked") ? "1" : "0";
+                newjson.gotodetail = $("#f_gotodetail").prop("checked") ? "1" : "0";
+                newjson.notnull = $("#f_notnull").prop("checked") ? "1" : "0";
+                newjson.disableindetail = $("#f_disableindetail").prop("checked") ? "1" : "0";
+                newjson.nosave = $("#f_nosave").prop("checked") ? "1" : "0";
+				newjson.hidden = $("#f_hidden").prop("checked") ? "1" : "0";
+
             } else if (field_type == "grid") {
 
             } else {
@@ -1681,6 +1725,11 @@
                   return;
                 }
 
+                newjson.filetype = $("#f_" + field_type + "_filetype").val();
+
+            }  else if (field_type == "url") {
+
+                newjson.defaultvalue = $("#f_" + field_type + "_defaultvalue").val();
                 newjson.filetype = $("#f_" + field_type + "_filetype").val();
 
             } else if (field_type == "grid") {

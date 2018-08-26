@@ -32,6 +32,7 @@
     $this->keytypename["datetime"]="日期时间";
     $this->keytypename["fkey"]="表关联下拉";
     $this->keytypename["flist"]="表关联多选";
+    $this->keytypename["url"]="网络链接";
 
 
     $this->keydbtype=array();
@@ -46,6 +47,7 @@
     $this->keydbtype["datetime"]="datetime";
     $this->keydbtype["fkey"]="int";
     $this->keydbtype["flist"]="varchar(4000)";
+    $this->keydbtype["url"]="varchar(500)";
 	}
 	
 	public  function __destruct ()
