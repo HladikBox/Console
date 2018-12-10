@@ -486,6 +486,16 @@
                                     <div class="col-md-10" id="f_select_options">
                                     </div>
                                 </div>
+								<div class="row">
+                                    <div class="col-md-2 col-md-offset-1" data-toggle="tooltip" title="列表状态过滤">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" id="f_select_listfilter">
+                                                <b>列表状态过滤</b>
+                                            </label>
+                                        </div>
+                                    </div>
+								</div>
                             </section>
 
                             <section class="type_section number_class hide">
@@ -647,6 +657,25 @@
                                         </div>
                                     </div>
                                 </div>
+								<div class="row">
+                                    <div class="col-md-2 col-md-offset-1" data-toggle="tooltip" title="列表状态过滤">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" id="f_fkey_showview">
+                                                <b>关联数据查看</b>
+                                            </label>
+                                        </div>
+                                    </div>
+									<div class="col-md-6">
+                                        <div class="form-group" >
+                                            <label class="col-sm-4 control-label"><span style="color:red;">*</span> 模型名称</label>
+                                            <div class="col-sm-8">
+                                                <input type="text"  class="form-control" id="f_fkey_viewmodel" placeholder="模型名称" data-toggle="tooltip" title="模型名称">
+                                            </div>
+                                            <span class="help-block col-sm-offset-4"></span>
+                                        </div>
+                                    </div>
+								</div>
                             </section>
 
                             <section class="type_section flist_class hide">
@@ -1481,6 +1510,7 @@
                     var option = json.options.option[i];
                     AddSelectOption(option.name, option.value, option.default);
                 }
+                $("#f_" + field_type + "_listfilter").prop("checked", json.listfilter == "1");
             } else if (field_type == "number") {
                 $("#f_" + field_type + "_isdecimal").prop("checked", json.isdecimal == "1");
                 $("#f_" + field_type + "_maxvalue").val(json.maxvalue);
@@ -1495,6 +1525,8 @@
             } else if (field_type == "grid") {
                 $("#f_" + field_type + "_fkey").val(json.model + "-" + json.modelkey);
             } else if (field_type == "fkey") {
+                $("#f_" + field_type + "_showview").prop("checked", json.showview == "1");
+                $("#f_" + field_type + "_viewmodel").val(json.viewmodel);
                 $("#f_" + field_type + "_displayfield").val(json.displayfield);
                 $("#f_" + field_type + "_tablename").val(json.tablename);
                 $("#f_" + field_type + "_ntbname").val(json.ntbname);
@@ -1540,6 +1572,8 @@
             field_type = "longtext";
             $("#f_" + field_type + "_default").val("");
 
+            field_type = "select";
+            $("#f_" + field_type + "_listfilter").prop("checked", false);
             $(".f_select_option").remove();
 
 
@@ -1561,6 +1595,8 @@
             $("#f_" + field_type + "_fkey").val("");
 
             field_type = "fkey";
+            $("#f_" + field_type + "_showview").prop("checked", false);
+            $("#f_" + field_type + "_viewmodel").val("");
             $("#f_" + field_type + "_displayfield").val("");
             $("#f_" + field_type + "_tablename").val("");
             $("#f_" + field_type + "_ntbname").val("");
@@ -1705,6 +1741,7 @@
                 var jv = { option: options };
                 newjson.options = jv;
 
+                newjson.listfilter = $("#f_" + field_type + "_listfilter").prop("checked") ? "1" : "0";
             } else if (field_type == "number") {
 
                 newjson.isdecimal = $("#f_" + field_type + "_isdecimal").prop("checked") ? "1" : "0";
@@ -1748,6 +1785,8 @@
                 newjson.tablename = $("#f_" + field_type + "_tablename").val();
                 newjson.ntbname = $("#f_" + field_type + "_ntbname").val();
                 newjson.condition = $("#f_" + field_type + "_condition").val();
+                newjson.showview = $("#f_" + field_type + "_showview").prop("checked") ? "1" : "0";
+                newjson.viewmodel = $("#f_" + field_type + "_viewmodel").val();
 
                 if ($.trim(newjson.tablename) == "") {
                     alert("数据来源不能空");
