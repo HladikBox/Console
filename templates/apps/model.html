@@ -1,6 +1,7 @@
 {{include  file="$smarty_root/header.html" }}
 
-
+<script src="/plugins/ace-builds/src/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="/plugins/ace-builds/src/ext-language_tools.js"></script>
 
 
 <!-- =============================================== -->
@@ -76,6 +77,7 @@
                     </form> 
                     </div>
                 </div>
+              <a href="#" class="btn btn-default btn-block margin-bottom" id="btnEditJS" onclick="openJSEditor()" >编辑JS</a>
             </div>
             <div class="col-md-8">
                 <div class="box box-primary">
@@ -108,15 +110,41 @@
                             <td class="field_description"  style="max-width: 200px;">{{$rs.description}}</td>
                               <input type="hidden" value="{{$rs.type}}" class="field_type" />
                             <td>
-                                <a href="#" class="tr_up"><i class="fa fa-arrow-up"></i></a>
-                                <a href="#" class="tr_down"><i class="fa fa-arrow-down"></i></a>
-                                <a href="#" class="btnFieldEditor"><i class="fa fa-pencil-square-o"></i></a>
-                                <a href="#" class="tr_del"><i class="fa fa-times"></i></a>
+                                <a class="tr_up"><i class="fa fa-arrow-up"></i></a>
+                                <a class="tr_down"><i class="fa fa-arrow-down"></i></a>
+                                <a class="btnFieldEditor"><i class="fa fa-pencil-square-o"></i></a>
+                                <a class="tr_del"><i class="fa fa-times"></i></a>
                                 <textarea class="field_json hide">{{$rs.json}}</textarea>
                             </td>
                           </tr>
                           {{/foreach}}
                       </table>
+                    </div>
+                </div>
+            </div>
+			<div class="col-md-4 " >
+                <div class="box box-warning">
+                    <div class="box-header with-border">
+                      <h3 class="box-title">Sql语句</h3>
+                      <!-- tools box -->
+                      <div class="pull-right box-tools">
+                          <button type="button" class="btn btn-primary btn-sm" id="btnFieldExecute">
+                              执行
+                          </button>
+                          <button type="button" class="btn btn-info btn-sm" id="btnClearFieldExcute">
+                              清空
+                          </button>
+                        <button type="button" class="btn  btn-sm" data-widget="collapse" data-toggle="tooltip" title="Collapse">
+                          <i class="fa fa-minus"></i></button>
+                      </div>
+                      <!-- /.box-tools -->
+                    </div>
+                    <div class="box-body ">
+                      <div class="row">
+                          <div class="col-md-12 cmdcontent">
+                                <textarea type="text"  class="form-control" id="cmd_content" placeholder=""  rows="20" cols="50"  ></textarea>
+						  </div>
+                      </div>
                     </div>
                 </div>
             </div>
@@ -183,8 +211,8 @@
                             <td class="option_name">{{$rs.name}}</td>
                             <td class="option_typename">{{if $rs.type=="timeline"}}时间数值折线图报表{{elseif $rs.type=="column"}}柱状比较图分析报表{{elseif $rs.type=="pie"}}饼状图分析报表{{/if}}</td>
                             <td>
-                                <a href="#" class="tr_up"><i class="fa fa-arrow-up"></i></a>
-                                <a href="#" class="tr_down"><i class="fa fa-arrow-down"></i></a>
+                                <a href="" class="tr_up"><i class="fa fa-arrow-up"></i></a>
+                                <a href="" class="tr_down"><i class="fa fa-arrow-down"></i></a>
                                 <a href="#" class="btnChartEditor"><i class="fa fa-pencil-square-o"></i></a>
                                 <a href="#" class="tr_del"><i class="fa fa-times"></i></a>
                                 <textarea class="chart_json hide">{{$rs.json}}</textarea></td>
@@ -231,6 +259,45 @@
 
 
 
+<div class="modal fade" id="dlgJSCode">
+    <div class="modal-dialog" style="width:1000px;">
+        <div class="modal-content">
+            <div class="modal-header bg-light-blue-active">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">编写后端的模块页面的JS</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group" >
+                            <label class="col-md-12 control-label"> 代码编辑，支持JQuery</label>
+                            <div class="col-sm-12" style="height:500px;">
+                                <textarea type="text"  class="form-control" id="dlg_jscode_content" placeholder="直接编辑JS代码"  rows="20" cols="100"  style="height:300px;"></textarea>
+                            </div>
+                            <span class="help-block col-sm-offset-4"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6" >
+                        <button type="button" class="btn btn-primary " id="btnJSReset" onclick="JSCodeReset()">重置代码</button>
+                    </div>
+                </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="btnJSConfirm" onclick="saveJSCode();">应用</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 
 
 <div class="modal fade" id="dlgFieldEditor">
@@ -956,10 +1023,222 @@
     <!-- /.modal-dialog -->
 </div>
 
+<textarea id="jscodereset" class="hidden">
+
+//删除某行数据之后，前端的响应
+myjs_afterdelete = function (data) {
+	
+    return true;
+};
+//删除某行数据前，前端的响应，返回非“”则提示报错
+myjs_delevalidate = function () {
+
+    return "";
+
+};
+
+//列表页面加载完成后显示数据
+myjs_listPageLoad = function () {
+};
+
+//搜索按钮点击后，对传入的数据进行修正
+myjs_searchClick = function (json) {
+    return json;
+};
+
+//搜索结果出来后的事件
+myjs_afterResultLoad = function () {
+
+};
+
+//保存前的动作
+myjs_beforeSave = function () {
+};
+
+//保存按钮的点击后的数据修正
+myjs_saveClick = function (json) {
+    return json;
+};
+
+//完成保存事件后
+myjs_aftersave = function (data) {
+    
+    return true;
+};
+
+//保存前的数据校验
+myjs_savevalidate = function () {
+
+    return "";
+};
+
+//详情页面加载完成的事件
+myjs_detailPageLoad = function () {
+	
+};
+
+//导入数据加载完成后
+myjs_afterimportdataload = function () {
+    
+};
+
+</textarea>
 
 {{include  file="$smarty_root/footer.html" }}
-
+<style type="text/css">
+    .ace_editor {
+        height:500px;
+    }
+    .ace_content{
+        height:590px;
+    }
+	.cmdcontent .ace_editor {
+        height:200px;
+    }
+	.cmdcontent .ace_content {
+        height:200px;
+    }
+</style>
 <script>
+var jseditor=null;
+var cmd_content=null;
+var def="//目前只支持添加字段，可以的多行一次过执行。如\n//field add 名称 数据库字段 字段类型\n//(text,longtext,password,check,select,html,number,upload,grid,datetime,fkey,flist,url)\n";
+	$(document).ready(function(){
+	$("#cmd_content").val(def);
+		cmd_content=ace.edit("cmd_content");
+                cmd_content.setOptions({
+                    enableBasicAutocompletion: true,
+                    enableSnippets: true,
+                    enableLiveAutocompletion: true
+                });
+
+                cmd_content.setTheme("ace/theme/monokai");
+		$("#btnFieldExecute").click(function(){
+		
+			var content=cmd_content.getValue();
+			var lines=content.split("\n");
+			var count=0;
+			for(var line of lines){
+				line=$.trim(line);
+				line=line.toLowerCase();
+				if(line.indexOf("//")<0&&line!=""){
+					var words=line.split(" ");
+					var ws=[];
+					for(w of words){
+						if($.trim(w)!=""){
+							ws.push($.trim(w));
+						}
+					}
+					words=ws;
+					if(words[0]=="field"){
+						if(words[1]=="add"){
+							var name=words[2];
+							var key=words[3];
+							var type=words[4];
+							if(name!=""&&key!=""&&type!=""){
+								var typename="文本";
+								//text,longtext,password,check,select,html,number,upload,grid,datetime,fkey,flist,url
+								var newjson={name,key,type,description:""};
+								switch(type){
+									case "text": typename="文本";  break;
+									case "longtext": typename="长文本";  break;
+									case "password": typename="密码";  break;
+									case "check": typename="选中"; newjson.yvalue="是";newjson.yvalue="否";  break;
+									case "select": typename="下拉"; newjson.options={option:[{"name": "选项1", "value": "1"},{"name": "选项2", "value": "2"}]};  break;
+									case "html": typename="HTML编辑器";  break;
+									case "number": typename="数值";  break;
+									case "upload": typename="上传";   break;
+									case "grid": typename="下级数据";  break;
+									case "datetime": typename="日期时间";  break;
+									case "fkey": typename="表关联下拉";  break;
+									case "flist": typename="表关联多选";  break;
+									case "url": typename="网络连接";  break;
+									default: type="text"; typename="文本";  break;
+								}
+								console.log(newjson);
+								CMDSaveField(newjson,typename);
+								count++;
+							}
+						}
+					}
+				}
+			}
+			info("成功添加"+count+"个字段，请继续手动补充详情");
+		});
+		$("#btnClearFieldExcute").click(function(){
+			cmd_content.setValue( def );
+		});
+	});
+	
+    function openJSEditor(){
+        
+		var json={
+            action:"getjscode",
+            app_id:"{{$appinfo.id}}",
+            model:"{{$model.modelname}}"
+        };
+        getJSON("{{$rootpath}}api/api", json, function (data) {
+		//alert(data[0].charCodeAt());
+		
+		data=data.trim();
+		if(data.charAt(0)==65279){
+			data=data.substring(1);
+		}
+		
+            $("#dlgJSCode").modal("show");
+            $("#dlg_jscode_content").val(data);
+            if(jseditor==null){
+                jseditor = ace.edit("dlg_jscode_content");
+                jseditor.setOptions({
+                    enableBasicAutocompletion: true,
+                    enableSnippets: true,
+                    enableLiveAutocompletion: true
+                });
+
+                jseditor.setTheme("ace/theme/monokai");
+                jseditor.session.setMode("ace/mode/javascript");
+            }else{
+                jseditor.setValue( data );
+            }
+            
+        });
+
+    }
+
+    function JSCodeReset(){
+		var data=$("#jscodereset").val();
+        jseditor.setValue( data );
+
+    }
+
+	function saveJSCode(){
+		
+		var content=jseditor.getValue();
+		
+        var json={
+            action:"setjscode",
+            app_id:"{{$appinfo.id}}",
+            model:"{{$model.modelname}}",
+            content:content
+        };
+        $(".btnJSConfirm").attr("disabled", true);
+        getJSON("{{$rootpath}}api/api", json, function (data) {
+            //alert(JSON.stringify(data));
+            if(data.code=="0"){
+
+                //$("#dlgApiCoding").modal("hide");
+
+            }else{
+                error("代码保存失败，请检查并重写");
+            }
+
+        },function(){
+            $(".btnJSConfirm").attr("disabled", false);
+        });
+		
+	}
+
+
     $(document).ready(function () {
         $("#f_grid_fkey optgroup").each(function(){
             if($(this).children().length==0){
@@ -1636,6 +1915,26 @@
 
         $("#dlgFieldEditor").modal("show");
     }
+	
+	function CMDSaveField(newjson,typename){
+	var newjonstr=JSON.stringify(newjson);
+		var cobj = $('<tr class="field_row">'
+                + '<td class="field_name">' + newjson.name + '</td>'
+                + '<td class="field_key">' + newjson.key + '</td>'
+                + '<td class="field_typename">' + typename +'</td>'
+                    + '<td class="field_description">' + newjson.description + '</td>'
+                    + '< input type= "hidden" value= "' + newjson.type + '" class="field_type" />'
+                + '<td>'
+                + '<a href="#" class="tr_up"><i class="fa fa-arrow-up"></i></a> '
+                + '<a href="#" class="tr_down"><i class="fa fa-arrow-down"></i></a> '
+                + '<a href="#" class="btnFieldEditor"><i class="fa fa-pencil-square-o"></i></a> '
+                + '<a href="#" class="tr_del"><i class="fa fa-times"></i></a> '
+                    + '<textarea class="field_json hide"></textarea> '
+                + '</td>'
+                + '</tr>');
+                cobj.children("td").children(".field_json").val(newjonstr);
+                $("#field_table").append(cobj);
+	}
 
     function SaveField(returnobj){
 
