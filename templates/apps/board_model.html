@@ -11,7 +11,7 @@
                           <th style="width: 10px">#</th>
                           <th>模型名称</th>
                           <th>名称</th>
-                          <th>数据来源</th>
+                          <th style="max-width:300px;">数据来源</th>
                           <th>描述</th>
                           <th class="db_op_th hide">SQL执行</th>
                           <th class="ut_op hide">单元测试</th>
@@ -21,7 +21,7 @@
                             <td> </td>
                             <td><a target="_blank" href="/apps/model?app_id={{$appinfo.id}}&model={{$rs.modelname}}">{{$rs.modelname}}</a></td>
                             <td><a target="_blank" class="modelname" href="/apps/model?app_id={{$appinfo.id}}&model={{$rs.modelname}}">{{$rs.name}}</a></td>
-                            <td><a target="_blank" href="/apps/model?app_id={{$appinfo.id}}&model={{$rs.modelname}}">{{$rs.tablename}}</a></td>
+                            <td  style="max-width:300px;"><a target="_blank" href="/apps/model?app_id={{$appinfo.id}}&model={{$rs.modelname}}">{{$rs.tablename}}</a></td>
                             <td>{{$rs.description}}</td>
                             <td class="db_op hide" modelname="{{$rs.modelname}}"></td>
                             <td class="ut_op hide"></td>

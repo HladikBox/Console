@@ -7,6 +7,15 @@
   <description>默认基础数据模型，用于快速新增</description>
   <fields>
     <field>
+      <name>排序</name>
+      <key>seq</key>
+      <type>number</type>
+      <displayinlist>1</displayinlist>
+      <gotodetail>1</gotodetail>
+	  <min>1</min>
+	  <description></description>
+    </field>
+    <field>
       <name>名称</name>
       <key>name</key>
       <type>text</type>

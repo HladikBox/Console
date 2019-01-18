@@ -78,6 +78,7 @@
                     </div>
                 </div>
               <a href="#" class="btn btn-default btn-block margin-bottom" id="btnEditJS" onclick="openJSEditor()" >编辑JS</a>
+              <a href="#" class="btn btn-default btn-block margin-bottom" id="btnEditPHP" onclick="openPHPEditor()" >编辑模型业务逻辑</a>
             </div>
             <div class="col-md-8">
                 <div class="box box-primary">
@@ -299,6 +300,45 @@
 </div>
 <!-- /.modal -->
 
+<div class="modal fade" id="dlgPHPCode">
+    <div class="modal-dialog" style="width:1000px;">
+        <div class="modal-content">
+            <div class="modal-header bg-light-blue-active">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">编写后端的模块页面的PHP</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group" >
+                            <label class="col-md-12 control-label"> 代码编辑</label>
+                            <div class="col-sm-12" style="height:500px;">
+                                <textarea type="text"  class="form-control" id="dlg_phpcode_content" placeholder="直接编辑PHP代码"  rows="20" cols="100"  style="height:300px;"></textarea>
+                            </div>
+                            <span class="help-block col-sm-offset-4"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6" >
+                        <button type="button" class="btn btn-primary " id="btnPHPReset" onclick="PHPCodeReset()">重置代码</button>
+                    </div>
+                </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="btnJSConfirm" onclick="savePHPCode();">应用</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 
 <div class="modal fade" id="dlgFieldEditor">
     <div class="modal-dialog" style="width:1000px;">
@@ -1084,6 +1124,153 @@ myjs_afterimportdataload = function () {
 
 </textarea>
 
+<textarea id="phpcodereset" class="hidden">
+
+                      
+class {{$model.modelname}}XmlModel extends XmlModel
+{
+  
+  //模型数据/
+  //public $XmlData;
+  
+  //构造函数完成
+  public function fixModelData($xmldata){
+	parent::fixModelData($xmldata);
+  }
+  
+  
+  //重新修改传入的请求
+  public function resetRequestData($dbMgr,$request){
+    
+    return $request;
+  }
+  
+  //每次调用显示列表界面
+  public function fixShowList($data){
+	  return $data;
+  }
+  
+  //列表界面点击搜索之后，重置sql语句
+  public function fixListSearchSql($sql){
+	  return $sql;
+  }
+  
+  //运行搜索的sql语句之后，再手动加工显示的结果
+  public function fixListSearchResult($result){
+	  return $result;
+  }
+  
+  //模型显示为子集数据时使用的搜索结果
+  public function fixGridSearchSql($sql){
+	  return $sql;
+  }
+  
+  //模型显示为子集数据时，再手动加工显示的结果
+  public function fixGridSearchResult($result){
+	  return $result;
+  }
+  
+  //重写打开编辑界面时的id
+  public function fixEditId($id){
+  	return $id;
+  }
+  
+  //重写打开编辑时候加载的数据sql
+  public function fixEditSql($sql){
+  	return $sql;
+  }
+  
+  //重写打开编辑时候加载的数据结果
+  public function fixEditData($result){
+  	return $result;
+  }
+  
+  //保存前的数据验证
+  public function saveValidate($dbmgr,$request){
+	  $error=parent::saveValidate($dbmgr,$request);
+	  if(MODULE=="api"){
+		  //api调用保存
+	  }else{
+		  //admin后台调用保存
+	  }
+	  return $error;
+  }
+  
+  //新增的insert语句的重写
+  public function fixInsertSql($sql){
+  	return $sql;
+  }
+  
+  //保存的update语句的重写
+  public function fixUpdateSql($sql){
+  	return $sql;
+  }
+  
+  //保存成功时做的事情
+  public function afterSave($dbmgr,$id){
+  	if(MODULE=="api"){
+		  //api调用保存
+	}else{
+		  //admin后台调用保存
+	}
+  }
+  
+  //单数据模式的id
+  public function GetNoListId(){
+  	return 0;
+  }
+  
+  //导入数据的修正
+  public function fixImportDataCheck($dataarr,$dbmgr){
+  	return $dataarr;
+  }
+  
+  //删除的id数组
+  public function deleteId($id_array){
+  	return $id_array;
+  }
+  
+  //删除之前的校验
+  public function deleteVaild($id_array,$dbmgr){
+  	return "";
+  }
+  //删除之后的更新
+  public function afterDelete($id_array,$dbmgr){
+  	
+  }
+
+  //请求列表前的数据过滤
+ public function fixApiListRequest($dbMgr,$request){
+  return $request;
+ }
+  
+  //修正api请求list时候的sql
+ public function fixApiListSql($sql){
+ 	return $sql;
+ }
+ //修正api请求list时候的sql搜索的结果
+ public function fixApiListResult($result){
+ 	return $result;
+ }
+ 
+  //修正api请求get时候请求的id
+  public function fixApiGetId($id){
+  	return $id;
+  }
+ 
+  //修正api请求get时候请求的sql
+  public function fixApiGetSql($sql){
+  	return $sql;
+  }
+  
+  //修正api请求get时候请求的sql的数据结果
+  public function fixApiGetData($result){
+  	return $result;
+  }
+
+}
+
+</textarea>
 {{include  file="$smarty_root/footer.html" }}
 <style type="text/css">
     .ace_editor {
@@ -1101,6 +1288,7 @@ myjs_afterimportdataload = function () {
 </style>
 <script>
 var jseditor=null;
+var phpeditor=null;
 var cmd_content=null;
 var def="//目前只支持添加字段，可以的多行一次过执行。如\n//field add 名称 数据库字段 字段类型\n//(text,longtext,password,check,select,html,number,upload,grid,datetime,fkey,flist,url)\n";
 	$(document).ready(function(){
@@ -1204,10 +1392,45 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
         });
 
     }
+    function openPHPEditor(){
+        
+		var json={
+            action:"getphpcode",
+            app_id:"{{$appinfo.id}}",
+            model:"{{$model.modelname}}"
+        };
+        getJSON("{{$rootpath}}api/api", json, function (data) {
+		//alert(data[0].charCodeAt());
+		
+		
+            $("#dlgPHPCode").modal("show");
+            $("#dlg_phpcode_content").val(data);
+            if(phpeditor==null){
+                phpeditor = ace.edit("dlg_phpcode_content");
+                phpeditor.setOptions({
+                    enableBasicAutocompletion: true,
+                    enableSnippets: true,
+                    enableLiveAutocompletion: true
+                });
+
+                phpeditor.setTheme("ace/theme/monokai");
+                phpeditor.session.setMode("ace/mode/php");
+            }else{
+                phpeditor.setValue( data );
+            }
+            
+        });
+
+    }
 
     function JSCodeReset(){
 		var data=$("#jscodereset").val();
         jseditor.setValue( data );
+
+    }
+    function PHPCodeReset(){
+		var data=$("#phpcodereset").val();
+        phpeditor.setValue("<"+"?"+"php" +data+"?"+">" );
 
     }
 
@@ -1238,6 +1461,32 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
 		
 	}
 
+	function savePHPCode(){
+		
+		var content=phpeditor.getValue();
+		
+        var json={
+            action:"setphpcode",
+            app_id:"{{$appinfo.id}}",
+            model:"{{$model.modelname}}",
+            content:content
+        };
+        $(".btnPHPConfirm").attr("disabled", true);
+        getJSON("{{$rootpath}}api/api", json, function (data) {
+            //alert(JSON.stringify(data));
+            if(data.code=="0"){
+
+                //$("#dlgApiCoding").modal("hide");
+
+            }else{
+                error("代码保存失败，请检查并重写");
+            }
+
+        },function(){
+            $(".btnPHPConfirm").attr("disabled", false);
+        });
+		
+	}
 
     $(document).ready(function () {
         $("#f_grid_fkey optgroup").each(function(){

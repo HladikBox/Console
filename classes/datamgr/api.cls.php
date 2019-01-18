@@ -45,9 +45,17 @@
 	    	$model=$value["model"];
 	    	$ret[$model][]=$value;
 	    }
+		
         $ret=setArrayNoNull($ret);
         $ret=bubbleSort($ret,"func");
         $ret=bubbleSort($ret,"model");
+		foreach($ret as $m=>$item){
+			foreach($item as $f=>$item2){
+				  $path=$CONFIG['workspace']['path']."\\$login\\$alias\\api\\".$m."\\".$item2["func"].".md";
+				 $desc= file_get_contents($path);
+				 $ret[$m][$f]["desc"]=$desc;
+			}
+		}
 		return $ret;
 	}
 	public function getApiList($login,$alias,$modellist){

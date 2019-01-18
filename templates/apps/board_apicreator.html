@@ -17,7 +17,7 @@
                                         <th>操作</th>
                                 </tr>
                                 {{foreach from=$apicreatorlist item=rs key=key}}
-                                <tr id="apicreator_{{$rs.model}}_{{$rs.func}}" class="api_item">
+                                <tr id="apicreator_{{$rs.model}}_{{$rs.func}}"  class="api_item">
                                     <td><input {{if $rs.active=="1"}}checked="checked"{{/if}} type="checkbox" class="api_active" ></td>
                                     <td><a target="_blank"  class="api_testurl"  href="{{$Config.workspace.domain}}/{{$User.login}}/{{$appinfo.alias}}/api/{{$rs.model}}/{{$rs.func}}">/api/{{$rs.model}}/{{$rs.func}}</a></td>
                                     <td  class="api_model">{{$rs.model}}</td>
@@ -200,7 +200,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">取消</button>
                 <span class="text-red" id="txtApiCreatorConfirm"></span>
-                <button type="button" class="btn btn-primary" id="btnApiCreatorConfirm">应用</button>
+                <button type="button" class="btn btn-primary" id="btnApiCreatorConfirm" needcheck="Y">应用</button>
             </div>
         </div>
         <!-- /.modal-content -->

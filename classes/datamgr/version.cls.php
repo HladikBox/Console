@@ -54,14 +54,18 @@
         $folder=$CONFIG['workspace']['path']."\\$login\\$alias\\";
 
         if (!is_dir($folder."version\\")) mkdir($folder."version\\");
-
-        $zip=new ZipArchive();
-        if($zip->open($folder."version\\".$version.".zip", ZipArchive::OVERWRITE)=== TRUE){
-            addFileToZip($folder,"", $zip,array("logs", "upload", "version")); //调用方法，对要打包的根目录进行操作，并将ZipArchive的对象传递给方法
-            $zip->close(); //关闭处理的zip文件
-        }else{
-            return outResult("-1","写入版本失败，请重试!");
-        }
+		
+		$this->copyDir($folder,$folder."version\\$version\\",array("logs", "upload", "version"));
+        //$zip=new ZipArchive();
+        //if($zip->open($folder."version\\".$version.".zip", ZipArchive::OVERWRITE)=== TRUE){
+        //    addFileToZip($folder,"", $zip,array("logs", "upload", "version")); //调用方法，对要打包的根目录进行操作，并将ZipArchive的对象传递给方法
+        //    $zip->close(); //关闭处理的zip文件
+        //}else{
+        //    return outResult("-1","写入版本失败，请重试!");
+        //}
+		
+		
+		
         $id=$this->dbmgr->getNewId("tb_app_version");
         $sql="insert into tb_app_version (id,app_id,version,committed_date,comment,is_tag) values ($id,$app_id,$version,now(),'$comment','$is_tag')";
         $this->dbmgr->query($sql);
@@ -74,6 +78,42 @@
 
     }
 
+	
+	public function copyDir($dirSrc,$dirTo,$exfolders=[])
+	{
+		if(is_file($dirTo))
+		{
+			//echo $dirTo . '这不是一个目录';
+			return;
+		}
+		if(!file_exists($dirTo))
+		{
+			mkdir($dirTo);
+		}
+
+		if($handle=opendir($dirSrc))
+		{
+			while($filename=readdir($handle))
+			{
+				if($filename!='.' && $filename!='..'&&in_array($filename,$exfolders)==false)
+				{
+					$subsrcfile=$dirSrc . '/' . $filename;
+					$subtofile=$dirTo . '/' . $filename;
+					if(is_dir($subsrcfile))
+					{
+						$this->copyDir($subsrcfile,$subtofile);//再次递归调用copydir
+					}
+					if(is_file($subsrcfile))
+					{
+						copy($subsrcfile,$subtofile);
+					}
+				}
+			}
+			closedir($handle);
+		}
+
+	}
+	
     public function rollback($app_id,$login,$alias,$version){
          Global $CONFIG;
 
@@ -95,17 +135,19 @@
             }
         }
 
-        $file=$CONFIG['workspace']['path']."\\$login\\$alias\\version\\$version.zip";
+        //$file=$CONFIG['workspace']['path']."\\$login\\$alias\\version\\$version.zip";
 
-        $zip = new ZipArchive() ; 
+        //$zip = new ZipArchive() ; 
         //打开zip文档，如果打开失败返回提示信息 
-        if ($zip->open($file) !== TRUE) { 
-        return outResult("-1","找不到版本文件，请回滚到其他版本");
-        }
-        $zip->extractTo($path); 
+        //if ($zip->open($file) !== TRUE) { 
+        //return outResult("-1","找不到版本文件，请回滚到其他版本");
+        //}
+        //$zip->extractTo($path); 
         //关闭zip文档 
-        $zip->close(); 
-        
+        //$zip->close(); 
+		
+		$f=$CONFIG['workspace']['path']."\\$login\\$alias\\version\\$version\\";
+        $this->copyDir($f,$path."\\");
         return outResult("0","成功",$result);
     }
 

@@ -17,7 +17,7 @@
     outputJSON($versionMgr->submit($_REQUEST["app_id"],$User["login"],$appinfo["alias"],$_REQUEST["comment"],$_REQUEST["is_tag"]));
   }else{
     $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
-    $result=$versionMgr->submit($_REQUEST["app_id"],$User["login"],$appinfo["alias"],"备份上一个版本，防止回滚失败");
+    $result=$versionMgr->submit($_REQUEST["app_id"],$User["login"],$appinfo["alias"],"备份上一个版本，防止回滚失败","N");
     outputJSON($versionMgr->rollback($_REQUEST["app_id"],$User["login"],$appinfo["alias"],$_REQUEST["version"]));
   }
 

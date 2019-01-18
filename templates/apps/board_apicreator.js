@@ -161,6 +161,10 @@
                     $("#txtApiCreatorConfirm").text("方法仅能使用英文且不能为空");
                     return;
                 }
+                if($("#apicreator_"+model+"_"+func).hasClass("api_item")){
+                    $("#txtApiCreatorConfirm").text("不能创建同名方法");
+                    return;
+                }
             }
             var description=$.trim($("#dlg_apicreator_description").val());
             if(description.length<5){
