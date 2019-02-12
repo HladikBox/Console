@@ -96,6 +96,36 @@
     file_put_contents($filepath,$content); 
     
     outputJSON(outResult(0,"success","success"));
+  }elseif ($action=="getcsscode") {
+    $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
+    $folder=$CONFIG['workspace']['path']."\\".$User["login"]."\\".$appinfo["alias"]."\\";
+    $func=$_REQUEST["func"];
+    $model=$_REQUEST["model"];
+    $filepath=$folder."js\\".$model.".css";
+
+    $content="";
+    $lines = @file($filepath);
+    $startcontent=false;
+    foreach($lines as $val){
+      
+      $content.=$val;
+    }
+
+    outputJSON($content);
+
+  }elseif ($action=="setcsscode") {
+    $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
+    $folder=$CONFIG['workspace']['path']."\\".$User["login"]."\\".$appinfo["alias"]."\\";
+    $func=$_REQUEST["func"];
+    $model=$_REQUEST["model"];
+    $filepath=$folder."js\\".$model.".css";
+
+    $content=trim($_REQUEST["content"]);
+    
+
+    file_put_contents($filepath,$content);  
+    
+    outputJSON(outResult(0,"success","success"));
   }elseif ($action=="getphpcode") {
     $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
     $folder=$CONFIG['workspace']['path']."\\".$User["login"]."\\".$appinfo["alias"]."\\";

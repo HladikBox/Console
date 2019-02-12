@@ -72,12 +72,23 @@
                                   <input type="checkbox" id="m_nosave" {{if $model.nosave=="1"}}checked{{/if}}>仅查看不保存，供视图使用
                               </label>
                           </div>
+                          <div class="checkbox" data-toggle="tooltip" title="不需要支持新增">
+                              <label>
+                                  <input type="checkbox" id="m_noaddnew" {{if $model.noaddnew=="1"}}checked{{/if}}>不需要新增
+                              </label>
+                          </div>
+                          <div class="checkbox" data-toggle="tooltip" title="允许列表全选">
+                              <label>
+                                  <input type="checkbox" id="m_canselectall" {{if $model.canselectall=="1"}}checked{{/if}}>允许列表全选
+                              </label>
+                          </div>
                       </div>
                       <!-- /.box-body -->
                     </form> 
                     </div>
                 </div>
               <a href="#" class="btn btn-default btn-block margin-bottom" id="btnEditJS" onclick="openJSEditor()" >编辑JS</a>
+              <a href="#" class="btn btn-default btn-block margin-bottom" id="btnEditCSS" onclick="openCSSEditor()" >编辑CSS</a>
               <a href="#" class="btn btn-default btn-block margin-bottom" id="btnEditPHP" onclick="openPHPEditor()" >编辑模型业务逻辑</a>
             </div>
             <div class="col-md-8">
@@ -175,8 +186,8 @@
                             <td class="option_name">{{$rs.name}}</td>
                             <td class="option_typename">{{if $rs.type=="function"}}方法{{else}}超链接{{/if}}</td>
                             <td>
-                                <a href="#" class="tr_up"><i class="fa fa-arrow-up"></i></a>
-                                <a href="#" class="tr_down"><i class="fa fa-arrow-down"></i></a>
+                                <a  class="tr_up"><i class="fa fa-arrow-up"></i></a>
+                                <a  class="tr_down"><i class="fa fa-arrow-down"></i></a>
                                 <a href="#" class="btnOptionEditor"><i class="fa fa-pencil-square-o"></i></a>
                                 <a href="#" class="tr_del"><i class="fa fa-times"></i></a>
                                 <textarea class="option_json hide">{{$rs.json}}</textarea></td>
@@ -210,10 +221,10 @@
                           {{foreach from=$model.charts.chart item=rs}}
                           <tr>
                             <td class="option_name">{{$rs.name}}</td>
-                            <td class="option_typename">{{if $rs.type=="timeline"}}时间数值折线图报表{{elseif $rs.type=="column"}}柱状比较图分析报表{{elseif $rs.type=="pie"}}饼状图分析报表{{/if}}</td>
+                            <td class="option_typename">{{if $rs.type=="timeline"}}时间数值折线图报表{{elseif $rs.type=="timecolumn"}}时间数值柱状图报表{{elseif $rs.type=="column"}}柱状比较图分析报表{{elseif $rs.type=="pie"}}饼状图分析报表{{/if}}</td>
                             <td>
-                                <a href="" class="tr_up"><i class="fa fa-arrow-up"></i></a>
-                                <a href="" class="tr_down"><i class="fa fa-arrow-down"></i></a>
+                                <a  class="tr_up"><i class="fa fa-arrow-up"></i></a>
+                                <a  class="tr_down"><i class="fa fa-arrow-down"></i></a>
                                 <a href="#" class="btnChartEditor"><i class="fa fa-pencil-square-o"></i></a>
                                 <a href="#" class="tr_del"><i class="fa fa-times"></i></a>
                                 <textarea class="chart_json hide">{{$rs.json}}</textarea></td>
@@ -258,6 +269,43 @@
 </div>
 <!-- /.content-wrapper -->
 
+
+<div class="modal fade" id="dlgCSSCode">
+    <div class="modal-dialog" style="width:1000px;">
+        <div class="modal-content">
+            <div class="modal-header bg-light-blue-active">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">编写后端的模块页面的CSS</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group" >
+                            <label class="col-md-12 control-label"> CSS代码</label>
+                            <div class="col-sm-12" style="height:500px;">
+                                <textarea type="text"  class="form-control" id="dlg_csscode_content" placeholder="直接编辑CSS代码"  rows="20" cols="100"  style="height:300px;"></textarea>
+                            </div>
+                            <span class="help-block col-sm-offset-4"></span>
+                        </div>
+                    </div>
+                </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="btnCSSConfirm" onclick="saveCSSCode();">应用</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 
 
 <div class="modal fade" id="dlgJSCode">
@@ -890,6 +938,7 @@
                                                 <select class="form-control" id="r_type">
                                                     <option value="">请选择报表类型</option>
                                                     <option value="timeline">时间数值折线图报表</option>
+                                                    <option value="timecolumn">时间数值柱状图报表</option>
                                                     <option value="column">柱状比较图报表</option>
                                                     <option value="pie">饼状分析报表</option>
                                                 </select>
@@ -901,6 +950,19 @@
                                         <div class="form-group" >
                                             <label class="col-sm-4 control-label"><span style="color:red;">*</span> 统计字段设置</label>
                                             <div class="col-sm-8">
+                                                <div class="row" id="chart_field">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-4 control-label">常规</label>
+                                                            <div class="col-sm-8">
+                                                                <select class="form-control" id="r_field">
+                                                                    <option value="">请选择字段</option>
+                                                                </select>
+                                                            </div>
+                                                            <span class="help-block col-sm-offset-4"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 <div class="row" id="chart_datetimefield">
                                                     <div class="col-md-12">
                                                         <div class="form-group">
@@ -1182,6 +1244,11 @@ class {{$model.modelname}}XmlModel extends XmlModel
   
   //重写打开编辑时候加载的数据结果
   public function fixEditData($result){
+	 for($i=0;$i<count($result["fields"]["field"]);$i++){
+        if($result["fields"]["field"][$i]["key"]=="keyname"){
+            $result["fields"]["field"][$i]["value"]=$value;
+        }
+    }
   	return $result;
   }
   
@@ -1288,6 +1355,7 @@ class {{$model.modelname}}XmlModel extends XmlModel
 </style>
 <script>
 var jseditor=null;
+var csseditor=null;
 var phpeditor=null;
 var cmd_content=null;
 var def="//目前只支持添加字段，可以的多行一次过执行。如\n//field add 名称 数据库字段 字段类型\n//(text,longtext,password,check,select,html,number,upload,grid,datetime,fkey,flist,url)\n";
@@ -1357,6 +1425,36 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
 			cmd_content.setValue( def );
 		});
 	});
+	
+    function openCSSEditor(){
+        
+		var json={
+            action:"getcsscode",
+            app_id:"{{$appinfo.id}}",
+            model:"{{$model.modelname}}"
+        };
+        getJSON("{{$rootpath}}api/api", json, function (data) {
+		//alert(data[0].charCodeAt());
+		
+			$("#dlgCSSCode").modal("show");
+            $("#dlg_csscode_content").val(data);
+            if(csseditor==null){
+                csseditor = ace.edit("dlg_csscode_content");
+                csseditor.setOptions({
+                    enableBasicAutocompletion: true,
+                    enableSnippets: true,
+                    enableLiveAutocompletion: true
+                });
+
+                csseditor.setTheme("ace/theme/monokai");
+                csseditor.session.setMode("ace/mode/css");
+            }else{
+                csseditor.setValue( data );
+            }
+            
+        });
+
+    }
 	
     function openJSEditor(){
         
@@ -1461,6 +1559,34 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
 		
 	}
 
+
+	function saveCSSCode(){
+		
+		var content=csseditor.getValue();
+		
+        var json={
+            action:"setcsscode",
+            app_id:"{{$appinfo.id}}",
+            model:"{{$model.modelname}}",
+            content:content
+        };
+        $(".btnCSSConfirm").attr("disabled", true);
+        getJSON("{{$rootpath}}api/api", json, function (data) {
+            //alert(JSON.stringify(data));
+            if(data.code=="0"){
+
+                //$("#dlgApiCoding").modal("hide");
+
+            }else{
+                error("代码保存失败，请检查并重写");
+            }
+
+        },function(){
+            $(".btnCSSConfirm").attr("disabled", false);
+        });
+		
+	}
+	
 	function savePHPCode(){
 		
 		var content=phpeditor.getValue();
@@ -1578,7 +1704,7 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
             }
         });
         $("#btn_f_select_addoption").click(function(){
-            AddSelectOption("","","");
+            AddSelectOption("","",'',"");
         });
 
         $("#o_type").change(function(){
@@ -1603,21 +1729,31 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
                 $("#chart_datetimefield").show();
                 $("#chart_statusfield").show();
                 $("#chart_numberfield").show();
+                $("#chart_field").hide();
                 
             }
-            else if ($("#o_type").val() == "column") {
-
+            else if ($("#r_type").val() == "timecolumn") {
                 $("#chart_datetimefield").show();
                 $("#chart_statusfield").show();
+                $("#chart_numberfield").show();
+                $("#chart_field").hide();
+                
+            }
+            else if ($("#r_type").val() == "column") {
+
+                $("#chart_field").show();
+                $("#chart_datetimefield").hide();
+                $("#chart_statusfield").hide();
                 $("#chart_numberfield").show();
             }
-            else if ($("#o_type").val() == "pie") {
+            else if ($("#r_type").val() == "pie") {
 
-                $("#chart_datetimefield").show();
-                $("#chart_statusfield").show();
-                $("#chart_numberfield").show();
+                $("#chart_datetimefield").hide();
+                $("#chart_statusfield").hide();
+                $("#chart_numberfield").hide();
             } else {
 
+                $("#chart_field").hide();
                 $("#chart_datetimefield").hide();
                 $("#chart_statusfield").hide();
                 $("#chart_numberfield").hide();
@@ -1625,7 +1761,7 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
         });
         
         $("#btnSave").click(function(){
-            var json={name:$("#m_name").val(),tablename:$("#m_tablename").val(),searchcondition:$("#m_searchcondition").val(),description:$("#m_description").val(),nolist:$("#m_nolist").prop("checked")?"1":"0",import:$("#m_import").prop("checked")?"1":"0",nosave:$("#m_nosave").prop("checked")?"1":"0"};
+            var json={name:$("#m_name").val(),tablename:$("#m_tablename").val(),searchcondition:$("#m_searchcondition").val(),description:$("#m_description").val(),nolist:$("#m_nolist").prop("checked")?"1":"0",import:$("#m_import").prop("checked")?"1":"0",nosave:$("#m_nosave").prop("checked")?"1":"0",noaddnew:$("#m_noaddnew").prop("checked")?"1":"0",canselectall:$("#m_canselectall").prop("checked")?"1":"0"};
             if($.trim(json.name)==""){
               warning("模型名称不能为空");
               return;
@@ -1863,8 +1999,8 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
                 + '<td class="field_name">' + newjson.name + '</td>'
                 + '<td class="field_typename">' + (newjson.type!="link"?"方法":"超链接") + '</td>'
                 + '<td>'
-                + '<a href="#" class="tr_up"><i class="fa fa-arrow-up"></i></a> '
-                + '<a href="#" class="tr_down"><i class="fa fa-arrow-down"></i></a> '
+                + '<a  class="tr_up"><i class="fa fa-arrow-up"></i></a> '
+                + '<a  class="tr_down"><i class="fa fa-arrow-down"></i></a> '
                 + '<a href="#" class="btnOptionEditor"><i class="fa fa-pencil-square-o"></i></a> '
                 + '<a href="#" class="tr_del"><i class="fa fa-times"></i></a> '
                 + '<textarea class="option_json hide"></textarea> '
@@ -1898,6 +2034,7 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
             $("#r_datetimefield").val(json.datetimefield);
             $("#r_statusfield").val(json.statusfield);
             $("#r_numberfield").val(json.numberfield);
+            $("#r_field").val(json.field);
             
         } else {
             $("#r_name").val("");
@@ -1906,6 +2043,7 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
             $("#r_datetimefield").val("");
             $("#r_statusfield").val("");
             $("#r_numberfield").val("");
+            $("#r_field").val("");
         }
 
         $("#r_type").change();
@@ -1933,6 +2071,7 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
     }
     function ReloadChartField() {
 
+        $("#r_field").html("<option value=''>请选择常规字段</option>");
         $("#r_datetimefield").html("<option value=''>请选择日期字段</option>");
         $("#r_statusfield").html("<option value=''>请选择选项字段</option>");
         $("#r_numberfield").html("<option value=''>请选择数值字段</option>");
@@ -1950,6 +2089,7 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
             if (type == "number" ) {
                 $("#r_numberfield").append("<option value='" + key + "'>" + name + "</option>")
             }
+			$("#r_field").append("<option value='" + key + "'>" + name + "</option>")
         });
     }
 
@@ -1960,7 +2100,8 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
             description: $("#r_description").val(),
             datetimefield: $("#r_datetimefield").val(),
             statusfield: $("#r_statusfield").val(),
-            numberfield: $("#r_numberfield").val()
+            numberfield: $("#r_numberfield").val(),
+            field: $("#r_field").val()
         };
 
         var newjonstr = JSON.stringify(newjson);
@@ -1975,8 +2116,8 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
                 + '<td class="chart_name">' + newjson.name + '</td>'
                 + '<td class="chart_typename">' + ($("#r_type option:checked").text()) + '</td>'
                 + '<td>'
-                + '<a href="#" class="tr_up"><i class="fa fa-arrow-up"></i></a> '
-                + '<a href="#" class="tr_down"><i class="fa fa-arrow-down"></i></a> '
+                + '<a  class="tr_up"><i class="fa fa-arrow-up"></i></a> '
+                + '<a  class="tr_down"><i class="fa fa-arrow-down"></i></a> '
                 + '<a href="#" class="btnChartEditor"><i class="fa fa-pencil-square-o"></i></a> '
                 + '<a href="#" class="tr_del"><i class="fa fa-times"></i></a> '
                 + '<textarea class="chart_json hide"></textarea> '
@@ -2036,7 +2177,10 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
                 }
                 for (var i = 0; i < json.options.option.length; i++) {
                     var option = json.options.option[i];
-                    AddSelectOption(option.name, option.value, option.default);
+					if(option.color==undefined){
+						option.color="";
+					}
+                    AddSelectOption(option.name, option.value,option.color, option.default);
                 }
                 $("#f_" + field_type + "_listfilter").prop("checked", json.listfilter == "1");
             } else if (field_type == "number") {
@@ -2174,8 +2318,8 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
                     + '<td class="field_description">' + newjson.description + '</td>'
                     + '< input type= "hidden" value= "' + newjson.type + '" class="field_type" />'
                 + '<td>'
-                + '<a href="#" class="tr_up"><i class="fa fa-arrow-up"></i></a> '
-                + '<a href="#" class="tr_down"><i class="fa fa-arrow-down"></i></a> '
+                + '<a  class="tr_up"><i class="fa fa-arrow-up"></i></a> '
+                + '<a  class="tr_down"><i class="fa fa-arrow-down"></i></a> '
                 + '<a href="#" class="btnFieldEditor"><i class="fa fa-pencil-square-o"></i></a> '
                 + '<a href="#" class="tr_del"><i class="fa fa-times"></i></a> '
                     + '<textarea class="field_json hide"></textarea> '
@@ -2278,8 +2422,9 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
                 $(".f_select_option").each(function () {
                     var name = $(this).children("div").children("div").children(".f_select_option_name").val();
                     var value = $(this).children("div").children("div").children(".f_select_option_value").val();
+                    var color = $(this).children("div").children("div").children(".f_select_option_color").val();
                     var isdefault = $(this).children("div").children("div").children("label").children(".f_select_option_default").prop("checked") ? "1" : "0";
-                    var opjson = { "name": name, "value": value, "default": isdefault };
+                    var opjson = { "name": name, "value": value,color:color, "default": isdefault };
                     options.push(opjson);
                 });
                 if (options.length == 0) {
@@ -2385,8 +2530,8 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
                     + '<td class="field_description">' + newjson.description + '</td>'
                     + '< input type= "hidden" value= "' + newjson.type + '" class="field_type" />'
                 + '<td>'
-                + '<a href="#" class="tr_up"><i class="fa fa-arrow-up"></i></a> '
-                + '<a href="#" class="tr_down"><i class="fa fa-arrow-down"></i></a> '
+                + '<a  class="tr_up"><i class="fa fa-arrow-up"></i></a> '
+                + '<a  class="tr_down"><i class="fa fa-arrow-down"></i></a> '
                 + '<a href="#" class="btnFieldEditor"><i class="fa fa-pencil-square-o"></i></a> '
                 + '<a href="#" class="tr_del"><i class="fa fa-times"></i></a> '
                     + '<textarea class="field_json hide"></textarea> '
@@ -2399,16 +2544,20 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
     }
 
 
-    function AddSelectOption(name,value,is_default){
+    function AddSelectOption(name,value,color,is_default){
             var str='<div class="row  f_select_option">'+
                         '<div class="form-group" >'+
-                            '<label class="col-sm-2 control-label">显示值</label>'+
+                            '<label class="col-sm-1 control-label">显示</label>'+
                             '<div class="col-sm-2">'+
                                 '<input type="text" maxlength="15" class="form-control f_select_option_name" value="'+name+'"  placeholder="显示值" >'+
                             '</div>'+
-                            '<label class="col-sm-2 control-label">存储值</label>'+
+                            '<label class="col-sm-1 control-label">存储</label>'+
                             '<div class="col-sm-2">'+
                                 '<input type="text" maxlength="15" class="form-control f_select_option_value" value="'+value+'"  placeholder="存储值" >'+
+                            '</div>'+
+                            '<label class="col-sm-1 control-label">颜色</label>'+
+                            '<div class="col-sm-2">'+
+                                '<input type="text" maxlength="15" class="form-control f_select_option_color" value="'+color+'"  placeholder="颜色" >'+
                             '</div>'+
                             '<div class="radio col-sm-2">'+
                                 '<label>'+

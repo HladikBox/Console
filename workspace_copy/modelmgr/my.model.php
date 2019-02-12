@@ -54,6 +54,11 @@ class {{modelname}}XmlModel extends XmlModel
   
   //重写打开编辑时候加载的数据结果
   public function fixEditData($result){
+	 for($i=0;$i<count($result["fields"]["field"]);$i++){
+        if($result["fields"]["field"][$i]["key"]=="keyname"){
+            $result["fields"]["field"][$i]["value"]=$value;
+        }
+    }
   	return $result;
   }
   
