@@ -70,6 +70,56 @@
 
     outputJSON($content);
 
+  }elseif ($action=="getglobaljscode") {
+	 $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
+    $folder=$CONFIG['workspace']['path']."\\".$User["login"]."\\".$appinfo["alias"]."\\";
+	
+    $filepath=$folder."js\\SystemGlobal.js";
+	
+	$content="";
+    $lines = @file($filepath);
+    foreach($lines as $val){
+      $content.=$val;
+    }
+	$content=trim($content);
+    outputJSON($content);
+  }elseif ($action=="setglobaljscode") {
+    $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
+    $folder=$CONFIG['workspace']['path']."\\".$User["login"]."\\".$appinfo["alias"]."\\";
+	
+    $filepath=$folder."js\\SystemGlobal.js";
+
+    $content=trim($_REQUEST["content"]);
+    
+
+    file_put_contents($filepath,$content); 
+    
+    outputJSON(outResult(0,"success","success"));
+  }elseif ($action=="getdashboardjscode") {
+	 $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
+    $folder=$CONFIG['workspace']['path']."\\".$User["login"]."\\".$appinfo["alias"]."\\";
+	
+    $filepath=$folder."js\\SystemDashboard.js";
+	
+	$content="";
+    $lines = @file($filepath);
+    foreach($lines as $val){
+      $content.=$val;
+    }
+	$content=trim($content);
+    outputJSON($content);
+  }elseif ($action=="setdashboardjscode") {
+    $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
+    $folder=$CONFIG['workspace']['path']."\\".$User["login"]."\\".$appinfo["alias"]."\\";
+	
+    $filepath=$folder."js\\SystemDashboard.js";
+
+    $content=trim($_REQUEST["content"]);
+    
+
+    file_put_contents($filepath,$content); 
+    
+    outputJSON(outResult(0,"success","success"));
   }elseif ($action=="getjscode") {
 	 $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
     $folder=$CONFIG['workspace']['path']."\\".$User["login"]."\\".$appinfo["alias"]."\\";
