@@ -262,6 +262,81 @@
 	ob_end_flush();
 	exit;
     //outputJSON($apis);
+  }elseif ($action=="getapiinitphpcode") {
+    $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
+    $folder=$CONFIG['workspace']['path']."\\".$User["login"]."\\".$appinfo["alias"]."\\";
+    $func=$_REQUEST["func"];
+    $model=$_REQUEST["model"];
+    $filepath=$folder."common\\init.inc.php";
+
+    $content="";
+    $lines = @file($filepath);
+    $startcontent=false;
+    foreach($lines as $val){
+      
+      $content.=$val;
+    }
+	if($content==""){
+		$content="<?php 
+		
+		
+		
+?>";
+	}
+
+    outputJSON($content);
+
+  }elseif ($action=="getcmsinitphpcode") {
+    $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
+    $folder=$CONFIG['workspace']['path']."\\".$User["login"]."\\".$appinfo["alias"]."\\";
+    $func=$_REQUEST["func"];
+    $model=$_REQUEST["model"];
+    $filepath=$folder."common\\cms.inc.php";
+
+    $content="";
+    $lines = @file($filepath);
+    $startcontent=false;
+    foreach($lines as $val){
+      
+      $content.=$val;
+    }
+	
+	if($content==""){
+		$content="<?php 
+		
+		
+		
+?>";
+	}
+
+    outputJSON($content);
+
+  }elseif ($action=="setapinitphpcode") {
+    $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
+    $folder=$CONFIG['workspace']['path']."\\".$User["login"]."\\".$appinfo["alias"]."\\";
+    $func=$_REQUEST["func"];
+    $model=$_REQUEST["model"];
+    $filepath=$folder."common\\init.inc.php";
+
+    $content=trim($_REQUEST["content"]);
+    
+
+    file_put_contents($filepath,$content);  
+    
+    outputJSON(outResult(0,"success","success"));
+  }elseif ($action=="setcmsinitphpcode") {
+    $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
+    $folder=$CONFIG['workspace']['path']."\\".$User["login"]."\\".$appinfo["alias"]."\\";
+    $func=$_REQUEST["func"];
+    $model=$_REQUEST["model"];
+    $filepath=$folder."common\\cms.inc.php";
+
+    $content=trim($_REQUEST["content"]);
+    
+
+    file_put_contents($filepath,$content);  
+    
+    outputJSON(outResult(0,"success","success"));
   }
   
 
