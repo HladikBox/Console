@@ -3,7 +3,6 @@
 <script src="/plugins/ace-builds/src/ace.js" type="text/javascript" charset="utf-8"></script>
 <script src="/plugins/ace-builds/src/ext-language_tools.js"></script>
 
-
 <!-- =============================================== -->
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -106,14 +105,17 @@
                       <!-- /.box-tools -->
                     </div>
                     <div class="box-body no-padding">
-                      <table class="table table-hover" id="field_table">
-                          <tr class="th">
+                      <table class="table table-hover" id="field_table" class="gbin1-list">
+                          <thead>
+						  <tr class="th">
                               <th>字段名称</th>
                               <th>数据库字段</th>
                               <th>字段类型</th>
                               <th style="max-width: 200px;">描述</th>
                               <th>操作</th>
                           </tr>
+						  </thead>
+						  <tbody>
                           {{foreach from=$model.fields.field item=rs}}
                           <tr class="field_row">
                               <td class="field_name">{{$rs.name}}</td>
@@ -130,6 +132,7 @@
                             </td>
                           </tr>
                           {{/foreach}}
+						  </tbody>
                       </table>
                     </div>
                 </div>
@@ -1400,10 +1403,15 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
 									case "longtext": typename="长文本";  break;
 									case "password": typename="密码";  break;
 									case "check": typename="选中"; newjson.yvalue="是";newjson.yvalue="否";  break;
-									case "select": typename="下拉"; newjson.options={option:[{"name": "选项1", "value": "1"},{"name": "选项2", "value": "2"}]};  break;
+									case "select": 
+													typename="下拉"; 
+													newjson.options={option:[{"name": "选项1", "value": "1"},{"name": "选项2", "value": "2"}]};  break;
 									case "html": typename="HTML编辑器";  break;
 									case "number": typename="数值";  break;
-									case "upload": typename="上传";   break;
+									case "upload": typename="上传";   
+										newjson.uploadmodule="{{$model.modelname}}";
+										newjson.filetype="image";
+									break;
 									case "grid": typename="下级数据";  break;
 									case "datetime": typename="日期时间";  break;
 									case "fkey": typename="表关联下拉";  break;
@@ -2532,8 +2540,8 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
                 + '<td>'
                 + '<a  class="tr_up"><i class="fa fa-arrow-up"></i></a> '
                 + '<a  class="tr_down"><i class="fa fa-arrow-down"></i></a> '
-                + '<a href="#" class="btnFieldEditor"><i class="fa fa-pencil-square-o"></i></a> '
-                + '<a href="#" class="tr_del"><i class="fa fa-times"></i></a> '
+                + '<a  class="btnFieldEditor"><i class="fa fa-pencil-square-o"></i></a> '
+                + '<a  class="tr_del"><i class="fa fa-times"></i></a> '
                     + '<textarea class="field_json hide"></textarea> '
                 + '</td>'
                 + '</tr>');
@@ -2572,4 +2580,12 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
             });
     }
 
+</script>
+
+<script src="https://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+        
+        $("#field_table tbody").sortable().disableSelection();
+    });
 </script>
