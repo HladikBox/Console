@@ -892,6 +892,20 @@
                                 </div>
                             </section>
 
+                            <section class="type_section color_class hide">
+                                <h4 class="page-header">颜色类型字段专属</h4>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group" >
+                                            <label class="col-sm-4 control-label">默认值</label>
+                                            <div class="col-sm-8">
+                                                <input type="text"  class="form-control" id="f_color_default" placeholder="新增时自动填充的默认值" data-toggle="tooltip" title="新增时的默认值">
+                                            </div>
+                                            <span class="help-block col-sm-offset-4"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
 
                         </form>
                     </div>
@@ -1422,6 +1436,7 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
 									case "fkey": typename="表关联下拉";  break;
 									case "flist": typename="表关联多选";  break;
 									case "url": typename="网络连接";  break;
+									case "color": typename="颜色";  break;
 									default: type="text"; typename="文本";  break;
 								}
 								console.log(newjson);
@@ -2190,6 +2205,8 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
                 $("#f_" + field_type + "_nvalue").val(json.nvalue);
             } else if (field_type == "longtext") {
                 $("#f_" + field_type + "_default").val(json.default);
+            } else if (field_type == "color") {
+                $("#f_" + field_type + "_default").val(json.default);
             } else if (field_type == "select") {
                 try{
                   $(".f_select_option").remove();
@@ -2264,6 +2281,10 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
 
             field_type = "longtext";
             $("#f_" + field_type + "_default").val("");
+			
+			
+            field_type = "color";
+            $("#f_" + field_type + "_default").val("#ffffff");
 
             field_type = "select";
             $("#f_" + field_type + "_listfilter").prop("checked", false);
@@ -2433,6 +2454,10 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
                 newjson.nvalue = $("#f_" + field_type + "_nvalue").val();
 
             } else if (field_type == "longtext") {
+
+                newjson.default = $("#f_" + field_type + "_default").val();
+
+            } else if (field_type == "color") {
 
                 newjson.default = $("#f_" + field_type + "_default").val();
 

@@ -33,6 +33,7 @@
     $this->keytypename["fkey"]="表关联下拉";
     $this->keytypename["flist"]="表关联多选";
     $this->keytypename["url"]="网络链接";
+    $this->keytypename["color"]="颜色";
 
 
     $this->keydbtype=array();
@@ -48,6 +49,7 @@
     $this->keydbtype["fkey"]="int";
     $this->keydbtype["flist"]="varchar(4000)";
     $this->keydbtype["url"]="varchar(500)";
+    $this->keydbtype["color"]="varchar(20)";
 	}
 	
 	public  function __destruct ()
