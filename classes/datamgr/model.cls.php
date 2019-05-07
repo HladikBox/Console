@@ -47,6 +47,7 @@
     $this->keydbtype["upload"]="varchar(100)";
     $this->keydbtype["datetime"]="datetime";
     $this->keydbtype["fkey"]="int";
+    $this->keydbtype["grid"]="varchar(20)";
     $this->keydbtype["flist"]="varchar(4000)";
     $this->keydbtype["url"]="varchar(500)";
     $this->keydbtype["color"]="varchar(20)";
@@ -346,8 +347,11 @@
         $field_key=parameter_filter($field["key"]);
         $field_name=parameter_filter($field["name"]);
         $field_description=$field_name.".\r\n".parameter_filter($field["description"]);
-
+		
         $column_type=$this->keydbtype[$field_type];
+		if($field_type=="grid"){
+			// $column_type;
+		}
         if($field_type=="number"&&$field["isdecimal"]==1){
           $column_type="decimal(12,2)";
         }
@@ -382,6 +386,9 @@
           }
         }
         if(!empty($column_type)){
+		//if($field_type=="grid"){
+		//	echo $this->getFieldUpdateStr($dbname,$tablename,$field_key,$column_type,$field_description,$defaultvalue);
+		//}
           $sql[]=$this->getFieldUpdateStr($dbname,$tablename,$field_key,$column_type,$field_description,$defaultvalue);
         }
 
