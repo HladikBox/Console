@@ -515,6 +515,14 @@
                                             </label>
                                         </div>
                                     </div>
+                                    <div class="col-md-2 " data-toggle="tooltip" title="允许在列表编辑这个字段">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" id="f_canedit">
+                                                <b>允许列表编辑</b>
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                             </section>
                             <br />
@@ -553,6 +561,14 @@
                                                 <input type="text"  class="form-control" id="f_text_default" placeholder="新增时自动填充的默认值" data-toggle="tooltip" title="新增时的默认值">
                                             </div>
                                             <span class="help-block col-sm-offset-4"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2  col-md-offset-1" data-toggle="tooltip" title="当允许搜索启用时，这个就是的判定是严格的">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" id="f_text_strict">
+                                                <b>严格搜索</b>
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
@@ -1730,6 +1746,12 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
                 $("#f_nosave").prop("disabled",true);
 				$("#f_hidden").prop("disabled",true);
             }
+			
+			
+            $("#f_canedit").prop("disabled",true);
+			if(field_type=="text"||field_type=="number"){
+				$("#f_canedit").prop("disabled",false);
+			}
         });
         $("#btn_f_select_addoption").click(function(){
             AddSelectOption("","",'',"");
@@ -2190,12 +2212,14 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
             $("#f_disableindetail").prop("checked", json.disableindetail == "1");
             $("#f_nosave").prop("checked", json.nosave == "1");
             $("#f_hidden").prop("checked", json.hidden == "1");
+            $("#f_canedit").prop("checked", json.canedit == "1");
 
             $("#f_type").change();
             var field_type = $("#f_type").val();
             if (field_type == "text") {
                 $("#f_" + field_type + "_unique").prop("checked", json.unique == "1");
                 $("#f_" + field_type + "_unionunique").prop("checked", json.unionunique == "1");
+                $("#f_" + field_type + "_strict").prop("checked", json.strict == "1");
                 $("#f_" + field_type + "_format").val(json.format);
                 $("#f_" + field_type + "_default").val(json.default);
             } else if (field_type == "check") {
@@ -2266,10 +2290,12 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
             $("#f_nosave").prop("checked", false);
             $("#f_hidden").prop("checked", false);
             $("#f_disableindetail").prop("checked", false);
+            $("#f_canedit").prop("checked", false);
 
             var field_type = "text";
             $("#f_" + field_type + "_unique").prop("checked", false);
             $("#f_" + field_type + "_unionunique").prop("checked", false);
+            $("#f_" + field_type + "_strict").prop("checked", false);
             $("#f_" + field_type + "_format").val("");
             $("#f_" + field_type + "_default").val("");
 
@@ -2388,6 +2414,7 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
                 return;
             }
 
+            newjson.canedit = $("#f_canedit").prop("checked") ? "1" : "0";
             if (field_type == "password") {
 
                 newjson.notnull = $("#f_notnull").prop("checked") ? "1" : "0";
@@ -2443,6 +2470,7 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
             if (field_type == "text") {
                 newjson.unique = $("#f_" + field_type + "_unique").prop("checked") ? "1" : "0";
                 newjson.unionunique = $("#f_" + field_type + "_unionunique").prop("checked") ? "1" : "0";
+                newjson.strict = $("#f_" + field_type + "_strict").prop("checked") ? "1" : "0";
                 newjson.format = $("#f_" + field_type + "_format").val();
                 newjson.default = $("#f_" + field_type + "_default").val();
 

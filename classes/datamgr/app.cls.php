@@ -105,7 +105,18 @@
       case ifnull(ma.id,0) when 0 then 'D' else 'A' end as market_status  from tb_app a
       inner join tb_app_type ap on a.type=ap.id
       left join tb_market_app ma on a.id=ma.app_id 
-      where a.user_id=$UID and a.status<>'D' order by market_status , created_date desc";
+      where a.user_id=$UID   order by market_status , ontop desc, created_date desc";
+      $query = $this->dbmgr->query($sql);
+      $result = $this->dbmgr->fetch_array_all($query);
+
+      return $result;
+    }
+    public function getUserApps2($UID){
+      $sql="select a.*,ap.name type_name, case a.run_status when 'C' then '等待配置' when 'P' then '运行中' when 'S' then  '已停止' end as run_status_name,
+      case ifnull(ma.id,0) when 0 then 'D' else 'A' end as market_status  from tb_app a
+      inner join tb_app_type ap on a.type=ap.id
+      left join tb_market_app ma on a.id=ma.app_id 
+      where a.user_id=$UID and a.status<>'D'  and a.ontop='Y'  order by market_status ,  created_date desc";
       $query = $this->dbmgr->query($sql);
       $result = $this->dbmgr->fetch_array_all($query);
 
@@ -495,6 +506,13 @@
         return outResult(-1,"你的应用已经正在运行中","");
       }
       $sql="update tb_app set run_status='P' where id=$app_id";
+      $this->dbmgr->query($sql);
+      return outResult(0,"成功","");
+    }
+    function ontop($app_id,$ontop){
+      Global $UID,$User,$CONFIG;
+	  $ontop=$ontop=='Y'?"Y":"N";
+      $sql="update tb_app set ontop='$ontop' where id=$app_id";
       $this->dbmgr->query($sql);
       return outResult(0,"成功","");
     }

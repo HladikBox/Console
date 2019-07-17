@@ -54,7 +54,7 @@
                 </a>
                 <ul class="treeview-menu">
                     {{foreach from=$apps item=rs}}
-                    {{if $rs.run_status!="C"}}
+                    {{if $rs.run_status!="C"&&$rs.ontop=='Y'}}
                     <li><a href="/apps/board?id={{$rs.id}}"><i class="fa fa-circle-o"></i> {{$rs.name}}</a></li>
                     {{/if}}
                     {{/foreach}}

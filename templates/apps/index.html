@@ -31,6 +31,13 @@
           <div class="box {{if $rs.market_status!='A'}}box-primary{{else}}box-success{{/if}} collapsed-box box-solid appinfobox" id="app_{{$rs.id}}" >
             <div class="box-header with-border">
                 <div class="row">
+                    <div class="col-md-1">
+						
+                        <a class="badge bg-green-active btnontop {{if $rs.ontop=='N'}}hide{{/if}}" id="ontopY_{{$rs.id}}" st='N' appid="{{$rs.id}}">置顶</a>
+						
+                        <a class="badge bg-gray-active btnontop  {{if $rs.ontop=='Y'}}hide{{/if}}" id="ontopN_{{$rs.id}}" st='Y' appid="{{$rs.id}}">置顶</a>
+						
+                    </div>
                     <div class="col-md-2">{{$rs.name}} {{if $rs.market_status=='A'}}<a class="label label-info" href="/market/apps" >上架应用</a>{{/if}}</div>
                     <div class="col-md-2">{{$rs.type_name}}类应用</div>
                     <div class="col-md-2"><span>{{getDateStr date=$rs.created_date}} 创建</span></div>
@@ -281,6 +288,24 @@
                 $("#app_"+id+" .overlay").addClass("hide");
             });
         });
+		
+		$(".btnontop").click(function(){
+			var st=$(this).attr("st");
+			var appid=$(this).attr("appid");
+            var json = {
+                action: "ontop",
+                app_id: appid,
+				ontop:st
+            };
+			getJSON("{{$rootpath}}api/apps", json);
+			if(st=='Y'){
+				$("#ontopN_"+appid).addClass("hide");
+				$("#ontopY_"+appid).removeClass("hide");
+			}else{
+				$("#ontopY_"+appid).addClass("hide");
+				$("#ontopN_"+appid).removeClass("hide");
+			}
+		});
     });
     
 </script>

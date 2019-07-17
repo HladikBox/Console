@@ -52,6 +52,8 @@
     outputJSON($appMgr->startApp($_REQUEST["app_id"]));
   }elseif($action=="stop"){
     outputJSON($appMgr->stopApp($_REQUEST["app_id"]));
+  }elseif($action=="ontop"){
+    outputJSON($appMgr->ontop($_REQUEST["app_id"],$_REQUEST["ontop"]));
   }elseif($action=="submitmenu"){
     
     $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);

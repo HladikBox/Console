@@ -29,4 +29,5 @@ if($CONFIG['fileupload']['oss']==true){
 	$CONFIG['fileupload']['accesskeysecret']    = "bN7Gnq1q6l6TDlVK8yQDcjcCzY8sQt";
 	$CONFIG['fileupload']['endpoint']    = "oss-cn-shenzhen-internal.aliyuncs.com";
 	$CONFIG['fileupload']['bucket']    = "applinkupload";
+	$CONFIG['fileupload']['bucket_path']    = "";
 }
