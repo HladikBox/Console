@@ -322,6 +322,7 @@
 
       $model=$this->getModel($login,$alias,$modelname);
       $dbname=$login."_".$alias;
+	  
       $sql[]="use `$dbname` ;";
       $tablename=parameter_filter($model["tablename"]);
 

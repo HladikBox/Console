@@ -24,7 +24,7 @@
                                     <td class="api_func">{{$rs.func}}</td>
                                     <td class="api_description">{{$rs.description}}</td>
                                     <td>
-                                        <a class="fa fa-pencil-square-o" href="javascript:openApiCreatorEditor('{{$rs.model}}','{{$rs.func}}');" target="_blank" ></a>
+                                        <a class="fa fa-pencil-square-o" onclick="openApiCreatorEditor('{{$rs.model}}','{{$rs.func}}');" target="_blank" ></a>
                                     </td>
                                 </tr>
                                 {{/foreach}}

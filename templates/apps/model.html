@@ -453,7 +453,7 @@
                                             <span class="help-block col-sm-offset-4"></span>
                                         </div>
                                     </div>
-                                </div>
+                                </div> 
                             </section>
                             <section>
                                 <h4 class="page-header">显示/可用</h4>
@@ -837,7 +837,15 @@
                                     </div>
                                 </div>
 								<div class="row">
-                                    <div class="col-md-2 col-md-offset-1" data-toggle="tooltip" title="列表状态过滤">
+                                    <div class="col-md-2 col-md-offset-1" data-toggle="tooltip" title="异步加载">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" id="f_fkey_ajax">
+                                                <b>异步加载</b>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 " data-toggle="tooltip" title="列表状态过滤">
                                         <div class="checkbox">
                                             <label>
                                                 <input type="checkbox" id="f_fkey_showview">
@@ -1749,7 +1757,7 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
 			
 			
             $("#f_canedit").prop("disabled",true);
-			if(field_type=="text"||field_type=="number"){
+			if(field_type=="text"||field_type=="number"||field_type=="check"){
 				$("#f_canedit").prop("disabled",false);
 			}
         });
@@ -2259,6 +2267,7 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
             } else if (field_type == "grid") {
                 $("#f_" + field_type + "_fkey").val(json.model + "-" + json.modelkey);
             } else if (field_type == "fkey") {
+                $("#f_" + field_type + "_ajax").prop("checked", json.ajax == "1");
                 $("#f_" + field_type + "_showview").prop("checked", json.showview == "1");
                 $("#f_" + field_type + "_viewmodel").val(json.viewmodel);
                 $("#f_" + field_type + "_displayfield").val(json.displayfield);
@@ -2335,6 +2344,7 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
             $("#f_" + field_type + "_fkey").val("");
 
             field_type = "fkey";
+            $("#f_" + field_type + "_ajax").prop("checked", false);
             $("#f_" + field_type + "_showview").prop("checked", false);
             $("#f_" + field_type + "_viewmodel").val("");
             $("#f_" + field_type + "_displayfield").val("");
@@ -2552,6 +2562,7 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
                 newjson.tablename = $("#f_" + field_type + "_tablename").val();
                 newjson.ntbname = $("#f_" + field_type + "_ntbname").val();
                 newjson.condition = $("#f_" + field_type + "_condition").val();
+                newjson.ajax = $("#f_" + field_type + "_ajax").prop("checked") ? "1" : "0";
                 newjson.showview = $("#f_" + field_type + "_showview").prop("checked") ? "1" : "0";
                 newjson.viewmodel = $("#f_" + field_type + "_viewmodel").val();
 
