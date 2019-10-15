@@ -22,7 +22,7 @@ $CONFIG['error_handler'] ="E_ALL";
 
 #[Database]
 $CONFIG['database']['provider']	= 'mysql';  //mssql,sqlsrv
-$CONFIG['database']['host']		= "localhost";
+$CONFIG['database']['host']		= "mysql.app-link.org";
 $CONFIG['database']['database']	= 'applink';  
 $CONFIG['database']['user']		= 'root';  
 $CONFIG['database']['psw']		= 'Aerith123$'; 
@@ -30,7 +30,7 @@ $CONFIG['database']['psw']		= 'Aerith123$';
 
 #[Database]
 $CONFIG['userdatabase']['provider']	= 'mysql';//mssql,sqlsrv
-$CONFIG['userdatabase']['host']		= "localhost";
+$CONFIG['userdatabase']['host']		= "mysql.app-link.org";
 $CONFIG['userdatabase']['user']		= 'root'; 
 $CONFIG['userdatabase']['psw']		= 'Aerith123$';
 
