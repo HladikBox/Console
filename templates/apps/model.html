@@ -86,6 +86,11 @@
                                   <input type="checkbox" id="m_canselectall" {{if $model.canselectall=="1"}}checked{{/if}}>允许列表全选
                               </label>
                           </div>
+                          <div class="checkbox" data-toggle="tooltip" title="记录操作记录">
+                              <label>
+                                  <input type="checkbox" id="m_recording" {{if $model.recording=="1"}}checked{{/if}}>记录操作记录
+                              </label>
+                          </div>
                       </div>
                       <!-- /.box-body -->
                     </form> 
@@ -1827,7 +1832,8 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
 			export:$("#m_export").prop("checked")?"1":"0",
 			nosave:$("#m_nosave").prop("checked")?"1":"0",
 			noaddnew:$("#m_noaddnew").prop("checked")?"1":"0",
-			canselectall:$("#m_canselectall").prop("checked")?"1":"0"};
+			canselectall:$("#m_canselectall").prop("checked")?"1":"0",
+			recording:$("#m_recording").prop("checked")?"1":"0"};
             if($.trim(json.name)==""){
               warning("模型名称不能为空");
               return;
