@@ -30,7 +30,7 @@ $smarty->register_function("getDateStr","smarty_getDateStr");
  $smarty->assign('charset',$CONFIG['charset']);
  $smarty->assign('Title',$CONFIG['Title']);
  $smarty->assign('Url',$CONFIG['URL']);
- $smarty->assign('uploadpath',$CONFIG['smarty']['rootpath']."/".$CONFIG['fileupload']['upload_path']);
+ $smarty->assign('uploadpath',"https://alioss.app-link.org/alucard263096/yyc/");
  $smarty->assign('request_url_encode',base64_encode($_SERVER["REQUEST_URI"]));
  $smarty->assign('Config',$CONFIG);
  $smarty->assign('SERVER_NAME',$_SERVER["SERVER_NAME"]);

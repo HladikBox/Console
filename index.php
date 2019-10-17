@@ -6,7 +6,7 @@
  * Window - Preferences - PHPeclipse - PHP - Code Templates
  */
   require 'include/common.inc.php';
-  include ROOT.'/include/init.inc.php';
+  //include ROOT.'/include/init.inc.php';
   
 
   

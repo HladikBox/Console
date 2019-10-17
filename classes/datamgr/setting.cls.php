@@ -34,6 +34,23 @@
         $result = $this->dbmgr->fetch_array($query);
         return $result;
     }
+    public function getSite(){
+        $sql="select * from tb_site";
+        $query = $this->dbmgr->query($sql);
+        $result = $this->dbmgr->fetch_array($query);
+        return $result;
+    }
+    public function getResource(){
+        
+        $sql="select * from tb_resource ";
+        $result=$this->dbmgr->fetch_array_all($this->dbmgr->query($sql));
+        
+        $ret=[];
+        for($i=0;$i<count($result);$i++){
+            $ret[$result[$i]["filename"]]=$result[$i]["url"];
+        }
+        return $ret;
+    }
  }
  
  $settingMgr=SettingMgr::getInstance();

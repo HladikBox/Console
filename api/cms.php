@@ -10,6 +10,7 @@
   include_once ROOT.'/classes/datamgr/app.cls.php';
   include ROOT.'/classes/datamgr/api.cls.php';
   include ROOT.'/classes/datamgr/market.cls.php';
+  include ROOT.'/classes/datamgr/version.cls.php';
   
     header('Access-Control-Allow-Origin:*');  
     header('Access-Control-Allow-Methods:POST');  
@@ -24,7 +25,7 @@
   }elseif($action=="apicalllog"){
 	  //print_r($_REQUEST);
     $apilist=$apiMgr->apiCallLog($_REQUEST["login"],$_REQUEST["alias"],$_REQUEST["model"],$_REQUEST["func"],$_REQUEST["output_data_length"],$_REQUEST["input_data"],$_REQUEST["output_data"]);
-	outputJSON($_REQUEST);
+	  outputJSON($_REQUEST);
   }elseif($action=="getsubmitcode"){
     $folder=$marketMgr->getSubmitCode($_REQUEST["id"]);
 

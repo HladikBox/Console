@@ -4,7 +4,7 @@
 if(!isset($_SESSION[SESSIONNAME]["user"]))
 {
 	$_SESSION[SESSIONNAME]["url_request"]="http://".$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
-	WindowRedirect("/login");
+	WindowRedirect("/");
 	exit();
 }
 

@@ -25,30 +25,47 @@
     <![endif]-->
 </head>
 <body class="hold-transition login-page">
-    <div class="login-box">
-        <div class="login-logo" >
-			{{if $SERVER_NAME=="zzl.app-link.org"}}
-            <a href="#"><b>中咨联</b>小程序开发平台</a>
-			{{else}}
-            <a href="#"><b>App</b>Link</a>
-			{{/if}}
-        </div>
-        <!-- /.login-logo -->
-        <div class="login-box-body">
-            <p class="login-box-msg">请使用GitHub进行授权登陆</p>
-
-            <div class="row " style="margin-bottom:18px;">
-                <div class="center-block" style="width:100px;">
-                    <svg aria-hidden="true" class="octicon octicon-mark-github" height="100" version="1.1" viewBox="0 0 16 16" width="100"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg>
+    <body class="hold-transition login-page">
+        <div class="login-box">
+          <div class="login-logo">
+            <a ><b>易创云开发平台</b></a>
+          </div>
+          <!-- /.login-logo -->
+          <div class="login-box-body">
+            <p class="login-box-msg">登录开始极速云开发</p>
+        
+            <form action="../../index2.html" method="post">
+              <div class="form-group has-feedback">
+                <input type="email" class="form-control" placeholder="Email">
+                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+              </div>
+              <div class="form-group has-feedback">
+                <input type="password" class="form-control" placeholder="Password">
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+              </div>
+              <div class="row">
+                <div class="col-xs-8">
+                  <div class="checkbox icheck">
+                    <label>
+                      <input type="checkbox"> 记住密码
+                    </label>
+                  </div>
                 </div>
-            </div>
-            <!-- Change this to a button or input when using this as a form -->
-            <a href="https://github.com/login/oauth/authorize?client_id={{$client_id}}&scope=user%20repo" class="btn btn-lg btn-success btn-block">点击授权登录</a>
-
-            
-
+                <!-- /.col -->
+                <div class="col-xs-4">
+                  <button type="submit" class="btn btn-primary btn-block btn-flat">登录</button>
+                </div>
+                <!-- /.col -->
+              </div>
+            </form>
+        
+            <a href="#">忘记密码？</a><br>
+            <a href="注册账号" class="text-center">Register a new membership</a>
+        
+          </div>
+          <!-- /.login-box-body -->
         </div>
-        <!-- /.login-box-body -->
+        <!-- /.login-box -->
     </div>
     <!-- /.login-box -->
     <!-- jQuery 2.2.3 -->
