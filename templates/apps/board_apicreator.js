@@ -167,10 +167,10 @@
                 }
             }
             var description=$.trim($("#dlg_apicreator_description").val());
-            if(description.length<5){
-                $("#txtApiCreatorConfirm").text("请填写不少于5个字的接口用途描述");
-                return;
-            }
+            //if(description.length<5){
+            //    $("#txtApiCreatorConfirm").text("请填写不少于5个字的接口用途描述");
+            //    return;
+            //}
 
             getJSON("{{$rootpath}}api/api", 
                 {

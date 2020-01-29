@@ -145,6 +145,15 @@
 						  </tbody>
                       </table>
                     </div>
+					
+                    <div class="box-footer with-border">
+                      <div class="pull-right box-tools">
+                          <button type="button" class="btn btn-primary btn-sm" id="btnAddField2">
+                              添加字段
+                          </button>
+                      </div>
+                      <!-- /.box-tools -->
+                    </div>
                 </div>
             </div>
 			<div class="col-md-4 " >
@@ -1427,7 +1436,7 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
 			var count=0;
 			for(var line of lines){
 				line=$.trim(line);
-				line=line.toLowerCase();
+				line=line;
 				if(line.indexOf("//")<0&&line!=""){
 					var words=line.split(" ");
 					var ws=[];
@@ -1445,7 +1454,7 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
 							if(name!=""&&key!=""&&type!=""){
 								var typename="文本";
 								//text,longtext,password,check,select,html,number,upload,grid,datetime,fkey,flist,url
-								var newjson={name,key,type,description:""};
+								var newjson={name,key,type,description:"",displayinlist:1,search:1};
 								switch(type){
 									case "text": typename="文本";  break;
 									case "longtext": typename="长文本";  break;
@@ -1455,7 +1464,7 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
 													typename="下拉"; 
 													newjson.options={option:[{"name": "选项1", "value": "1"},{"name": "选项2", "value": "2"}]};  break;
 									case "html": typename="HTML编辑器";  break;
-									case "number": typename="数值";  break;
+									case "number": typename="数值";newjson.isdecimal=1;  break;
 									case "upload": typename="上传";   
 										newjson.uploadmodule="{{$model.modelname}}";
 										newjson.filetype="image";
@@ -1706,6 +1715,9 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
             OpenFieldEditor(jsonobj.val(),jsonobj);
         });
         $("#btnAddField").click(function () {
+            OpenFieldEditor(null, null);
+        });
+        $("#btnAddField2").click(function () {
             OpenFieldEditor(null, null);
         });
         $("#option_table").on("click",".btnOptionEditor",function () {

@@ -116,13 +116,13 @@
                             <select class="form-control" id="ddlQuickCopy" >
                                 {{foreach from=$modellist item=rs key=key}}
                                 {{if $rs.nolist=="1"}}
-                                <option model="{{$rs.modelname}}" func="update">{{$rs.name}}的值更新</option>
-                                <option model="{{$rs.modelname}}" func="get">{{$rs.name}}的字段获取</option>
+                                <option model="{{$rs.modelname}}" func="update">{{$rs.modelname}}{{$rs.name}}的值更新</option>
+                                <option model="{{$rs.modelname}}" func="get">{{$rs.modelname}}{{$rs.name}}的字段获取</option>
                                 {{else}}
-                                <option model="{{$rs.modelname}}" func="list">{{$rs.name}}的列表数据获取</option>
-                                <option model="{{$rs.modelname}}" func="get">{{$rs.name}}的详情数据获取</option>
-                                <option model="{{$rs.modelname}}" func="update">{{$rs.name}}的值更新</option>
-                                <option model="{{$rs.modelname}}" func="delete">{{$rs.name}}的数据删除</option>
+                                <option model="{{$rs.modelname}}" func="list">{{$rs.modelname}}{{$rs.name}}的列表数据获取</option>
+                                <option model="{{$rs.modelname}}" func="get">{{$rs.modelname}}{{$rs.name}}的详情数据获取</option>
+                                <option model="{{$rs.modelname}}" func="update">{{$rs.modelname}}{{$rs.name}}的值更新</option>
+                                <option model="{{$rs.modelname}}" func="delete">{{$rs.modelname}}{{$rs.name}}的数据删除</option>
                                 {{/if}}
                                 {{/foreach}}
                             </select>
@@ -229,7 +229,11 @@
 
     /**************
     请在此处编写你对请求值的修正
-    如$request["request_time"]=date('Y-m-d H:i:s');
+	
+	以下为常用复制
+	$request["request_time"]=date('Y-m-d H:i:s');
+    $request["orderby"]="r_main.seq";
+    $request["status"]="A";
     ****************/
     $request=$_REQUEST;
     

@@ -35,13 +35,35 @@
     }
     $zip=new ZipArchive();
     $zipfile=$CONFIG['workspace']['path']."\\".$User["login"]."\\".$appinfo["alias"]."\\logs\\sourcecode_".$_REQUEST["type"].".zip";
-    if($zip->open($zipfile, ZipArchive::OVERWRITE)=== TRUE){
+	unlink($zipfile);
+    if($zip->open($zipfile, ZipArchive::CREATE)=== TRUE){
          addFileToZip($folder,"", $zip); //调用方法，对要打包的根目录进行操作，并将ZipArchive的对象传递给方法
          $zip->close(); //关闭处理的zip文件
     }
 
 
     $file_name=$appinfo["alias"]."_".$_REQUEST["type"]."_sourcecode.zip"; 
+    RedirectDownload($file_name,$zipfile);
+
+    
+  }elseif($action=="downloadversion"){
+	  $version=$_REQUEST["version"]+0;
+    $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
+    $modellist=$modelMgr->getModelList($User["login"],$appinfo["alias"]);
+	//print_r($modellist);
+	//exit;
+	 $folder=$CONFIG['workspace']['path']."\\".$User["login"]."\\".$appinfo["alias"]."\\version\\".$version;
+    
+    $zip=new ZipArchive();
+     $zipfile=$CONFIG['workspace']['path']."\\".$User["login"]."\\".$appinfo["alias"]."\\logs\\version_".$version.".zip";
+	unlink($zipfile);
+    if($zip->open($zipfile, ZipArchive::CREATE)=== TRUE){
+         addFileToZip($folder,"", $zip); //调用方法，对要打包的根目录进行操作，并将ZipArchive的对象传递给方法
+         $zip->close(); //关闭处理的zip文件
+    }
+
+
+    $file_name=$appinfo["alias"]."_$version.zip";
     RedirectDownload($file_name,$zipfile);
 
     

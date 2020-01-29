@@ -23,6 +23,7 @@
                             + '<td>' + data.return.committed_date + '</td>'
                             + '<td>' + data.return.comment + '</td>'
                             + '<td><a href="javascript:rollback('+data.return.version+')">回滚</a></td>'
+                            + '<td><a href="javascript:versiondownload('+data.return.version+')">下载</a></td>'
                             + '</tr>');
 
                     newtr.insertAfter("#versionTH");
@@ -52,6 +53,12 @@
             }, function () {
                 $("#btnSubmitVersion").attr("disabled", false);
             });
+        });
+    }
+    function versiondownload(version) {
+        warning("请千万不要把版本文件直接覆盖，做好备份，有需覆盖！", function () {
+            var url="/api/api?action=downloadversion&app_id={{$appinfo.id}}&version="+version;
+			window.open(url);
         });
     }
 </script>

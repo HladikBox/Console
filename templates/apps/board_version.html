@@ -10,6 +10,7 @@
                                     <th>签入日期</th>
                                     <th >描述</th>
                                     <th >操作</th>
+                                    <th >下载</th>
                                 </tr>
                                 {{foreach from=$versionlist item=rs key=key}}
                                 <tr class="version_item" >
@@ -17,6 +18,7 @@
                                     <td>{{$rs.committed_date}}</td>
                                     <td>{{$rs.comment}}</td>
                                     <td><a href="javascript:rollback({{$rs.version}})" >回滚</a></td>
+                                    <td><a href="javascript:versiondownload({{$rs.version}})" >下载</a></td>
                                 </tr>
                                 {{/foreach}}
                             </table>
