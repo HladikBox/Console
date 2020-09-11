@@ -121,6 +121,7 @@
                                 {{else}}
                                 <option model="{{$rs.modelname}}" func="list">{{$rs.modelname}}{{$rs.name}}的列表数据获取</option>
                                 <option model="{{$rs.modelname}}" func="get">{{$rs.modelname}}{{$rs.name}}的详情数据获取</option>
+                                <option model="{{$rs.modelname}}" func="batchupdate">{{$rs.modelname}}{{$rs.name}}的批量更新</option>
                                 <option model="{{$rs.modelname}}" func="update">{{$rs.modelname}}{{$rs.name}}的值更新</option>
                                 <option model="{{$rs.modelname}}" func="delete">{{$rs.modelname}}{{$rs.name}}的数据删除</option>
                                 {{/if}}
@@ -309,6 +310,66 @@
 
 </textarea>
 
+<textarea id="func_batchupdate" class="hidden">
+
+    //传入primary_id是更新，为空则是新增    
+    //传入primary_id是更新，为空则是新增    
+    //传入primary_id是更新，为空则是新增
+
+    //1. （请勿改动的代码）获取数据模型对象
+    $modelname="{MODEL}";
+    $modelmgrpath=USER_ROOT."modelmgr/$modelname.model.php";
+    $model=new XmlModel($modelname,CURRENT_PATH);
+    //修正$model的字段默认值，for($model->XmlData["fields"]["field"] as $field)
+
+	
+	/**************
+	请在此处编写你对在数据保存完成后相关的更新语句
+	比如：$dbmgr->query("delete tb_example where fkey_id=$id ");
+	****************/
+
+	$list=json_decode($_REQUEST["datajson"],true);
+	foreach($list as $request){
+	
+		//修正请求的数据
+		$request=$model->beforeSaveDataFix($request);//print_r($request);//你可以比较fix前后的区别
+
+		/**************
+		请在此处编写你对请求值的修正，例如默认值在这里传递
+		如$request["request_time"]=date('Y-m-d H:i:s');
+		****************/
+
+		//校验请求的数据正确性
+		$error=$model->saveValidate($dbmgr,$request);
+		if($error!=""){
+			outputJSON(outResult(-1,$error,null));
+		}
+
+		//2. （请勿改动的代码）获取自动生成的搜索sql语句
+		//$return=$dbmgr->begin_trans();
+		$result=$model->Save($dbmgr,$request);
+		if(substr($result,0,5)=="right"){
+			$id=substr($result,5);
+
+			/**************
+			请在此处编写你对在数据保存完成后相关的更新语句
+			比如：$dbmgr->query("update tb_example set public time=now() where id=$id ");
+			****************/
+
+			//$result=outResult(0,"Save Success",$id);    
+			//$dbmgr->commit_trans();
+		}else{
+			$result=outResult(-1,"Save fail",$result);  
+			outputJSON($result);			
+			//$dbmgr->rollback_trans();
+		}
+	
+	
+	}
+
+    outputJSON(outResult(0,"SUCCESS"));
+
+</textarea>
 <textarea id="func_get" class="hidden">
 
     /**************

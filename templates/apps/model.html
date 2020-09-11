@@ -26,6 +26,7 @@
             <div class="col-md-4">
               <a href="#" class="btn btn-primary btn-block margin-bottom" id="btnSave" >保存</a>
               <a href="#" class="btn btn-warning btn-block margin-bottom" id="btnExecuteMysql" >生成数据库表</a>
+              <a href="#" class="btn btn-warning btn-block margin-bottom btnExecuteNow"  >更新数据库</a>
               <textarea class="hide" id="txtConsole"></textarea>
                 <div class="box box-primary">
                     <div class="box-header with-border">
@@ -162,7 +163,7 @@
                       <h3 class="box-title">Sql语句</h3>
                       <!-- tools box -->
                       <div class="pull-right box-tools">
-                          <button type="button" class="btn btn-primary btn-sm" id="btnFieldExecute">
+                          <button type="button" class="btn btn-primary btn-sm btnFieldExecute" >
                               执行
                           </button>
                           <button type="button" class="btn btn-info btn-sm" id="btnClearFieldExcute">
@@ -222,6 +223,40 @@
             <div class="col-md-4">
                 <div class="box box-success">
                     <div class="box-header with-border">
+                      <h3 class="box-title">分组</h3>
+                      <!-- tools box -->
+                      <div class="pull-right box-tools">
+                          <button type="button" class="btn btn-primary btn-sm" id="btnAddGroup">
+                              添加分组
+                          </button>
+                        <button type="button" class="btn  btn-sm" data-widget="collapse" data-toggle="tooltip" title="Collapse">
+                          <i class="fa fa-minus"></i></button>
+                      </div>
+                      <!-- /.box-tools -->
+                    </div>
+                    <div class="box-body no-padding">
+                      <table class="table table-hover" id="group_table">
+                          <tr class="th">
+                              <th>名称</th>
+                              <th>操作</th>
+                          </tr>
+                          {{foreach from=$model.groups.group item=rs}}
+                          <tr>
+                            <td class="group_name"><input value='{{$rs}}'  maxlength='10' placeholder='输入分组名称'  onchange='reloadgroupname()' /></td>
+                            <td>
+                                <a  class="tr_up"><i class="fa fa-arrow-up"></i></a>
+                                <a  class="tr_down"><i class="fa fa-arrow-down"></i></a>
+                                <a href="#" class="tr_del"><i class="fa fa-times"></i></a>
+                                <textarea class="option_json hide">{{$rs.json}}</textarea></td>
+                          </tr>
+                          {{/foreach}}
+                      </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="box box-success">
+                    <div class="box-header with-border">
                         <h3 class="box-title">数据图表</h3>
                         <!-- tools box -->
                         <div class="pull-right box-tools">
@@ -262,7 +297,7 @@
                       <h3 class="box-title">Sql语句</h3>
                       <!-- tools box -->
                       <div class="pull-right box-tools">
-                          <button type="button" class="btn btn-primary btn-sm" id="btnExecuteNow">
+                          <button type="button" class="btn btn-primary btn-sm btnExecuteNow" id="">
                               执行
                           </button>
                           <button type="button" class="btn btn-info btn-sm" id="btnRefreshSql">
@@ -537,16 +572,10 @@
                                             </label>
                                         </div>
                                     </div>
-                                </div>
-                            </section>
-                            <br />
-                            <section class="type_section text_class hide">
-                                <h4 class="page-header">文本类型字段专属</h4>
-                                <div class="row">
-                                    <div class="col-md-2 col-md-offset-1" data-toggle="tooltip" title="当保存时，会去数据库检查字段的值是否已经被使用">
+                                    <div class="col-md-2 " data-toggle="tooltip" title="当保存时，会去数据库检查字段的值是否已经被使用">
                                         <div class="checkbox">
                                             <label>
-                                                <input type="checkbox" id="f_text_unique">
+                                                <input type="checkbox" id="f_unique">
                                                 <b>唯一</b>
                                             </label>
                                         </div>
@@ -554,12 +583,25 @@
                                     <div class="col-md-2 " data-toggle="tooltip" title="当保存时，会连同其它标记为组合唯一的字段一起去数据库检查值是否被使用">
                                         <div class="checkbox">
                                             <label>
-                                                <input type="checkbox" id="f_text_unionunique">
+                                                <input type="checkbox" id="f_unionunique">
                                                 <b>组合唯一</b>
                                             </label>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-2 " data-toggle="tooltip" title="选择分组">
+										<div class="checkbox">
+                                        <select id="f_groupname">
+											<option value=''>--默认分组--</option>
+										</select>
+										</div>
+                                    </div>
+                                </div>
+                            </section>
+                            <br />
+                            <section class="type_section text_class hide">
+                                <h4 class="page-header">文本类型字段专属</h4>
+                                <div class="row">
+                                    <div class="col-md-3 col-md-offset-1">
                                         <div class="form-group" >
                                             <label class="col-sm-4 control-label">格式化</label>
                                             <div class="col-sm-8">
@@ -623,14 +665,6 @@
                                             <label>
                                                 <input type="checkbox" id="f_check_default">
                                                 <b>默认选中</b>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2" data-toggle="tooltip" title="表唯一选中，保存时，将表数据其它数据设置为不选中">
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox" id="f_check_unique">
-                                                <b>唯一选中</b>
                                             </label>
                                         </div>
                                     </div>
@@ -794,10 +828,10 @@
                                                 <select class="form-control" id="f_grid_fkey">
                                                     <option>请选择</option>
                                                   {{foreach from=$modellist item=rs}}
-                                                  <optgroup label="{{$rs.name}}">
+                                                  <optgroup label="{{$rs.name}} - {{$rs.modelname}}">
                                                     {{foreach from=$rs.fields.field item=rss}}
                                                     {{if $rss.type=="fkey" && $rss.search=="1"}}
-                                                    <option value ="{{$rs.modelname}}-{{$rss.key}}">{{$rss.name}}</option>
+                                                    <option value ="{{$rs.modelname}}-{{$rss.key}}">{{$rss.name}} - {{$rss.key}}</option>
                                                     {{/if}}
                                                     {{/foreach}}
                                                   </optgroup>
@@ -807,6 +841,27 @@
                                             <span class="help-block col-sm-offset-4"></span>
                                         </div>
                                     </div>
+									
+                                    
+                                    <div class="col-md-2 col-md-offset-1" data-toggle="tooltip" title="允许新增">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" id="f_grid_cannotnew">
+                                                <b>不允许新增</b>
+                                            </label>
+                                        </div>
+                                    </div>
+									
+									
+                                    <div class="col-md-2 col-md-offset-1" data-toggle="tooltip" title="允许删除">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" id="f_grid_candelete">
+                                                <b>允许删除</b>
+                                            </label>
+                                        </div>
+                                    </div>
+									
                                 </div>
                             </section>
 
@@ -1429,7 +1484,7 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
                 });
 
                 cmd_content.setTheme("ace/theme/monokai");
-		$("#btnFieldExecute").click(function(){
+		$(".btnFieldExecute").click(function(){
 		
 			var content=cmd_content.getValue();
 			var lines=content.split("\n");
@@ -1774,7 +1829,7 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
 			
 			
             $("#f_canedit").prop("disabled",true);
-			if(field_type=="text"||field_type=="number"||field_type=="check"){
+			if(field_type=="text"||field_type=="number"||field_type=="check"||field_type=="select"){
 				$("#f_canedit").prop("disabled",false);
 			}
         });
@@ -1881,6 +1936,18 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
                 
               }
             });
+			
+			
+            var groups=Array();
+            $("#group_table input").each(function(){
+              try{
+				if($(this).val()!=""){
+					groups.push($(this).val());
+				}
+              }catch(e){
+                
+              }
+            });
 
             var charts = Array();
             $("#chart_table .chart_json").each(function () {
@@ -1895,7 +1962,8 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
 
             json.options = { option: options };
             json.charts = { chart: charts };
-            //alert(json.charts.chart.length);
+            json.groups = { group: groups };
+            //alert(json.groups.group.length);
             $("#txtConsole").val(JSON.stringify(json));
             //alert("保存成功");
             datachanged = false;
@@ -1952,9 +2020,9 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
 
         });
 
-        $("#btnExecuteNow").click(function(){
+        $(".btnExecuteNow").click(function(){
             var json={action:"executesql",app_id:"{{$appinfo.id}}",modelname:"{{$model.modelname}}"};
-                $("#btnExecuteNow").attr("disabled", true);
+                $(".btnExecuteNow").attr("disabled", true);
                 getJSON("{{$rootpath}}api/model", json, function (data) {
                     if(data.code==0){
                       info("执行成功，数据表已经生成");
@@ -1970,7 +2038,7 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
                     
 
                 }, function () {
-                    $("#btnExecuteNow").attr("disabled", false);
+                    $(".btnExecuteNow").attr("disabled", false);
                 });
         });
         $("#model_content").on("change", "input", function () {
@@ -2239,18 +2307,18 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
             $("#f_nosave").prop("checked", json.nosave == "1");
             $("#f_hidden").prop("checked", json.hidden == "1");
             $("#f_canedit").prop("checked", json.canedit == "1");
-
+            $("#f_unique").prop("checked", json.unique == "1");
+            $("#f_unionunique").prop("checked", json.unionunique == "1");
+            $("#f_groupname").find("option:contains('"+json.groupname+"')").attr("selected",true);
+			$("#f_groupname").find("option:selected").text();
             $("#f_type").change();
             var field_type = $("#f_type").val();
             if (field_type == "text") {
-                $("#f_" + field_type + "_unique").prop("checked", json.unique == "1");
-                $("#f_" + field_type + "_unionunique").prop("checked", json.unionunique == "1");
                 $("#f_" + field_type + "_strict").prop("checked", json.strict == "1");
                 $("#f_" + field_type + "_format").val(json.format);
                 $("#f_" + field_type + "_default").val(json.default);
             } else if (field_type == "check") {
                 $("#f_" + field_type + "_default").prop("checked", json.default == "1");
-                $("#f_" + field_type + "_unique").prop("checked", json.unique == "1");
                 $("#f_" + field_type + "_yvalue").val(json.yvalue);
                 $("#f_" + field_type + "_nvalue").val(json.nvalue);
             } else if (field_type == "longtext") {
@@ -2284,6 +2352,8 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
                 $("#f_" + field_type + "_filetype").val(json.filetype);
             } else if (field_type == "grid") {
                 $("#f_" + field_type + "_fkey").val(json.model + "-" + json.modelkey);
+                $("#f_" + field_type + "_candelete").prop("checked", json.candelete == "1");
+                $("#f_" + field_type + "_cannotnew").prop("checked", json.cannotnew == "1");
             } else if (field_type == "fkey") {
                 $("#f_" + field_type + "_ajax").prop("checked", json.ajax == "1");
                 $("#f_" + field_type + "_showview").prop("checked", json.showview == "1");
@@ -2318,17 +2388,17 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
             $("#f_hidden").prop("checked", false);
             $("#f_disableindetail").prop("checked", false);
             $("#f_canedit").prop("checked", false);
+            $("#f_unique").prop("checked", false);
+            $("#f_unionunique").prop("checked", false);
+            $("#f_groupname").find("option:contains('')").attr("selected",true);
+			$("#f_groupname").find("option:selected").text();
 
             var field_type = "text";
-            $("#f_" + field_type + "_unique").prop("checked", false);
-            $("#f_" + field_type + "_unionunique").prop("checked", false);
             $("#f_" + field_type + "_strict").prop("checked", false);
             $("#f_" + field_type + "_format").val("");
             $("#f_" + field_type + "_default").val("");
 
             field_type = "check";
-            $("#f_" + field_type + "_default").prop("checked", false);
-            $("#f_" + field_type + "_unique").prop("checked", false);
             $("#f_" + field_type + "_yvalue").val("是");
             $("#f_" + field_type + "_nvalue").val("否");
 
@@ -2360,6 +2430,8 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
 
             field_type = "grid";
             $("#f_" + field_type + "_fkey").val("");
+            $("#f_" + field_type + "_candelete").prop("checked", false);
+            $("#f_" + field_type + "_cannotnew").prop("checked", false);
 
             field_type = "fkey";
             $("#f_" + field_type + "_ajax").prop("checked", false);
@@ -2491,13 +2563,14 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
                 newjson.disableindetail = $("#f_disableindetail").prop("checked") ? "1" : "0";
                 newjson.nosave = $("#f_nosave").prop("checked") ? "1" : "0";
 				newjson.hidden = $("#f_hidden").prop("checked") ? "1" : "0";
+                newjson.unique = $("#f_unique").prop("checked") ? "1" : "0";
+                newjson.unionunique = $("#f_unionunique").prop("checked") ? "1" : "0";
+                newjson.groupname = $("#f_groupname").val();
 
             }
 
             var field_type = $("#f_type").val();
             if (field_type == "text") {
-                newjson.unique = $("#f_" + field_type + "_unique").prop("checked") ? "1" : "0";
-                newjson.unionunique = $("#f_" + field_type + "_unionunique").prop("checked") ? "1" : "0";
                 newjson.strict = $("#f_" + field_type + "_strict").prop("checked") ? "1" : "0";
                 newjson.format = $("#f_" + field_type + "_format").val();
                 newjson.default = $("#f_" + field_type + "_default").val();
@@ -2505,7 +2578,6 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
             } else if (field_type == "check") {
 
                 newjson.default = $("#f_" + field_type + "_default").prop("checked") ? "1" : "0";
-                newjson.unique = $("#f_" + field_type + "_unique").prop("checked") ? "1" : "0";
                 newjson.yvalue = $("#f_" + field_type + "_yvalue").val();
                 newjson.nvalue = $("#f_" + field_type + "_nvalue").val();
 
@@ -2574,6 +2646,10 @@ var def="//目前只支持添加字段，可以的多行一次过执行。如\n/
                 }
                 newjson.model = valarr[0];
                 newjson.modelkey = valarr[1];
+				
+				
+                newjson.candelete = $("#f_" + field_type + "_candelete").prop("checked") ? "1" : "0";
+                newjson.cannotnew = $("#f_" + field_type + "_cannotnew").prop("checked") ? "1" : "0";
 
             } else if (field_type == "fkey") {
                 newjson.displayfield = $("#f_" + field_type + "_displayfield").val();
@@ -2684,3 +2760,34 @@ $(document).ready(function(){
         $("#field_table tbody").sortable().disableSelection();
     });
 </script>
+<style>
+	.group_name{
+		padding:10px;
+	}
+	.group_name input{
+		border:0px
+	}
+</style>
+			<script>
+				$(document).ready(function(){
+					$("#btnAddGroup").click(function(){
+						var str=" <tr>";
+						str+="<td class=\"group_name\"><input value='' maxlength='10' placeholder='输入分组名称' onchange='reloadgroupname()' /></td>";
+						str+="<td><a  class=\"tr_up\"><i class=\"fa fa-arrow-up\"></i></a><a  class=\"tr_down\"><i class=\"fa fa-arrow-down\"></i></a>";
+						str+="<a href=\"#\" class=\"tr_del\"><i class=\"fa fa-times\"></i></a></td></tr>";
+						$("#group_table").append(str);
+					});
+					reloadgroupname();
+				});
+				
+				function reloadgroupname(){
+					var allgroup=$(".group_name input");
+					var str="<option value=''>--默认分组--</option>";
+					for(i=0;i<allgroup.length;i++){
+						if($(allgroup[i]).val()!=""){
+							str+="<option value='"+$(allgroup[i]).val()+"'>"+$(allgroup[i]).val()+"</option>";
+						}
+					}
+					$("#f_groupname").html(str);
+				}
+			</script>

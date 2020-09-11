@@ -1,5 +1,23 @@
 <script type="text/javascript">
     $(document).ready(function(){
+		//alert(1);
+		//$("#table_modellist").DataTable();
+		//alert(2);
+		
+		$(".sortit").click(function(){
+			var tdno=$(this).attr("tdno");
+			var modelrow=$(".modelrow");
+			for(var i=0;i<modelrow.length-1;i++){
+				for(var j=i+1;j<modelrow.length-1-i;j++){
+					var x=$($(modelrow[i]).find("td")[tdno]).text();
+					var y=$($(modelrow[j]).find("td")[tdno]).text();
+					if(x>y){
+						$(modelrow[i]).insertAfter($(modelrow[j]));
+					}
+				}
+			}
+		});
+		
         $("#btnExecuteMysql").click(function(){
             if($(".db_op").length==0){
                 info("清先添加模型");

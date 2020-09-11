@@ -109,9 +109,11 @@
         $model=$this->getModelByPath($path);//json_decode(json_encode((array) simplexml_load_string($str)), true);
         //print_r($model);
         //exit();
-        $filectime=filectime($login,$alias,$path);
+        $filectime=date("Y-m-d H:i",filectime($path));
+        $filemtime=date("Y-m-d H:i",filemtime($path));
         $model["modelname"]=$filenamearr[0];
         $model["createdtime"]=$filectime;
+        $model["updatedtime"]=$filemtime;
         if($this->checkModelFormat($model)){
           $ret[$filenamearr[0]]=$model;
         }
@@ -145,6 +147,11 @@
       $model["charts"]["chart"]=array();
       $model["charts"]["chart"][]=$temp;
     }
+    if($model["groups"]["group"]==""){
+      //$temp=$model["groups"]["group"];
+      //$model["groups"]["group"]=array();
+      //$model["groups"]["group"][]=$temp;
+    }
     if($model["fields"]["field"][0]==""&&$model["fields"]["field"]["name"]!=""){
       $temp=$model["fields"]["field"];
       $model["fields"]["field"]=array();
@@ -177,6 +184,8 @@
     }
 
     $model=setArrayNoNull($model);
+	//print_r($model);
+	//exit;
     return $model;
   }
 
@@ -268,6 +277,12 @@
               foreach ($option as $fkey => $fvalue) {
                 $optionnode->addChild($fkey,htmlspecialchars($fvalue));
               }
+            }
+          }elseif ($key=="groups") {
+            $options=$model["groups"]["group"];
+            $optionsnode = $xml_data->addChild("groups");
+            foreach ($options as $option) {
+              $optionsnode ->addChild("group",$option);
             }
           }elseif ($key=="charts") {
             $options=$model["charts"]["chart"];

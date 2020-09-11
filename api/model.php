@@ -14,6 +14,7 @@
   $action=$_REQUEST["action"];
   if($action=="savemodel"){
     $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"]);
+	//print_r($_REQUEST["model"]);
     outputJSON($modelMgr->saveModel($User["login"],$appinfo["alias"],$_REQUEST["modelname"],$_REQUEST["model"]));
   }elseif($action=="getexecutesql"){
     $appinfo=$appMgr->getAppInfo($UID,$_REQUEST["app_id"],$_REQUEST["modelname"]);

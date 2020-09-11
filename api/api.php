@@ -53,6 +53,8 @@
 	//print_r($modellist);
 	//exit;
 	 $folder=$CONFIG['workspace']['path']."\\".$User["login"]."\\".$appinfo["alias"]."\\version\\".$version;
+	 
+	 mkdir($CONFIG['workspace']['path']."\\".$User["login"]."\\".$appinfo["alias"]."\\logs\\");
     
     $zip=new ZipArchive();
      $zipfile=$CONFIG['workspace']['path']."\\".$User["login"]."\\".$appinfo["alias"]."\\logs\\version_".$version.".zip";

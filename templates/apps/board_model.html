@@ -9,20 +9,24 @@
                     <table class="table table-condensed" id="table_modellist">
                         <tr>
                           <th style="width: 10px">#</th>
-                          <th>模型名称</th>
-                          <th>名称</th>
+                          <th class="sortit" tdno="1">模型名称</th>
+                          <th  class="sortit" tdno="2">名称</th>
                           <th style="max-width:300px;">数据来源</th>
                           <th>描述</th>
+                          <th   class="sortit" tdno="5">创建时间</th>
+                          <th  class="sortit" tdno="6">修改时间</th>
                           <th class="db_op_th hide">SQL执行</th>
                           <th class="ut_op hide">单元测试</th>
                         </tr>
                         {{foreach from=$modellist item=rs key=key}}
-                        <tr id="model_{{$rs.modelname}}">
+                        <tr id="model_{{$rs.modelname}}" class="modelrow">
                             <td> </td>
                             <td><a target="_blank" href="/apps/model?app_id={{$appinfo.id}}&model={{$rs.modelname}}">{{$rs.modelname}}</a></td>
                             <td><a target="_blank" class="modelname" href="/apps/model?app_id={{$appinfo.id}}&model={{$rs.modelname}}">{{$rs.name}}</a></td>
                             <td  style="max-width:300px;"><a target="_blank" href="/apps/model?app_id={{$appinfo.id}}&model={{$rs.modelname}}">{{$rs.tablename}}</a></td>
                             <td>{{$rs.description}}</td>
+                            <td >{{$rs.createdtime}}</td>
+                            <td >{{$rs.updatedtime}}</td>
                             <td class="db_op hide" modelname="{{$rs.modelname}}"></td>
                             <td class="ut_op hide"></td>
                         </tr>
@@ -93,18 +97,18 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group" >
-                            <label class="col-sm-4 control-label"><span style="color:red;">*</span> 模型标识</label>
+                            <label class="col-sm-4 control-label"><span style="color:red;">*</span> 模型名称</label>
                             <div class="col-sm-8">
-                                <input type="text" maxlength="40" class="form-control" id="cm_modelname" placeholder="唯一标识，仅支持全英文" data-toggle="tooltip" title="唯一标识，仅支持全英文">
+                                <input type="text"  class="form-control" id="cm_name" placeholder="模型名称" >
                             </div>
                             <span class="help-block col-sm-offset-4"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group" >
-                            <label class="col-sm-4 control-label"><span style="color:red;">*</span> 模型名称</label>
+                            <label class="col-sm-4 control-label"><span style="color:red;">*</span> 模型标识</label>
                             <div class="col-sm-8">
-                                <input type="text"  class="form-control" id="cm_name" placeholder="模型名称" >
+                                <input type="text" maxlength="40" class="form-control" id="cm_modelname" placeholder="唯一标识，仅支持全英文" data-toggle="tooltip" title="唯一标识，仅支持全英文">
                             </div>
                             <span class="help-block col-sm-offset-4"></span>
                         </div>

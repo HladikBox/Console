@@ -152,7 +152,7 @@
                 model=$.trim($("#dlg_apicreator_model").val().toLowerCase());
                 func=$.trim($("#dlg_apicreator_func").val().toLowerCase());
 
-                var pattern =  /^[A-Za-z0-9]+$/;
+                var pattern =  /^[\-A-Za-z0-9]+$/;
                 if($.trim(model)==""||!pattern.test(model)){
                     $("#txtApiCreatorConfirm").text("模块仅能使用英文且不能为空");
                     return;
